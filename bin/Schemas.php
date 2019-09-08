@@ -10,7 +10,7 @@
 *
 ***/
 
-class Schema extends \Tatter\Schema\Config\Schema
+class Schemas extends \Tatter\Schemas\Config\Schemas
 {
 	// whether to continue instead of throwing exceptions
 	public $silent = true;

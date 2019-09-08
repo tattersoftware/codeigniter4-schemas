@@ -1,12 +1,12 @@
-<?php namespace Tatter\Schema\Exceptions;
+<?php namespace Tatter\Schemas\Exceptions;
 
 use CodeIgniter\Exceptions\ExceptionInterface;
 use CodeIgniter\Exceptions\FrameworkException;
 
-class SchemaException extends \RuntimeException implements ExceptionInterface
+class SchemasException extends \RuntimeException implements ExceptionInterface
 {
 	public static function forMissingField($class, $field)
 	{
-		return new static(lang('Schema.missingField', [$class, $field]));
+		return new static(lang('Schemas.missingField', [$class, $field]));
 	}
 }

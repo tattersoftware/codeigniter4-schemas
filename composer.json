@@ -1,15 +1,15 @@
 {
-	"name": "tatter/schema",
+	"name": "tatter/schemas",
 	"description": "Database schema mapper, for CodeIgniter 4",
 	"keywords": [
 		"codeigniter",
 		"codeigniter4",
-		"schema",
+		"schemas",
 		"database",
 		"mapping",
 		"structure"
 	],
-	"homepage": "https://github.com/tattersoftware/codeigniter4-schema",
+	"homepage": "https://github.com/tattersoftware/codeigniter4-schemas",
 	"license": "MIT",
 	"authors": [
 		{
@@ -36,7 +36,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Tatter\\Schema\\": "src"
+			"Tatter\\Schemas\\": "src"
 		}
 	},
 	"autoload-dev": {
