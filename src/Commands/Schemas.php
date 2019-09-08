@@ -4,15 +4,15 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use Tatter\Schema\Mapper;
 
-class SchemasMap extends BaseCommand
+class Schemas extends BaseCommand
 {
     protected $group       = 'Schemas';
-    protected $name        = 'schemas:map';
+    protected $name        = 'schemas';
     protected $description = 'Map a new schema of a database.';
 
     public function run(array $params)
     {
-		$mapper = new Mapper();
+		$schemas = service('schemas');
 
 	}
 }

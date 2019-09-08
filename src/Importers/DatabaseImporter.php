@@ -1,4 +1,4 @@
-<?php namespace Tatter\Schemas;
+<?php namespace Tatter\Schemas\Importers;
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Structures\Schema;
@@ -6,24 +6,14 @@ use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
-class Mapper
+class DatabaseImporter extends BaseImporter
 {
-	// Trait the Reflection helper to get table names from models
-	use \CodeIgniter\Test\ReflectionHelper;
-	
 	/**
 	 * The main database connection.
 	 *
 	 * @var ConnectionInterface
 	 */
 	protected $db;
-	
-	/**
-	 * The configuration instance.
-	 *
-	 * @var \Tatter\Schemas\Config\Schema
-	 */
-	protected $config;
 
 	/**
 	 * The database group to map.
@@ -33,38 +23,24 @@ class Mapper
 	protected $group;
 
 	/**
-	 * The pattern used to identify potention relation fields.
+	 * The pattern used to identify potention relationship fields.
 	 *
 	 * @var string
 	 */
 	protected $fieldRegex = '/^.+_id$/';
 	
-	/**
-	 * Array of error messages assigned on failure
-	 *
-	 * @var array
-	 */
-	protected $errors = [];
-	
 	// Initiate library
 	public function __construct(BaseConfig $config, $db = null)
 	{		
-		// Save the configuration
-		$this->config = $config;
+		parent::__construct($config);
 		
-		// Get default database group
+		// Get the default database group
 		$config      = config('Database');
 		$this->group = $config->defaultGroup;
 		unset($config);
 
 		// Use injected database connection, or start a new one with the default group
 		$this->db = db_connect($db);
-	}
-	
-	// Return any error messages
-	public function getErrors(): array
-	{
-		return $this->errors;
 	}
 
 	/**
@@ -80,8 +56,8 @@ class Mapper
 		return $this;
 	}
 	
-	// Handle the mapping process
-	public function run()
+	// Mapping the database from $this->group into a new schema
+	public function import()
 	{
 		// Start with a fresh Schema
 		$schema = new Schema();
@@ -115,22 +91,5 @@ class Mapper
 		}
 		
 		return $schema;
-	}
-	
-	/**
-	 * Use the ReflectionHelper trait to get the protected "table" property 
-	 *
-	 * @param mixed    $model  A model instance or class name
-	 *
-	 * @return string  The name of the table for this model
-	 */
-	public function getModelTable($model): string
-	{
-		if (is_string($model))
-		{
-			$model = new $model();
-		}
-		
-		return $this->getPrivateProperty($model, $table);
 	}
 }
