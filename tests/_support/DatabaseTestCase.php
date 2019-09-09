@@ -33,9 +33,9 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	protected $namespace = 'CIModuleTests\Support';
 
 	/**
-	 * Fresh instance of the prefetch library.
+	 * Instance of the library.
 	 */
-	protected $prefetch;
+	protected $schemas;
 
 	public function setUp(): void
 	{
@@ -43,7 +43,6 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		
 		$config         = new \Tatter\Schemas\Config\Schemas();
 		$config->silent = false;
-		
-		$this->mapper = new \Tatter\Schemas\Mapper($config, 'tests');
+		$this->schemas = new \Tatter\Schemas\Schemas($config);
 	}
 }

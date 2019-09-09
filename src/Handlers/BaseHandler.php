@@ -1,4 +1,4 @@
-<?php namespace Tatter\Schemas\Importers;
+<?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Structures\Schema;
@@ -6,7 +6,7 @@ use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
-class BaseImporter extends BaseImporter
+class BaseHandler
 {
 	// Trait the Reflection helper to get table names from models
 	use \CodeIgniter\Test\ReflectionHelper;

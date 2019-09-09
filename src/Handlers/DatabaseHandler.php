@@ -1,12 +1,13 @@
-<?php namespace Tatter\Schemas\Importers;
+<?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
-class DatabaseImporter extends BaseImporter
+class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 {
 	/**
 	 * The main database connection.
@@ -56,8 +57,8 @@ class DatabaseImporter extends BaseImporter
 		return $this;
 	}
 	
-	// Mapping the database from $this->group into a new schema
-	public function import()
+	// Map the database from $this->group into a new schema
+	public function import(): Schema
 	{
 		// Start with a fresh Schema
 		$schema = new Schema();
@@ -86,10 +87,15 @@ class DatabaseImporter extends BaseImporter
 				$table->fields[$field->name] = $field;
 			}
 			
-			
 			$schema->tables[$table->name] = $table;
 		}
 		
 		return $schema;
+	}
+	
+	// Create all the schema structures in the database
+	public function export(Schema $schema)
+	{
+		
 	}
 }

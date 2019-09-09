@@ -13,6 +13,7 @@ class Schemas extends BaseCommand
     public function run(array $params)
     {
 		$schemas = service('schemas');
-
+		$schema = $schemas->get();
+		var_dump($schema);
 	}
 }
