@@ -6,6 +6,8 @@ class CreateTestTables extends Migration
 {
 	public function up()
 	{
+		$this->db->disableForeignKeyChecks();
+		
 		// Factories
 		$fields = [
 			'name'           => ['type' => 'varchar', 'constraint' => 31],
@@ -50,8 +52,8 @@ class CreateTestTables extends Migration
 
 		// Factories-Workers
 		$fields = [
-			'factory_id'     => ['type' => 'INT', 'unsigned' => true],
-			'worker_id'      => ['type' => 'INT', 'unsigned' => true],
+			'factory_id'     => ['type' => 'INT'],
+			'worker_id'      => ['type' => 'INT'],
 			'created_at'     => ['type' => 'DATETIME', 'null' => true],
 		];
 		
@@ -60,6 +62,8 @@ class CreateTestTables extends Migration
 
 		$this->forge->addUniqueKey(['factory_id', 'worker_id']);
 		$this->forge->addUniqueKey(['worker_id', 'factory_id']);
+		$this->forge->addForeignKey('factory_id', 'factories', 'id', false, 'CASCADE');
+		$this->forge->addForeignKey('worker_id', 'workers', 'id', false, 'CASCADE');
 		
 		$this->forge->createTable('factories_workers');
 		
@@ -112,10 +116,34 @@ class CreateTestTables extends Migration
 		$this->forge->addUniqueKey(['servicer_id', 'machine_id']);
 		
 		$this->forge->createTable('machines_servicers');
+		
+		// Lawyers
+		$fields = [
+			'name'        => ['type' => 'varchar', 'constraint' => 31],
+			'servicer_id' => ['type' => 'int', 'null' => true],
+			'created_at'  => ['type' => 'datetime', 'null' => true],
+			'updated_at'  => ['type' => 'datetime', 'null' => true],
+			'deleted_at'  => ['type' => 'datetime', 'null' => true],
+		];
+		
+		$this->forge->addField('id');
+		$this->forge->addField($fields);
+
+		$this->forge->addKey('name');
+		$this->forge->addKey(['deleted_at', 'id']);
+		$this->forge->addKey('created_at');
+		
+		$this->forge->addForeignKey('servicer_id', 'servicers', 'id', false, 'CASCADE');
+		
+		$this->forge->createTable('lawyers');
+
+		$this->db->enableForeignKeyChecks();
 	}
 
 	public function down()
 	{
+		$this->db->disableForeignKeyChecks();
+		
 		$this->forge->dropTable('factories');
 		$this->forge->dropTable('workers');
 		$this->forge->dropTable('factories_workers');
@@ -123,5 +151,9 @@ class CreateTestTables extends Migration
 		$this->forge->dropTable('machines');
 		$this->forge->dropTable('servicers');
 		$this->forge->dropTable('machines_servicers');
+
+		$this->forge->dropTable('lawyers');
+		
+		$this->db->enableForeignKeyChecks();
 	}
 }

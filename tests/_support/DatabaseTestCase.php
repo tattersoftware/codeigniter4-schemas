@@ -1,6 +1,7 @@
 <?php namespace CIModuleTests\Support;
 
 use CodeIgniter\Config\Services;
+use Tatter\Schemas\Handlers\DatabaseHandler;
 
 class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 {
@@ -37,12 +38,25 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	 */
 	protected $schemas;
 
+	/**
+	 * SchemaDatabaseHandler preloaded for 'tests' DBGroup.
+	 */
+	protected $handler;
+
+	/**
+	 * An initial schema generated from the 'tests' database.
+	 */
+	protected $schema;
+
 	public function setUp(): void
 	{
 		parent::setUp();
 		
 		$config         = new \Tatter\Schemas\Config\Schemas();
 		$config->silent = false;
-		$this->schemas = new \Tatter\Schemas\Schemas($config);
+
+		$this->schemas  = new \Tatter\Schemas\Schemas($config);
+		$this->handler  = new DatabaseHandler($config, 'tests');
+		$this->schema   = $this->schemas->from($this->handler)->get();
 	}
 }

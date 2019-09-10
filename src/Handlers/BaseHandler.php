@@ -26,8 +26,15 @@ class BaseHandler
 	protected $errors = [];
 	
 	// Initiate library
-	public function __construct(BaseConfig $config)
-	{		
+	public function __construct(BaseConfig $config = null)
+	{
+		// If no configuration was supplied then get one from the service
+		if (is_null($config))
+		{
+			$schemas = \Config\Services::schemas();
+			$config = $schemas->getConfig();
+		}
+		
 		// Save the configuration
 		$this->config = $config;
 	}

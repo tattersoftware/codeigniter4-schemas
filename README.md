@@ -1,5 +1,5 @@
 # Tatter\Schemas
-Database schema mapper, for CodeIgniter 4
+Database schema management, for CodeIgniter 4
 
 ## Quick Start
 

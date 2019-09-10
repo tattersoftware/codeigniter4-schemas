@@ -6,9 +6,18 @@ use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
+use Tatter\Schemas\Structures\Index;
+use Tatter\Schemas\Structures\ForeignKey;
 
 class Schemas
 {
+	/**
+	 * The current config.
+	 *
+	 * @var Tatter\Schemas\Config\Schemas
+	 */
+	protected $config;
+
 	/**
 	 * The current schema.
 	 *
@@ -39,16 +48,22 @@ class Schemas
 		}
 	}
 	
-	// Return any error messages
-	public function getErrors(): array
+	// Return a copy of the config - usually used by handlers
+	public function getConfig(): BaseConfig
 	{
-		return $this->errors;
+		return $this->config;
 	}
 	
 	// Return the schema
 	public function get(): Schema
 	{
 		return $this->schema;
+	}
+	
+	// Return any error messages
+	public function getErrors(): array
+	{
+		return $this->errors;
 	}
 	
 	/**

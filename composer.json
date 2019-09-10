@@ -1,6 +1,6 @@
 {
 	"name": "tatter/schemas",
-	"description": "Database schema mapper, for CodeIgniter 4",
+	"description": "Database schema management, for CodeIgniter 4",
 	"keywords": [
 		"codeigniter",
 		"codeigniter4",
