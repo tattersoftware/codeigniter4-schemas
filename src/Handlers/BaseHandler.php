@@ -62,7 +62,7 @@ class BaseHandler
 			$model = new $model();
 		}
 		
-		return $this->getPrivateProperty($model, $table);
+		return $this->getPrivateProperty($model, 'table');
 	}
 	
 	/**

@@ -9,6 +9,13 @@ class Field
 	 */
 	public $name;
 	
+	/**
+	 * Whether this is a primary key.
+	 *
+	 * @var bool
+	 */
+	public $primary_key;
+	
 	public function __construct($fieldData = null)
 	{
 		if (empty($fieldData))
