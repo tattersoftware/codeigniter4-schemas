@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas;
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
@@ -78,18 +79,25 @@ class Schemas
 		{
 			$handler = $this->getHandlerFromClass($handler);
 		}
+		
 		$this->schema = $handler->import();
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 		return $this;
 	}
 	
 	/**
-	 * Uses the provided handler to export the current schema
+	 * Uses the provided handler or handler name to export the current schema
 	 *
 	 * @return $this
 	 */
-	public function to(SchemaHandlerInterface $handler)
+	public function to($handler)
 	{
+		// Check for a handler name
+		if (is_string($handler))
+		{
+			$handler = $this->getHandlerFromClass($handler);
+		}
+
 		$handler->export($this->schema);
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 		return $this;
@@ -101,13 +109,19 @@ class Schemas
 	 * @return SchemaHandlerInterface
 	 */	
 	protected function getHandlerFromClass(string $class): SchemaHandlerInterface
-	{
+	{		
 		// Check if its already namespaced
 		if (strpos($class, '\\') === false)
 		{
 			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
 		}
 		
-		return new $class($this->config);
+		if (! class_exists($class))
+		{
+			throw SchemasException::forUnsupportedHandler($class);
+		}
+		
+		$handler = new $class($this->config);
+		return $handler;
 	}
 }

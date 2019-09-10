@@ -147,7 +147,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 			// Add the table to the schema
 			$schema->tables[$table->name] = $table;
 		}
-		
+
 		// Check tables flagged as possible pivots
 		foreach ($tableRelations as $tableName)
 		{
