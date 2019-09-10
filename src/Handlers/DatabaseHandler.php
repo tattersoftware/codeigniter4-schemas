@@ -43,7 +43,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Map the database from $this->db into a new schema
-	public function import(): Schema
+	public function import(): ?Schema
 	{
 		// Start with a fresh Schema
 		$schema = new Schema();
@@ -166,7 +166,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				// If all fields were found we have a relation
 				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
 				{
-					// Note the table as a pivot & clear its relations
+					// Set the table as a pivot & clear its relations
 					$schema->tables[$tableName]->pivot = true;
 					$schema->tables[$tableName]->relations = [];
 					$pivotTables[] = $tableName;
@@ -286,8 +286,8 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Create all the schema structures in the database
-	public function export(Schema $schema)
+	public function export(Schema $schema): bool
 	{
-		
+		return false;
 	}
 }

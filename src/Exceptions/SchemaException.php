@@ -9,4 +9,8 @@ class SchemasException extends \RuntimeException implements ExceptionInterface
 	{
 		return new static(lang('Schemas.missingField', [$class, $field]));
 	}
+	public static function forUnsupportedHandler($class)
+	{
+		return new static(lang('Schemas.unsupportedHandler', [$class]));
+	}
 }

@@ -67,12 +67,17 @@ class Schemas
 	}
 	
 	/**
-	 * Uses the provided handler to import a new schema
+	 * Uses the provided handler or handler name to import a new schema
 	 *
 	 * @return $this
 	 */
-	public function from(SchemaHandlerInterface $handler)
+	public function from($handler)
 	{
+		// Check for a handler name
+		if (is_string($handler))
+		{
+			$handler = $this->getHandlerFromClass($handler);
+		}
 		$this->schema = $handler->import();
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 		return $this;
@@ -88,5 +93,21 @@ class Schemas
 		$handler->export($this->schema);
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 		return $this;
+	}
+	
+	/**
+	 * Tries to match a class name or shortname to its handler
+	 *
+	 * @return SchemaHandlerInterface
+	 */	
+	protected function getHandlerFromClass(string $class): SchemaHandlerInterface
+	{
+		// Check if its already namespaced
+		if (strpos($class, '\\') === false)
+		{
+			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
+		}
+		
+		return new $class($this->config);
 	}
 }
