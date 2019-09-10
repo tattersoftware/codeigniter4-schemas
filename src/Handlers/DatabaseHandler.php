@@ -19,6 +19,13 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	protected $db;
 
 	/**
+	 * The prefix for the database connection.
+	 *
+	 * @var string
+	 */
+	protected $prefix;
+
+	/**
 	 * The pattern used to identify potention relationship fields.
 	 *
 	 * @var string
@@ -31,7 +38,8 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		parent::__construct($config);
 		
 		// Use injected database connection, or start a new one with the default group
-		$this->db = db_connect($db);
+		$this->db     = db_connect($db);
+		$this->prefix = $this->db->getPrefix();
 	}
 	
 	// Map the database from $this->db into a new schema
@@ -43,10 +51,17 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		// Track possible relations to check
 		$tableRelations = [];
 		$fieldRelations = [];
-		
+
 		// Proceed table by table
-		foreach ($this->db->listTables() as $tableName)
+		foreach ($this->db->listTables($this->config->constrainByPrefix) as $tableName)
 		{
+			// Check for migrations table to ignore
+			if ($this->config->ignoreMigrationsTable && ($tableName == 'migrations' || $tableName == $this->prefix.'migrations'))
+			{
+				continue;
+			}
+			$tableName = $this->resolvePrefix($tableName);
+			
 			// Start a new table
 			$table = new Table($tableName);
 			
@@ -92,12 +107,24 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				// Start a new foreign key
 				$foreignKey = new ForeignKey($foreignKeyData);
 				
+				// Resolve prefixes on any names
+				$foreignKey->constraint_name = $this->resolvePrefix($foreignKey->constraint_name);
+				if (isset($foreignKey->table_name))
+				{
+					$foreignKey->table_name = $this->resolvePrefix($foreignKey->table_name);
+				}
+				if (isset($foreignKey->table_name))
+				{
+					$foreignKey->foreign_table_name = $this->resolvePrefix($foreignKey->foreign_table_name);
+				}
+				
 				// Add the FK to the table
 				$table->foreignKeys[$foreignKey->constraint_name] = $foreignKey;
 				
 				// Create a relation
 				$relation = new Relation();
-				$relation->table = $foreignKey->foreign_table_name;
+				$relation->type  = 'belongsTo';
+				$relation->table = $this->resolvePrefix($foreignKey->foreign_table_name);
 				
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
@@ -122,23 +149,23 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		foreach ($tableRelations as $tableName)
 		{
 			list($tableName1, $tableName2) = explode('_', $tableName, 2);
-			
+
 			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)			
-			if (isset($this->tables[$tableName1]) && isset($this->tables[$tableName2]))
+			if (isset($schema->tables[$tableName1]) && isset($schema->tables[$tableName2]))
 			{
 				// A match! Look for foreign fields (may not be properly keyed)
-				$fieldName1    = $this->findKeyToForeignTable($this->tables[$tableName], $tableName1);
-				$foreignField1 = $this->findPrimaryKey($this->tables[$tableName1]);
+				$fieldName1    = $this->findKeyToForeignTable($schema->tables[$tableName], $tableName1);
+				$foreignField1 = $this->findPrimaryKey($schema->tables[$tableName1]);
 				
-				$fieldName2    = $this->findKeyToForeignTable($this->tables[$tableName], $tableName2);
-				$foreignField2 = $this->findPrimaryKey($this->tables[$tableName2]);
-				
+				$fieldName2    = $this->findKeyToForeignTable($schema->tables[$tableName], $tableName2);
+				$foreignField2 = $this->findPrimaryKey($schema->tables[$tableName2]);
+			
 				// If all fields were found we have a match
 				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
 				{
 					// Note the table as a pivot & clear its relations
-					$this->tables[$tableName]->pivot = true;
-					$this->tables[$tableName]->relations = [];
+					$schema->tables[$tableName]->pivot = true;
+					$schema->tables[$tableName]->relations = [];
 
 					// Build the pivots
 					$pivot1 = [
@@ -159,7 +186,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					$relation->pivots = [$pivot1, $pivot2];
 					
 					// Add it to the first table
-					$this->tables[$tableName1]->relations[] = $relation;
+					$schema->tables[$tableName1]->relations[] = $relation;
 
 					// Build the pivots
 					$pivot1 = [
@@ -179,8 +206,8 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					$relation->table  = $tableName1;
 					$relation->pivots = [$pivot1, $pivot2];
 					
-					// Add it to the first table
-					$this->tables[$tableName2]->relations[] = $relation;
+					// Add it to the second table
+					$schema->tables[$tableName2]->relations[] = $relation;
 				}
 			}
 		}

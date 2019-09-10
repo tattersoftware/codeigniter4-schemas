@@ -34,6 +34,11 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	protected $namespace = 'CIModuleTests\Support';
 
 	/**
+	 * Preconfigured config instance.
+	 */
+	protected $config;
+
+	/**
 	 * Instance of the library.
 	 */
 	protected $schemas;
@@ -52,11 +57,14 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	{
 		parent::setUp();
 		
-		$config         = new \Tatter\Schemas\Config\Schemas();
-		$config->silent = false;
-
-		$this->schemas  = new \Tatter\Schemas\Schemas($config);
-		$this->handler  = new DatabaseHandler($config, 'tests');
-		$this->schema   = $this->schemas->from($this->handler)->get();
+		$config                        = new \Tatter\Schemas\Config\Schemas();
+		$config->silent                = false;
+		$config->ignoreMigrationsTable = true;
+		$config->constrainByPrefix     = true;
+		
+		$this->config  = $config;
+		$this->schemas = new \Tatter\Schemas\Schemas($config);
+		$this->handler = new DatabaseHandler($config, 'tests');
+		$this->schema  = $this->schemas->from($this->handler)->get();
 	}
 }
