@@ -41,9 +41,8 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		$schema = new Schema();
 		
 		// Track possible relations to check
-		$tableRelations      = [];
-		$fieldRelations      = [];
-		$foreignKeyRelations = [];
+		$tableRelations = [];
+		$fieldRelations = [];
 		
 		// Proceed table by table
 		foreach ($this->db->listTables() as $tableName)
@@ -103,11 +102,12 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
 				{
-					$relation->field = $foreignKey->column_name;
-				}
-				if (isset($foreignKey->foreign_column_name))
-				{
-					$relation->foreignField = $foreignKey->foreign_column_name;
+					$pivot = [
+						$foreignKey->foreign_table_name,
+						$foreignKey->column_name,
+						$foreignKey->foreign_column_name,
+					];
+					$relation->pivots = [$pivot];
 				}
 				
 				// Add the relation to the table
@@ -116,6 +116,73 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 			
 			// Add the table to the schema
 			$schema->tables[$table->name] = $table;
+		}
+		
+		// Check tables flagged as possible pivots
+		foreach ($tableRelations as $tableName)
+		{
+			list($tableName1, $tableName2) = explode('_', $tableName, 2);
+			
+			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)			
+			if (isset($this->tables[$tableName1]) && isset($this->tables[$tableName2]))
+			{
+				// A match! Look for foreign fields (may not be properly keyed)
+				$fieldName1    = $this->findKeyToForeignTable($this->tables[$tableName], $tableName1);
+				$foreignField1 = $this->findPrimaryKey($this->tables[$tableName1]);
+				
+				$fieldName2    = $this->findKeyToForeignTable($this->tables[$tableName], $tableName2);
+				$foreignField2 = $this->findPrimaryKey($this->tables[$tableName2]);
+				
+				// If all fields were found we have a match
+				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
+				{
+					// Note the table as a pivot & clear its relations
+					$this->tables[$tableName]->pivot = true;
+					$this->tables[$tableName]->relations = [];
+
+					// Build the pivots
+					$pivot1 = [
+						$tableName,       // groups_users
+						$foreignField1,   // id
+						$fieldName1,      // group_id
+					];
+					$pivot2 = [
+						$tableName2,      // users
+						$fieldName2,      // user_id
+						$foreignField2,   // id
+					];
+					
+					// Build the relation
+					$relation = new Relation();
+					$relation->type   = 'manyToMany';
+					$relation->table  = $tableName2;
+					$relation->pivots = [$pivot1, $pivot2];
+					
+					// Add it to the first table
+					$this->tables[$tableName1]->relations[] = $relation;
+
+					// Build the pivots
+					$pivot1 = [
+						$tableName,       // groups_users
+						$foreignField2,   // id
+						$fieldName2,      // user_id
+					];
+					$pivot2 = [
+						$tableName1,      // groups
+						$fieldName1,      // group_id
+						$foreignField1,   // id
+					];
+					
+					// Build the relation
+					$relation = new Relation();
+					$relation->type   = 'manyToMany';
+					$relation->table  = $tableName1;
+					$relation->pivots = [$pivot1, $pivot2];
+					
+					// Add it to the first table
+					$this->tables[$tableName2]->relations[] = $relation;
+				}
+			}
 		}
 		
 		return $schema;

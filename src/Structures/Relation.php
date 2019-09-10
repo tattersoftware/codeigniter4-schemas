@@ -17,23 +17,9 @@ class Relation
 	public $table;
 	
 	/**
-	 * The local field for direct relationships.
-	 *
-	 * @var string
-	 */
-	public $field;
-	
-	/**
-	 * The foreign field for direct relationships.
-	 *
-	 * @var string
-	 */
-	public $foreignField;
-	
-	/**
 	 * Tables and columns to pivot for "through" relationships.
 	 *
-	 * @var array of columnName => tableName
+	 * @var array of [tableName, fieldName, foreignField]
 	 */
 	public $pivots;
 }

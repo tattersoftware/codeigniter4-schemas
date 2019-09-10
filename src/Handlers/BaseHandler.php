@@ -19,7 +19,7 @@ class BaseHandler
 	protected $config;
 	
 	/**
-	 * Array of error messages assigned on failure
+	 * Array of error messages assigned on failure.
 	 *
 	 * @var array
 	 */
@@ -37,6 +37,9 @@ class BaseHandler
 		
 		// Save the configuration
 		$this->config = $config;
+
+		// Load the inflector helper for singular <-> plural
+		helper('inflector');
 	}
 	
 	// Return any error messages
@@ -46,13 +49,13 @@ class BaseHandler
 	}
 	
 	/**
-	 * Use the ReflectionHelper trait to get the protected "table" property 
+	 * Use the ReflectionHelper trait to get the protected "table" property.
 	 *
 	 * @param mixed    $model  A model instance or class name
 	 *
 	 * @return string  The name of the table for this model
 	 */
-	public function getModelTable($model): string
+	protected function getModelTable($model): string
 	{
 		if (is_string($model))
 		{
@@ -60,5 +63,60 @@ class BaseHandler
 		}
 		
 		return $this->getPrivateProperty($model, $table);
+	}
+	
+	/**
+	 * Search a table for fields that may be foreign keys to tableName.
+	 *
+	 * @param Table    $table      A Table
+	 * @param string   $tableName  The foreign table to try to match
+	 *
+	 * @return ?String The name of the field, or null if not found
+	 */
+	protected function findKeyToForeignTable(Table $table, string $tableName): ?string
+	{
+		// Check a few common conventions
+		$tests = [
+			$tableName,
+			$tableName . '_id',
+			singular($tableName),
+			singular($tableName) . '_id',
+		];
+		
+		foreach ($tests as $fieldName)
+		{
+			if (isset($table->fields[$fieldName]))
+			{
+				return $fieldName;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Search a table for its primary key.
+	 *
+	 * @param Table    $table      A Table
+	 *
+	 * @return ?string The name of the field, or null if not found
+	 */
+	protected function findPrimaryKey(Table $table): ?string
+	{
+		foreach ($table->fields as $field)
+		{
+			if ($field->primary_key)
+			{
+				return $field->name;
+			}
+		}
+		
+		// Hail Mary for `id`
+		if (isset($table->fields['id']))
+		{
+			return 'id';
+		}
+		
+		return null;
 	}
 }
