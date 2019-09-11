@@ -48,4 +48,29 @@ class Table
 	{
 		$this->name = $name;
 	}
+	
+	/**
+	 * Merges data from one table into the other; latter overwrites.
+	 *
+	 * @return $this
+	 */
+	public function merge(Table $table): Table
+	{
+		$this->name  = $table->name;
+		$this->pivot = $this->pivot || $table->pivot;
+		
+		foreach ($schema->tables as $tableName => $table)
+		{
+			if (isset($this->tables[$tableName]))
+			{
+				$this->tables[$tableName] = $this->tables[$tableName]->merge($table);
+			}
+			else
+			{
+				$this->tables[$tableName] = $table;
+			}
+		}
+		
+		return $this;
+	}
 }

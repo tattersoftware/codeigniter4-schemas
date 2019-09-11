@@ -290,4 +290,21 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	{
 		return false;
 	}
+	
+	/**
+	 * Return a string with or without DBPrefix depending on config setting.
+	 *
+	 * @param string    $str   Name of a database object
+	 *
+	 * @return string   The updated name
+	 */
+	protected function resolvePrefix(string $str): string
+	{
+		// Empty strings should always go back empty
+		if ($str == '')
+			return $str;
+		
+		// If constraining by table prefix then strip the prefix
+		return $this->config->constrainByPrefix ? preg_replace("/^{$this->prefix}/", '', $str, 1) : $str;
+	}
 }

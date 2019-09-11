@@ -24,10 +24,9 @@ class SchemasTest extends \CodeIgniter\Test\CIUnitTestCase
 		$this->assertEquals($this->config, $this->schemas->getConfig());
 	}
 
-	public function testStartsWithBlankSchema()
+	public function testStartsWithoutSchema()
 	{
-		$schema = new Schema();
-		$this->assertEquals($schema, $this->schemas->get());
+		$this->assertNull($this->schemas->get());
 	}
 
 	public function testGetHandlerFromClass()

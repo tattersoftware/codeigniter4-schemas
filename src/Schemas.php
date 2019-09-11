@@ -38,12 +38,8 @@ class Schemas
 	{
 		$this->config = $config;
 		
-		// If not starting schema provided then use a blank one
-		if (is_null($schema))
-		{
-			$this->schema = new Schema();
-		}
-		else
+		// Store starting schema
+		if (! is_null($schema))
 		{
 			$this->schema = $schema;
 		}
@@ -56,7 +52,7 @@ class Schemas
 	}
 	
 	// Return the schema
-	public function get(): Schema
+	public function get(): ?Schema
 	{
 		return $this->schema;
 	}
