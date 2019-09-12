@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use Config\Services;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
@@ -14,6 +15,13 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 {
 	// Trait the Reflection helper to get table names from models
 	use \CodeIgniter\Test\ReflectionHelper;
+	
+	/**
+	 * The default database group.
+	 *
+	 * @var string
+	 */
+	protected $defaultGroup;
 
 	/**
 	 * The database group to constrain by.
@@ -27,13 +35,15 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	{		
 		parent::__construct($config);
 		
-		// By default constrain to the default database group
-		if (is_null($DBGroup))
+		// Load the default database group		
+		$config = config('Database');
+		$this->defaultGroup = $config->defaultGroup;
+		unset($config);
+		
+		// If nothing was specified then constrain to the default database group
+		if (is_null($group))
 		{
-			$config      = config('Database');
-			$this->group = $config->defaultGroup;
-			unset($config);
-			$this->group = $group;
+			$this->group = $this->defaultGroup;
 		}
 		elseif (! empty($group))
 		{
@@ -54,10 +64,21 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 		return $this->group;
 	}
 	
-
+	// Load models and build table data off their properties
 	public function import(): ?Schema
 	{
 		$schema = new Schema();
+		//availalbe model properties: 'primaryKey', 'table', 'returnType', 'DBGroup'
+		foreach ($this->getModels() as $class)
+		{
+			// Instantiate the model to harvest its properties
+			$model = new $class();
+			
+			// Start a new table
+			$table = new Table($model->table);
+		
+			$schema->tables[$table->name] = $table;
+		}
 		
 		return $schema;
 	}
@@ -69,19 +90,59 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	/**
-	 * Use the ReflectionHelper trait to get the protected "table" property.
+	 * Load model class names from all namespaces, filtered by group
 	 *
-	 * @param mixed    $model  A model instance or class name
-	 *
-	 * @return string  The name of the table for this model
+	 * @return array of model class names
 	 */
-	protected function getModelTable($model): string
+	protected function getModels(): array
 	{
-		if (is_string($model))
+		$loader  = Services::autoloader();
+		$locator = Services::locator();
+		$models = [];
+
+		// Get each namespace
+		foreach ($loader->getNamespace() as $namespace => $path)
 		{
-			$model = new $model();
+			// Get files under this namespace's "/Models" path
+			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
+			{
+				// Load the file
+				require_once $file;
+			}
 		}
 		
-		return $this->getPrivateProperty($model, 'table');
+		// Filter loaded class on likely models
+		$classes = preg_grep('/model/i', get_declared_classes());
+		
+		// Try to load each class
+		foreach ($classes as $class)
+		{
+			// Try to instantiate
+			try { $instance = new $class(); }
+			catch (\Exception $e) { continue; }
+			
+			// Make sure it's really a model
+			if (! ($instance instanceof \CodeIgniter\Model))
+			{
+				continue;
+			}
+			
+			// Make sure it has a valid table
+			$table = $instance->table;
+			if (empty($table))
+			{
+				continue;
+			}
+			
+			// Filter by group
+			$group = $instance->DBGroup ?? $this->defaultGroup;
+			if (empty($this->group) || $group == $this->group)
+			{
+				$models[] = $class;
+			}
+			unset($instance);
+		}
+		
+		return $models;
 	}
 }

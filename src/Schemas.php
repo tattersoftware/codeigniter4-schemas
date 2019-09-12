@@ -64,20 +64,31 @@ class Schemas
 	}
 	
 	/**
-	 * Uses the provided handler or handler name to import a new schema
+	 * Uses the provided handlers or handler names to import a new schema
 	 *
 	 * @return $this
 	 */
-	public function from($handler)
+	public function import(...$handlers)
 	{
-		// Check for a handler name
-		if (is_string($handler))
+		// If no schema is loaded then start a fresh one
+		if (is_null($this->schema))
 		{
-			$handler = $this->getHandlerFromClass($handler);
+			$this->schema = new Schema();
 		}
 		
-		$this->schema = $handler->import();
-		$this->errors = array_merge($this->errors, $handler->getErrors());
+		// Import from each handler in order
+		foreach ($handlers as $handler)
+		{
+			// Check for a handler name
+			if (is_string($handler))
+			{
+				$handler = $this->getHandlerFromClass($handler);
+			}
+
+			$this->schema->merge($handler->import());
+			$this->errors = array_merge($this->errors, $handler->getErrors());
+		}
+
 		return $this;
 	}
 	
@@ -86,7 +97,7 @@ class Schemas
 	 *
 	 * @return $this
 	 */
-	public function to($handler)
+	public function export($handler)
 	{
 		// Check for a handler name
 		if (is_string($handler))
@@ -111,7 +122,7 @@ class Schemas
 		{
 			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
 		}
-		
+
 		if (! class_exists($class))
 		{
 			throw SchemasException::forUnsupportedHandler($class);
