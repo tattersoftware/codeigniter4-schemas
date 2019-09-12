@@ -7,10 +7,7 @@ use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
 class BaseHandler
-{
-	// Trait the Reflection helper to get table names from models
-	use \CodeIgniter\Test\ReflectionHelper;
-	
+{	
 	/**
 	 * The configuration instance.
 	 *
@@ -46,23 +43,6 @@ class BaseHandler
 	public function getErrors(): array
 	{
 		return $this->errors;
-	}
-	
-	/**
-	 * Use the ReflectionHelper trait to get the protected "table" property.
-	 *
-	 * @param mixed    $model  A model instance or class name
-	 *
-	 * @return string  The name of the table for this model
-	 */
-	protected function getModelTable($model): string
-	{
-		if (is_string($model))
-		{
-			$model = new $model();
-		}
-		
-		return $this->getPrivateProperty($model, 'table');
 	}
 	
 	/**

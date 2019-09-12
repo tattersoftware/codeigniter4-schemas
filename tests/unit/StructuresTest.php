@@ -4,7 +4,7 @@ use Tatter\Schemas\Structures\Mergeable;
 
 class StructuresTest extends \CodeIgniter\Test\CIUnitTestCase
 {
-	public function testMergeable()
+	public function testMergeHasItem()
 	{
 		$object1 = new Mergeable();
 		$object1->foo = 'yes';
@@ -14,6 +14,37 @@ class StructuresTest extends \CodeIgniter\Test\CIUnitTestCase
 		
 		$object1->merge($object2);
 		
-		$this->assertEquals($object1->bar, 'no thanks');
+		$this->assertEquals('no thanks', $object1->bar);
+	}
+	
+	public function testMergeOverwrites()
+	{
+		$object1      = new Mergeable();
+		$object1->foo = 'yes';
+		$object1->ra  = ['hot', 'diggity'];
+		
+		$object2      = new Mergeable();
+		$object2->foo = 'no thanks';
+		$object2->ra  = [1 => 'dog'];
+		
+		$object1->merge($object2);
+		
+		$this->assertEquals('no thanks', $object1->foo);
+		$this->assertContains('dog', $object1->ra);
+	}
+	
+	public function testMergeNestedMergeables()
+	{
+		$object1 = new Mergeable();
+		$object1->foo = 'yes';
+		
+		$object2       = new Mergeable();
+		$object2->bar  = 'no thanks';
+		$object2->nest = $object1;
+		
+		$object3 = new Mergeable();
+		$object3->merge($object2);
+				
+		$this->assertEquals($object3->nest->foo, 'yes');
 	}
 }
