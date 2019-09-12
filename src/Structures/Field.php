@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Field
+class Field extends Mergeable
 {
 	/**
 	 * The field name.

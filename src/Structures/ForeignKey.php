@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class ForeignKey
+class ForeignKey extends Mergeable
 {
 	/**
 	 * The foreign key constraint name.

@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Index
+class Index extends Mergeable
 {
 	/**
 	 * The index name.

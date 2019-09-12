@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Relation
+class Relation extends Mergeable
 {
 	/**
 	 * The type of relationship.
