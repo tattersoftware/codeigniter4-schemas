@@ -1,14 +1,10 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Index
+class Index extends BaseStructure
 {
 	/**
-	 * The index name.
-	 *
-	 * @var string
+	 * Initialize required fields.
 	 */
-	public $name;
-	
 	public function __construct($indexData = null)
 	{
 		if (empty($indexData))

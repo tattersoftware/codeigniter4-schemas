@@ -1,25 +1,14 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Relation
+class Relation extends BaseStructure
 {
 	/**
-	 * The type of relationship.
-	 *
-	 * @var string
+	 * Initialize required fields.
 	 */
-	public $type;
-	
-	/**
-	 * The related table name.
-	 *
-	 * @var string
-	 */
-	public $table;
-	
-	/**
-	 * Tables and columns to pivot for "through" relationships.
-	 *
-	 * @var array of [tableName, fieldName, foreignField]
-	 */
-	public $pivots;
+	public function __construct()
+	{
+		//$this->type   = 'unspecified';
+		//$this->table  = '';
+		//$this->pivots = [];
+	}
 }

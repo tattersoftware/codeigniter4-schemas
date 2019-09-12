@@ -1,23 +1,13 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Field
+class Field extends BaseStructure
 {
 	/**
-	 * The field name.
-	 *
-	 * @var string
+	 * Initialize required fields.
 	 */
-	public $name;
-	
-	/**
-	 * Whether this is a primary key.
-	 *
-	 * @var bool
-	 */
-	public $primary_key;
-	
 	public function __construct($fieldData = null)
 	{
+		//$this->primary_key = false;
 		if (empty($fieldData))
 			return;
 		
