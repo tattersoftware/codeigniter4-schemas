@@ -1,10 +1,14 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class ForeignKey extends BaseStructure
+class ForeignKey
 {
 	/**
-	 * Initialize required fields.
+	 * The foreign key constraint name.
+	 *
+	 * @var string
 	 */
+	public $constraint_name;
+	
 	public function __construct($foreignKeyData = null)
 	{
 		if (empty($foreignKeyData))

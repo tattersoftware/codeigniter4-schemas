@@ -1,25 +1,24 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Schema extends BaseStructure
-{
+class Schema
+{	
 	/**
-	 * Initialize with an array for tables.
+	 * The schema tables.
+	 *
+	 * @var array of Tables
 	 */
-	public function __construct()
-	{
-		$this->tables = [];
-	}
+	public $tables;
 	
 	/**
 	 * Merges data from one schema into the other; latter overwrites.
 	 *
 	 * @return $this
-	 *
+	 */
 	public function merge(Schema $schema): Schema
 	{
 		foreach ($schema->tables as $tableName => $table)
 		{
-			if (isset($this->data['tables'][$tableName]))
+			if (isset($this->tables[$tableName]))
 			{
 				$this->tables[$tableName] = $this->tables[$tableName]->merge($table);
 			}
@@ -31,5 +30,4 @@ class Schema extends BaseStructure
 		
 		return $this;
 	}
-*/
 }
