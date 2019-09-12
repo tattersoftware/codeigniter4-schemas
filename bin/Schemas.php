@@ -12,12 +12,6 @@
 
 class Schemas extends \Tatter\Schemas\Config\Schemas
 {
-	// Whether to continue instead of throwing exceptions
+	// whether to continue instead of throwing exceptions
 	public $silent = true;
-	
-	// Whether to ignore the migrations table
-	public $ignoreMigrationsTable = true;
-	
-	// Default time-to-live for a stored schema (e.g. Cache)
-	public $ttl = 6000;
 }

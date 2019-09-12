@@ -56,14 +56,14 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		$pivotTables = [];
 
 		// Proceed table by table
-		foreach ($this->db->listTables(true) as $tableName)
+		foreach ($this->db->listTables($this->config->constrainByPrefix) as $tableName)
 		{
 			// Check for migrations table to ignore
 			if ($this->config->ignoreMigrationsTable && ($tableName == 'migrations' || $tableName == $this->prefix.'migrations'))
 			{
 				continue;
 			}
-			$tableName = $this->stripPrefix($tableName);
+			$tableName = $this->resolvePrefix($tableName);
 			
 			// Start a new table
 			$table = new Table($tableName);
@@ -111,14 +111,14 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				$foreignKey = new ForeignKey($foreignKeyData);
 				
 				// Resolve prefixes on any names
-				$foreignKey->constraint_name = $this->stripPrefix($foreignKey->constraint_name);
+				$foreignKey->constraint_name = $this->resolvePrefix($foreignKey->constraint_name);
 				if (isset($foreignKey->table_name))
 				{
-					$foreignKey->table_name = $this->stripPrefix($foreignKey->table_name);
+					$foreignKey->table_name = $this->resolvePrefix($foreignKey->table_name);
 				}
 				if (isset($foreignKey->table_name))
 				{
-					$foreignKey->foreign_table_name = $this->stripPrefix($foreignKey->foreign_table_name);
+					$foreignKey->foreign_table_name = $this->resolvePrefix($foreignKey->foreign_table_name);
 				}
 				
 				// Add the FK to the table
@@ -127,7 +127,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				// Create a relation
 				$relation = new Relation();
 				$relation->type  = 'belongsTo';
-				$relation->table = $this->stripPrefix($foreignKey->foreign_table_name);
+				$relation->table = $this->resolvePrefix($foreignKey->foreign_table_name);
 				
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
@@ -292,18 +292,19 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	/**
-	 * Return a string without DBPrefix.
+	 * Return a string with or without DBPrefix depending on config setting.
 	 *
-	 * @param string    $str  Name of a database object
+	 * @param string    $str   Name of a database object
 	 *
 	 * @return string   The updated name
 	 */
-	protected function stripPrefix(string $str): string
+	protected function resolvePrefix(string $str): string
 	{
-		if (empty($str) || empty($this->prefix))
+		// Empty strings should always go back empty
+		if ($str == '')
 			return $str;
-
-		// Strip the first occurence of the prefix
-		return preg_replace("/^{$this->prefix}/", '', $str, 1);
+		
+		// If constraining by table prefix then strip the prefix
+		return $this->config->constrainByPrefix ? preg_replace("/^{$this->prefix}/", '', $str, 1) : $str;
 	}
 }

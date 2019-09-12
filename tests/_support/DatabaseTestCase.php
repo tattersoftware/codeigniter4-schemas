@@ -60,6 +60,7 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		$config                        = new \Tatter\Schemas\Config\Schemas();
 		$config->silent                = false;
 		$config->ignoreMigrationsTable = true;
+		$config->constrainByPrefix     = true;
 		
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
