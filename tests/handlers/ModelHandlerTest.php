@@ -44,7 +44,7 @@ class ModelHandlerTest extends CIModuleTests\Support\UnitTestCase
 
 	public function testImport()
 	{		
-		$schema = $this->handler->import();
+		$schema = $this->handler->get();
 		dd($schema);
 		$this->assertEquals($schema);
 	}

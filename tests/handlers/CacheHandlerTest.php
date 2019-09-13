@@ -19,15 +19,15 @@ class CacheHandlerTest extends CIModuleTests\Support\UnitTestCase
 		$this->assertEquals('testKey', $this->handler->getKey());
 	}
 
-	public function testExport()
+	public function testSave()
 	{		
-		$this->assertTrue($this->handler->export($this->schema));
+		$this->assertTrue($this->handler->save($this->schema));
 	}
 
-	public function testExportImportConsistency()
+	public function testGetSaveConsistency()
 	{		
-		$this->handler->export($this->schema);
-		$this->assertEquals($this->schema, $this->handler->import());
+		$this->handler->save($this->schema);
+		$this->assertEquals($this->schema, $this->handler->get());
 	}
 	
 	public function tearDown(): void

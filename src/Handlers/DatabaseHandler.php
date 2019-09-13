@@ -44,7 +44,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Map the database from $this->db into a new schema
-	public function import(): ?Schema
+	public function get(): ?Schema
 	{
 		// Start with a fresh Schema
 		$schema = new Schema();
@@ -287,8 +287,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Create all the schema structures in the database
-	public function export(Schema $schema): bool
+	public function save(Schema $schema): bool
 	{
+		$this->methodNotImplemented(__CLASS__, __METHOD__);
 		return false;
 	}
 	

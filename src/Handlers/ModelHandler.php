@@ -65,7 +65,7 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Load models and build table data off their properties
-	public function import(): ?Schema
+	public function get(): ?Schema
 	{
 		$schema = new Schema();
 
@@ -132,8 +132,9 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Not yet implemented
-	public function export(Schema $schema): bool
+	public function save(Schema $schema): bool
 	{
+		$this->methodNotImplemented(__CLASS__, __METHOD__);
 		return false;
 	}
 	

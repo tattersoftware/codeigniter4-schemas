@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
@@ -98,5 +99,21 @@ class BaseHandler
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Filler function for methods that aren't implemented (yet).
+	 *
+	 * @param string $class   The handler class
+	 * @param string $method  The missing method
+	 *
+	 * @throws 
+	 */
+	protected function methodNotImplemented(string $class, string $method)
+	{
+		if (! $this->config->silent)
+			throw SchemasException::forMethodNotImplemented($class, $method);
+
+		$this->errors[] = lang('Schemas.methodNotImplemented', [$class, $method]);
 	}
 }

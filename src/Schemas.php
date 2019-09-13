@@ -81,11 +81,11 @@ class Schemas
 
 			if (is_null($this->schema))
 			{
-				$this->schema = $handler->import();
+				$this->schema = $handler->get();
 			}
 			else
 			{
-				$this->schema->merge($handler->import());
+				$this->schema->merge($handler->get());
 			}
 			
 			$this->errors = array_merge($this->errors, $handler->getErrors());
@@ -107,7 +107,7 @@ class Schemas
 			$handler = $this->getHandlerFromClass($handler);
 		}
 
-		$handler->export($this->schema);
+		$handler->save($this->schema);
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 		return $this;
 	}

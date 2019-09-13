@@ -4,7 +4,7 @@ use Tatter\Schemas\Structures\Schema;
 
 interface SchemaHandlerInterface
 {
-	public function import(): ?Schema;
+	public function get(): ?Schema;
 	
-	public function export(Schema $schema): bool;
+	public function save(Schema $schema): bool;
 }
