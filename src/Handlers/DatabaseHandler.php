@@ -289,7 +289,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	// Create all the schema structures in the database
 	public function save(Schema $schema): bool
 	{
-		$this->methodNotImplemented(__CLASS__, __METHOD__);
+		$this->methodNotImplemented(__CLASS__, 'save');
 		return false;
 	}
 	

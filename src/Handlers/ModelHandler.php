@@ -75,7 +75,7 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			$instance = new $class();
 
 			// Harvest model attributes from the instance
-			$model = new stdClass();
+			$model = new \stdClass();
 
 			// Visible model attributes
 			foreach (['primaryKey', 'table', 'returnType', 'DBGroup'] as $attribute)
@@ -101,8 +101,8 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			$field->primary_key = true;
 			$table->fields->{$field->name} = $field;
 			
-			// Create a field for each allowedField
-			foreach ($model->allowedField as $fieldName)
+			// Create a field for each allowed field
+			foreach ($model->allowedFields as $fieldName)
 			{
 				$field = new Field($fieldName);
 				$table->fields->$fieldName = $field;
@@ -134,7 +134,7 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	// Not yet implemented
 	public function save(Schema $schema): bool
 	{
-		$this->methodNotImplemented(__CLASS__, __METHOD__);
+		$this->methodNotImplemented(__CLASS__, 'save');
 		return false;
 	}
 	

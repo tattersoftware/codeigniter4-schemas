@@ -35,17 +35,20 @@ class ModelHandlerTest extends CIModuleTests\Support\UnitTestCase
 
 		$this->assertCount(0, $models);
 	}
-/*
-	public function testExport()
-	{		
-		$this->assertTrue($this->handler->export($this->schema));
-	}
-*/
 
-	public function testImport()
+	public function testSaveNotImplemented()
+	{
+		$this->expectException('Tatter\Schemas\Exceptions\SchemasException', 'Tatter\Schemas\Handlers\ModelHandler does not have a save method');
+		$this->handler->save($this->schema);
+	}
+
+	public function testGet()
 	{		
 		$schema = $this->handler->get();
-		dd($schema);
-		$this->assertEquals($schema);
+
+		$this->assertEquals('servicers', $schema->tables->servicers->name);
+		$this->assertEquals('CIModuleTests\Support\Models\WorkerModel', $schema->tables->workers->model);
+		$this->assertCount(6, $schema->tables->machines->fields);
+		$this->assertTrue($schema->tables->factories->fields->id->primary_key);
 	}
 }
