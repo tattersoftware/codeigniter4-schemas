@@ -57,7 +57,7 @@ class CacheHandler extends BaseHandler implements SchemaHandlerInterface
 		return $this->cacheKey;
 	}
 	
-	// Check the cache for a schame at $cacheKey
+	// Check the cache for a schema at $cacheKey
 	public function get(): ?Schema
 	{
 		$schema = $this->cache->get($this->cacheKey);
