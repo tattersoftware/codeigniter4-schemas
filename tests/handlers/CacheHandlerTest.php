@@ -24,7 +24,7 @@ class CacheHandlerTest extends CIModuleTests\Support\UnitTestCase
 		$this->assertTrue($this->handler->export($this->schema));
 	}
 
-	public function testImport()
+	public function testExportImportConsistency()
 	{		
 		$this->handler->export($this->schema);
 		$this->assertEquals($this->schema, $this->handler->import());
