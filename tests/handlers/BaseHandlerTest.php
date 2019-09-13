@@ -5,19 +5,12 @@ use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Table;
 
-class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
+class BaseHandlerTest extends CIModuleTests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{
 		parent::setUp();
-		
-		$config                        = new \Tatter\Schemas\Config\Schemas();
-		$config->silent                = false;
-		$config->ignoreMigrationsTable = true;
-		$config->constrainByPrefix     = true;
-		
-		$this->config  = $config;
-		$this->handler = new BaseHandler($config);
+		$this->handler = new BaseHandler($this->config);
 	}
 
 	public function testFindKeyToForeignTable()
@@ -27,7 +20,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 		
 		$fields = new Mergeable();
 		$fields->factory = new Field();
-		$fields->type    = new Field();
 		$fields->serial  = new Field();
 		$table->fields   = $fields;
 		
@@ -35,7 +27,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 
 		$fields = new Mergeable();
 		$fields->factory_id = new Field();
-		$fields->type       = new Field();
 		$fields->serial     = new Field();
 		$table->fields      = $fields;
 		
@@ -43,7 +34,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 
 		$fields = new Mergeable();
 		$fields->factories  = new Field();
-		$fields->type       = new Field();
 		$fields->serial     = new Field();
 		$table->fields      = $fields;
 		
@@ -51,7 +41,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 
 		$fields = new Mergeable();
 		$fields->factories_id = new Field();
-		$fields->type         = new Field();
 		$fields->serial       = new Field();
 		$table->fields        = $fields;
 		
@@ -65,7 +54,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 		
 		$fields = new Mergeable();
 		$fields->factories  = new Field();
-		$fields->type       = new Field();
 		$fields->serial     = new Field();
 		$table->fields      = $fields;
 		
@@ -82,7 +70,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 
 		$fields = new Mergeable();
 		$fields->machine_id  = $field;
-		$fields->type       = new Field();
 		$fields->serial     = new Field();
 		$table->fields      = $fields;
 
@@ -96,7 +83,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 				
 		$fields = new Mergeable();
 		$fields->id     = new Field('id');
-		$fields->type   = new Field();
 		$fields->serial = new Field();
 		$table->fields  = $fields;
 		
@@ -110,7 +96,6 @@ class BaseHandlerTest extends \CodeIgniter\Test\CIUnitTestCase
 		
 		$fields = new Mergeable();
 		$fields->primary    = new Field('primary');
-		$fields->type       = new Field();
 		$fields->serial     = new Field();
 		$table->fields      = $fields;
 		

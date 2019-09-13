@@ -117,13 +117,12 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			
 			// Get field names from each timestamp attribute
 			foreach ($timestamps as $attribute)
-				{
-					$fieldName = $model->$attribute;
-					$field = new Field($fieldName);
-					$field->type = $model->dateFormat;
-					
-					$table->fields->$fieldName = $field;
-				}
+			{
+				$fieldName = $model->$attribute;
+				$field = new Field($fieldName);
+				$field->type = $model->dateFormat;
+
+				$table->fields->$fieldName = $field;
 			}
 			
 			$schema->tables->{$table->name} = $table;

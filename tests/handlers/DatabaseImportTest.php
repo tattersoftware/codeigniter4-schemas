@@ -4,11 +4,6 @@ use Tatter\Schemas\Handlers\DatabaseHandler;
 
 class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 {
-	public function setUp(): void
-	{
-		parent::setUp();
-	}
-
 	public function testHasAllTables()
 	{
 		$this->assertEquals(7, count($this->schema->tables));

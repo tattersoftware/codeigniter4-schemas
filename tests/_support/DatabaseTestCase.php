@@ -66,4 +66,11 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		$this->handler = new DatabaseHandler($config, 'tests');
 		$this->schema  = $this->schemas->import($this->handler)->get();
 	}
+	
+	public function tearDown(): void
+	{
+		parent::tearDown();
+		unset($this->schema);
+		unset($this->handler);
+	}
 }

@@ -3,13 +3,8 @@
 use Tatter\Schemas\Handlers\CacheHandler;
 use Tatter\Schemas\Handlers\DatabaseHandler;
 
-class SchemasLiveTest extends CIModuleTests\Support\DatabaseTestCase
+class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 {
-	public function setUp(): void
-	{
-		parent::setUp();
-	}
-
 	// Probably the most likely scenario for use
 	public function testDatabaseToCache()
 	{
@@ -20,9 +15,9 @@ class SchemasLiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->schemas->import($databaseHandler)->export($cacheHandler);
 		$this->assertEmpty($this->schemas->getErrors());
 		
-		$schemaFromLibrary = $this->schemas->get();
+		$schemaFromService = $this->schemas->get();
 		$schemaFromCache   = $cache->get('schema');
-		$this->assertEquals($schemaFromCache, $schemaFromLibrary);
+		$this->assertEquals($schemaFromCache, $schemaFromService);
 		
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
 	}

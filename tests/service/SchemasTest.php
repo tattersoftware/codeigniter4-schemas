@@ -2,23 +2,9 @@
 
 use Tatter\Schemas\Handlers\BaseHandler;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
-use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
 
-class SchemasTest extends \CodeIgniter\Test\CIUnitTestCase
+class SchemasTest extends CIModuleTests\Support\UnitTestCase
 {
-	public function setUp(): void
-	{
-		parent::setUp();
-		
-		$config                        = new \Tatter\Schemas\Config\Schemas();
-		$config->silent                = false;
-		$config->ignoreMigrationsTable = true;
-		
-		$this->config  = $config;
-		$this->schemas = new \Tatter\Schemas\Schemas($config);
-	}
-
 	public function testGetConfig()
 	{
 		$this->assertEquals($this->config, $this->schemas->getConfig());
