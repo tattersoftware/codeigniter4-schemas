@@ -33,27 +33,32 @@ the resulting schema to the cache:
 ```
 // Map the database and store the schema in cache
 $schemas = service('schemas');
-$this->schemas->from('database')->to('cache');
+$this->schemas->import('database')->export('cache');
 
-// Load the schema from cache and grab a copy
-$schema = $this->schemas->from('cache')->get();
+// Load the schema from cache add Model data and grab a copy
+$schema = $this->schemas->import('cache', 'model')->get();
 ```
 
 If you need to deviate from the default configuration you can inject the handlers yourself:
 ```
 $db = db_connect('alternate_database');
 $databaseHandler = new (\Tatter\Schemas\Handlers\DatabaseHandler(null, $db);
-$schema = $this->schemas->from($databaseHandler)->get();
+$schema = $this->schemas->import($databaseHandler)->get();
 ```
 
 ## Handlers
 
-Right now only the functions essential to basic mapping are available: Database imports
-and Cache imports & exports. The eventual goal is to support mapping and deploying schemas
-from any possible source, so **Schemas** functions as an alternative method of database
-management.
+Right now only a few basic handlers are available:
+* Database (import only)
+* Model (imports only)
+* Cache
+
+The eventual goal is to support mapping and deploying schemas from any possible source,
+so **Schemas** functions as an alternative method of database management.
 
 **COMING SOON**
 * `DatabaseHandler->export()`: Recreate a live database from its schema
 * `MigrationsHandler`: Create a schema from migration files, or vice versa
-* `BaseFileHandler`: A wrapper for importing and exporting from popular schema file formats
+* `FileHandler`: A wrapper for importing and exporting from popular schema file formats
+* `XmlHandler`: The first file handler, supporting Doctrine-style XML files
+
