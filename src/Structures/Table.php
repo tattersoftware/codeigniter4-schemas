@@ -19,33 +19,37 @@ class Table extends Mergeable
 	/**
 	 * The table's fields.
 	 *
-	 * @var array of Field objects
+	 * @var Mergeable of Field objects
 	 */
-	public $fields = [];
+	public $fields;
 	
 	/**
 	 * The table's indices.
 	 *
-	 * @var array of Index objects
+	 * @var Mergeable of Index objects
 	 */
-	public $indexes = [];
+	public $indexes;
 	
 	/**
 	 * The table's foreign keys.
 	 *
-	 * @var array of ForeignKey objects
+	 * @var Mergeable of ForeignKey objects
 	 */
-	public $foreignKeys = [];
+	public $foreignKeys;
 	
 	/**
 	 * Relationships this table has with others
 	 *
-	 * @var array of Relations
+	 * @var Mergeable of Relations
 	 */
-	public $relations = [];
+	public $relations;
 	
 	public function __construct($name = null)
 	{
-		$this->name = $name;
+		$this->name        = $name;
+		$this->fields      = new Mergeable();
+		$this->indexes     = new Mergeable();
+		$this->foreignKeys = new Mergeable();
+		$this->relations   = new Mergeable();
 	}
 }

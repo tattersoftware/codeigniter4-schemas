@@ -69,13 +69,7 @@ class Schemas
 	 * @return $this
 	 */
 	public function import(...$handlers)
-	{
-		// If no schema is loaded then start a fresh one
-		if (is_null($this->schema))
-		{
-			$this->schema = new Schema();
-		}
-		
+	{		
 		// Import from each handler in order
 		foreach ($handlers as $handler)
 		{
@@ -85,7 +79,15 @@ class Schemas
 				$handler = $this->getHandlerFromClass($handler);
 			}
 
-			$this->schema->merge($handler->import());
+			if (is_null($this->schema))
+			{
+				$this->schema = $handler->import();
+			}
+			else
+			{
+				$this->schema->merge($handler->import());
+			}
+			
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 

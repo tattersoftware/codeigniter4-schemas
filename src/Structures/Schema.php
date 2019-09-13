@@ -5,7 +5,12 @@ class Schema extends Mergeable
 	/**
 	 * The schema tables.
 	 *
-	 * @var array of Tables
+	 * @var Mergeable of Tables
 	 */
 	public $tables;
+	
+	public function __construct()
+	{
+		$this->tables = new Mergeable();
+	}
 }

@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Mergeable
+class Mergeable implements \Countable
 {	
 	/**
 	 * Merge two structures together.
@@ -37,5 +37,15 @@ class Mergeable
 		}
 		
 		return $this;
+	}
+	
+	/**
+	 * Specify count of public properties to satisfy Countable
+	 *
+	 * @int Number of public properties
+	 */
+	public function count(): int
+	{
+		return count(get_object_vars($this));
 	}
 }

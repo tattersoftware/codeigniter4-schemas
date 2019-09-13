@@ -65,7 +65,7 @@ class BaseHandler
 		
 		foreach ($tests as $fieldName)
 		{
-			if (isset($table->fields[$fieldName]))
+			if (isset($table->fields->$fieldName))
 			{
 				return $fieldName;
 			}
@@ -92,7 +92,7 @@ class BaseHandler
 		}
 		
 		// Hail Mary for `id`
-		if (isset($table->fields['id']))
+		if (isset($table->fields->id))
 		{
 			return 'id';
 		}

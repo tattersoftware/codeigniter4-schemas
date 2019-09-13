@@ -2,6 +2,7 @@
 
 use Tatter\Schemas\Handlers\BaseHandler;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
+use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 
 class SchemasTest extends \CodeIgniter\Test\CIUnitTestCase

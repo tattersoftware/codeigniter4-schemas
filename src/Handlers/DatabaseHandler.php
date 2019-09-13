@@ -2,6 +2,7 @@
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
+use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
@@ -91,7 +92,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				}
 				
 				// Add the field to the table
-				$table->fields[$field->name] = $field;
+				$table->fields->{$field->name} = $field;
 			}
 			
 			// Proceed index by index
@@ -101,7 +102,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				$index = new Index($indexData);
 				
 				// Add the index to the table
-				$table->indexes[$index->name] = $index;
+				$table->indexes->{$index->name} = $index;
 			}
 			
 			// Proceed FK by FK
@@ -122,7 +123,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				}
 				
 				// Add the FK to the table
-				$table->foreignKeys[$foreignKey->constraint_name] = $foreignKey;
+				$table->foreignKeys->{$foreignKey->constraint_name} = $foreignKey;
 				
 				// Create a relation
 				$relation = new Relation();
@@ -141,11 +142,11 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				}
 				
 				// Add the relation to the table
-				$table->relations[$relation->table] = $relation;
+				$table->relations->{$relation->table} = $relation;
 			}
 			
 			// Add the table to the schema
-			$schema->tables[$table->name] = $table;
+			$schema->tables->{$table->name} = $table;
 		}
 
 		// Check tables flagged as possible pivots
@@ -154,21 +155,21 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 			list($tableName1, $tableName2) = explode('_', $tableName, 2);
 
 			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)			
-			if (isset($schema->tables[$tableName1]) && isset($schema->tables[$tableName2]))
+			if (isset($schema->tables->$tableName1) && isset($schema->tables->$tableName2))
 			{
 				// A match! Look for foreign fields (may not be properly keyed)
-				$fieldName1    = $this->findKeyToForeignTable($schema->tables[$tableName], $tableName1);
-				$foreignField1 = $this->findPrimaryKey($schema->tables[$tableName1]);
+				$fieldName1    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName1);
+				$foreignField1 = $this->findPrimaryKey($schema->tables->$tableName1);
 				
-				$fieldName2    = $this->findKeyToForeignTable($schema->tables[$tableName], $tableName2);
-				$foreignField2 = $this->findPrimaryKey($schema->tables[$tableName2]);
+				$fieldName2    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName2);
+				$foreignField2 = $this->findPrimaryKey($schema->tables->$tableName2);
 			
 				// If all fields were found we have a relation
 				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
 				{
 					// Set the table as a pivot & clear its relations
-					$schema->tables[$tableName]->pivot = true;
-					$schema->tables[$tableName]->relations = [];
+					$schema->tables->$tableName->pivot = true;
+					$schema->tables->$tableName->relations = new Mergeable();
 					$pivotTables[] = $tableName;
 
 					// Build the pivots
@@ -190,7 +191,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					$relation->pivots = [$pivot1, $pivot2];
 					
 					// Add it to the first table
-					$schema->tables[$tableName1]->relations[$tableName2] = $relation;
+					$schema->tables->$tableName1->relations->$tableName2 = $relation;
 
 					// Build the pivots
 					$pivot1 = [
@@ -211,7 +212,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					$relation->pivots = [$pivot1, $pivot2];
 					
 					// Add it to the second table
-					$schema->tables[$tableName2]->relations[$tableName1] = $relation;
+					$schema->tables->$tableName2->relations->$tableName1 = $relation;
 				}
 			}
 		}
@@ -225,10 +226,10 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				$tableName2 = plural(preg_replace('/_id$/', '', $fieldName, 1));
 
 				// Check for the table (e.g. `user_id` must have `users`)
-				if (isset($schema->tables[$tableName2]))
+				if (isset($schema->tables->$tableName2))
 				{
 					// A match! Get the key from the target table
-					$foreignField = $this->findPrimaryKey($schema->tables[$tableName2]);
+					$foreignField = $this->findPrimaryKey($schema->tables->$tableName2);
 			
 					// If the field was found we have a relation
 					if ($foreignField)
@@ -245,9 +246,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 						$relation->type   = 'belongsTo';
 						$relation->table  = $tableName2;
 						$relation->pivots = [$pivot];
-					
+
 						// Add it to the first table
-						$schema->tables[$tableName1]->relations[$tableName2] = $relation;
+						$schema->tables->$tableName1->relations->$tableName2 = $relation;
 
 						// Build the reverse pivot
 						$pivot = [
@@ -263,7 +264,7 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 						$relation->pivots = [$pivot];
 					
 						// Add it to the second table
-						$schema->tables[$tableName2]->relations[$tableName1] = $relation;
+						$schema->tables->$tableName2->relations->$tableName1 = $relation;
 					}
 				}
 			}
@@ -273,12 +274,12 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		foreach ($pivotTables as $pivotTableName)
 		{
 			// Blank this table's relations
-			$schema->tables[$pivotTableName]->relations = [];
+			$schema->tables->$pivotTableName->relations = new Mergeable();
 						
 			// Remove the table from other relations
 			foreach ($schema->tables as $tableName => $table)
 			{
-				unset($schema->tables[$tableName]->relations[$pivotTableName]);
+				unset($schema->tables->$tableName->relations->$pivotTableName);
 			}
 		}
 		

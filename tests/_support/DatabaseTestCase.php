@@ -64,6 +64,6 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
 		$this->handler = new DatabaseHandler($config, 'tests');
-		$this->schema  = $this->schemas->from($this->handler)->get();
+		$this->schema  = $this->schemas->import($this->handler)->get();
 	}
 }

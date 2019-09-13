@@ -17,13 +17,13 @@ class SchemasLiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$cacheHandler    = new CacheHandler($this->config, $cache);
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		
-		$this->schemas->from($databaseHandler)->to($cacheHandler);
+		$this->schemas->import($databaseHandler)->export($cacheHandler);
 		$this->assertEmpty($this->schemas->getErrors());
 		
 		$schemaFromLibrary = $this->schemas->get();
 		$schemaFromCache   = $cache->get('schema');
 		$this->assertEquals($schemaFromCache, $schemaFromLibrary);
 		
-		$this->assertArrayHasKey('factories', $schemaFromCache->tables);
+		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
 	}
 }

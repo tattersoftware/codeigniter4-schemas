@@ -16,30 +16,30 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 
 	public function testHasSpecificTable()
 	{
-		$this->assertArrayHasKey('factories', $this->schema->tables);
+		$this->assertObjectHasAttribute('factories', $this->schema->tables);
 	}
 
 	public function testDetectsPivotTablesWithFK()
 	{
-		$this->assertTrue($this->schema->tables['factories_workers']->pivot);
+		$this->assertTrue($this->schema->tables->factories_workers->pivot);
 	}
 
 	public function testDetectsPivotTablesWithoutFK()
 	{
-		$this->assertTrue($this->schema->tables['machines_servicers']->pivot);
+		$this->assertTrue($this->schema->tables->machines_servicers->pivot);
 	}
 
 	public function testIgnoreMigrationsTable()
 	{
-		$this->assertArrayNotHasKey('migrations', $this->schema->tables);
+		$this->assertObjectNotHasAttribute('migrations', $this->schema->tables);
 
 		$config = new \Tatter\Schemas\Config\Schemas();
 		$config->ignoreMigrationsTable = false;
 
 		$handler = new DatabaseHandler($config, 'tests');
-		$schema = $this->schemas->from($handler)->get();
+		$schema = $this->schemas->import($handler)->get();
 		
-		$this->assertArrayHasKey('migrations', $schema->tables);
+		$this->assertObjectHasAttribute('migrations', $schema->tables);
 	}
 
 	// -------------------- RELATIONSHIPS --------------------
@@ -57,40 +57,40 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 	
 	public function testBelongsTo()
 	{
-		$table1 = $this->schema->tables['lawyers'];
-		$table2 = $this->schema->tables['servicers'];
+		$table1 = $this->schema->tables->lawyers;
+		$table2 = $this->schema->tables->servicers;
 		
-		$this->assertEquals('belongsTo', $table1->relations[$table2->name]->type);
+		$this->assertEquals('belongsTo', $table1->relations->{$table2->name}->type);
 		
 		$pivot = ['servicers', 'servicer_id', 'id'];
-		$this->assertEquals([$pivot], $table1->relations[$table2->name]->pivots);
+		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 	
 	public function testHasMany()
 	{
-		$table1 = $this->schema->tables['servicers'];
-		$table2 = $this->schema->tables['lawyers'];
+		$table1 = $this->schema->tables->servicers;
+		$table2 = $this->schema->tables->lawyers;
 		
-		$this->assertEquals('hasMany', $table1->relations[$table2->name]->type);
+		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
 		
 		$pivot = ['lawyers', 'id', 'servicer_id'];
-		$this->assertEquals([$pivot], $table1->relations[$table2->name]->pivots);
+		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 	
 	public function testManyToMany()
 	{
-		$table1 = $this->schema->tables['servicers'];
-		$table2 = $this->schema->tables['machines'];
+		$table1 = $this->schema->tables->servicers;
+		$table2 = $this->schema->tables->machines;
 		
-		$this->assertEquals('manyToMany', $table1->relations[$table2->name]->type);
-		$this->assertEquals('manyToMany', $table2->relations[$table1->name]->type);
+		$this->assertEquals('manyToMany', $table1->relations->{$table2->name}->type);
+		$this->assertEquals('manyToMany', $table2->relations->{$table1->name}->type);
 		
 		$pivot1 = ['machines_servicers', 'id', 'servicer_id'];
 		$pivot2 = ['machines', 'machine_id', 'id'];
-		$this->assertEquals([$pivot1, $pivot2], $table1->relations[$table2->name]->pivots);
+		$this->assertEquals([$pivot1, $pivot2], $table1->relations->{$table2->name}->pivots);
 		
 		$pivot1 = ['machines_servicers', 'id', 'machine_id'];
 		$pivot2 = ['servicers', 'servicer_id', 'id'];
-		$this->assertEquals([$pivot1, $pivot2], $table2->relations[$table1->name]->pivots);
+		$this->assertEquals([$pivot1, $pivot2], $table2->relations->{$table1->name}->pivots);
 	}
 }

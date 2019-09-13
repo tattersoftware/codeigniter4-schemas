@@ -17,9 +17,14 @@ class Relation extends Mergeable
 	public $table;
 	
 	/**
-	 * Tables and columns to pivot for "through" relationships.
+	 * Tables and columns for pivot and "through" relationships.
 	 *
-	 * @var array of [tableName, fieldName, foreignField]
+	 * @var Array of [tableName, fieldName, foreignField]
 	 */
-	public $pivots;
+	public $pivots = [];
+	
+	public function __construct()
+	{
+		$this->pivots = new Mergeable();
+	}
 }
