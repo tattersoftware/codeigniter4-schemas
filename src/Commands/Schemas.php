@@ -24,7 +24,7 @@ class Schemas extends BaseCommand
 		// If no handlers provided then prompt for one
 		if (empty($handlers))
 		{
-			$handler[] = CLI::prompt('Name of the first import handler', 'Database', 'required');
+			$handlers[] = CLI::prompt('Name of the first import handler', 'Database', 'required');
 			while ($handler = CLI::prompt('Name of the next import handler'))
 			{
 				$handlers[] = $handler;

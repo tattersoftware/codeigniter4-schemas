@@ -7,8 +7,13 @@ class Mergeable implements \Countable
 	 *
 	 * @var $this
 	 */
-	public function merge(Mergeable $object): Mergeable
+	public function merge(?Mergeable $object): Mergeable
 	{
+		if (is_null($object))
+		{
+			return $this;
+		}
+		
 		foreach ($object as $key => $item)
 		{
 			if (! isset($this->$key))
