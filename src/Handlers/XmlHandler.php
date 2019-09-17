@@ -31,9 +31,8 @@ class XmlHandler extends FileHandler implements SchemaHandlerInterface
 	{
 		$contents = $this->getContents();
 		if (is_null($contents))
-			return;
-		
-		
+			return null;
+	
 	}
 	
 	// Write out the schema into an XML file

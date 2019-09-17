@@ -39,7 +39,7 @@ class FileHandler extends BaseHandler
 	}
 	
 	// Get the path
-	public function setPath()
+	public function getPath()
 	{
 		return $this->path;
 	}
@@ -47,12 +47,12 @@ class FileHandler extends BaseHandler
 	// Validate the current file and get its contents
 	public function getContents(): ?string
 	{
-		if (! is_file($this->path)
+		if (! is_file($this->path))
 		{
 			if ($this->config->silent)
 			{
 				$this->errors[] = lang('Files.fileNotFound', [$this->path]);
-				return;
+				return null;
 			}
 			else
 			{
@@ -66,13 +66,13 @@ class FileHandler extends BaseHandler
 	// Validate the target file and write to it
 	public function putContents(string $data): bool
 	{
-		if (! is_file($this->path)
+		if (! is_file($this->path))
 		{
 // WIP - should try to create the file
 			if ($this->config->silent)
 			{
 				$this->errors[] = lang('Files.fileNotFound', [$this->path]);
-				return;
+				return null;
 			}
 			else
 			{
