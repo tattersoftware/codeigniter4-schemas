@@ -13,7 +13,7 @@ Database schema management, for CodeIgniter 4
 * Get helpful advice on optimizations to your database structure with schema analysis<sup>1</sup>
 * Backup, restore, or deploy an entire database structure between servers or environments<sup>1</sup>
 * Generate CodeIgniter 4 migration files from an existing database<sup>1</sup>
-* Transfer projects to CodeIgniter 4 by reading schema fiels from other supported formats<sup>1</sup>
+* Transfer projects to CodeIgniter 4 by reading schema files from other supported formats<sup>1</sup>
 
 <sup>1</sup> Some features are still in development. See **Handlers > Development** for
 planned future expansion.
@@ -47,14 +47,14 @@ the resulting schema to the cache:
 $schemas = service('schemas');
 $this->schemas->import('database')->export('cache');
 
-// Load the schema from cache add Model data and grab a copy
+// Load the schema from cache, add Model data, and get the updated schema
 $schema = $this->schemas->import('cache', 'model')->get();
 ```
 
 If you need to deviate from the default configuration you can inject the handlers yourself:
 ```
 $db = db_connect('alternate_database');
-$databaseHandler = new (\Tatter\Schemas\Handlers\DatabaseHandler(null, $db);
+$databaseHandler = new \Tatter\Schemas\Handlers\DatabaseHandler(null, $db);
 $schema = $this->schemas->import($databaseHandler)->get();
 ```
 
