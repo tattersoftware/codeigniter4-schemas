@@ -31,7 +31,7 @@ class Schemas extends BaseCommand
 			}
 		}
 		$export = $params['-export'] ?? CLI::getOption('export') ?? 'output';		
-		
+
 		// Try the import
 		try
 		{

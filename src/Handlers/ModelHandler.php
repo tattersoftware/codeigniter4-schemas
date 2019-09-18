@@ -71,46 +71,32 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 
 		foreach ($this->getModels() as $class)
 		{
-			// Instantiate the model
-			$instance = new $class();
-
-			// Harvest model attributes from the instance
-			$model = new \stdClass();
-
-			// Visible model attributes
-			foreach (['primaryKey', 'table', 'returnType', 'DBGroup'] as $attribute)
-			{
-				$model->$attribute = $instance->$attribute;
-			}
-			
-			// Protected attributes
-			foreach (['allowedFields', 'useSoftDeletes', 'useTimestamps',
-				'createdField', 'updatedField', 'deletedField', 'dateFormat'] as $attribute)
-			{
-				$model->$attribute = $this->getPrivateProperty($instance, $attribute);
-			}
-			unset($instance);
+			// Create a Reflection class so we don't need to instantiate the model
+			// (some model constructors can be troublesome)
+			$instance = new \ReflectionClass($class);
+			$properties = $instance->getDefaultProperties();
+    		unset($instance);
 
 			// Start a new table
-			$table             = new Table($model->table);
+			$table             = new Table($properties['table']);
 			$table->model      = $class;
-			$table->returnType = $model->returnType;
+			$table->returnType = $properties['returnType'];
 			
 			// Create a field for the primary key
-			$field = new Field($model->primaryKey);
+			$field = new Field($properties['primaryKey']);
 			$field->primary_key = true;
 			$table->fields->{$field->name} = $field;
 			
 			// Create a field for each allowed field
-			foreach ($model->allowedFields as $fieldName)
+			foreach ($properties['allowedFields'] as $fieldName)
 			{
 				$field = new Field($fieldName);
 				$table->fields->$fieldName = $field;
 			}
 			
 			// Figure out which timestamp fields (if any) this model uses and add them
-			$timestamps = $model->useTimestamps ? ['createdField', 'updatedField'] : [];
-			if ($model->useSoftDeletes)
+			$timestamps = $properties['useTimestamps'] ? ['createdField', 'updatedField'] : [];
+			if ($properties['useSoftDeletes'])
 			{
 				$timestamps[] = 'deletedField';
 			}
@@ -118,9 +104,9 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			// Get field names from each timestamp attribute
 			foreach ($timestamps as $attribute)
 			{
-				$fieldName = $model->$attribute;
+				$fieldName = $properties[$attribute];
 				$field = new Field($fieldName);
-				$field->type = $model->dateFormat;
+				$field->type = $properties['dateFormat'];
 
 				$table->fields->$fieldName = $field;
 			}
