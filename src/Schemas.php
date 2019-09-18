@@ -69,7 +69,7 @@ class Schemas
 	 * @return $this
 	 */
 	public function import(...$handlers)
-	{		
+	{
 		// Import from each handler in order
 		foreach ($handlers as $handler)
 		{
@@ -100,7 +100,7 @@ class Schemas
 	 * @return $this
 	 */
 	public function export($handler)
-	{
+	{		
 		// Check for a handler name
 		if (is_string($handler))
 		{
@@ -109,6 +109,7 @@ class Schemas
 
 		$handler->save($this->schema);
 		$this->errors = array_merge($this->errors, $handler->getErrors());
+		
 		return $this;
 	}
 	

@@ -20,14 +20,26 @@ class Schemas extends BaseCommand
 	public function run(array $handlers = [])
     {
 		$schemas = service('schemas');
+		$config  = config('Schemas');
 		
-		// If no handlers provided then prompt for one
+		// If no handlers were provided then prompt for one
 		if (empty($handlers))
 		{
-			$handlers[] = CLI::prompt('Name of the first import handler', 'Database', 'required');
-			while ($handler = CLI::prompt('Name of the next import handler'))
+			$handler = CLI::prompt('Name of the first import handler (skip for defaults)');
+			
+			// If no handler was provided load the defaults from the config
+			if (empty($handler))
 			{
-				$handlers[] = $handler;
+				$handlers = $config->defaultHandlers;
+			}
+			// Keep asking for handlers until blank
+			else
+			{
+				$handlers = [$handler];
+				while ($handler = CLI::prompt('Name of the next import handler'))
+				{
+					$handlers[] = $handler;
+				}
 			}
 		}
 		$export = $params['-export'] ?? CLI::getOption('export') ?? 'output';		
