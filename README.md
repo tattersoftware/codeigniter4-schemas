@@ -6,6 +6,18 @@ Database schema management, for CodeIgniter 4
 1. Install with Composer: `> composer require tatter/schemas`
 2. Generate a new schema: `> php spark schemas`
 
+## Features
+
+* View your entire database mapped out in a cascading structure
+* Read or detect table relationships for easy object-relation mapping (see e.g. [Tatter\Relations](https://github.com/tattersoftware/codeigniter4-relations))
+* Get helpful advice on optimizations to your database structure with schema analysis<sup>1</sup>
+* Backup, restore, or deploy an entire database structure between servers or environments<sup>1</sup>
+* Generate CodeIgniter 4 migration files from an existing database<sup>1</sup>
+* Transfer projects to CodeIgniter 4 by reading schema fiels from other supported formats<sup>1</sup>
+
+<sup>1</sup> Some features are still in development. See **Handlers > Development** for
+planned future expansion.
+
 ## Installation
 
 Install easily via Composer to take advantage of CodeIgniter 4's autoloading capabilities
@@ -46,19 +58,31 @@ $databaseHandler = new (\Tatter\Schemas\Handlers\DatabaseHandler(null, $db);
 $schema = $this->schemas->import($databaseHandler)->get();
 ```
 
+## Command
+
+**Schemas** comes with a `spark` command for convenient schema generation and display. Use
+`php spark schemas [import_handler ...]` to test and troubleshoot, or add it to your cron
+for periodic schema caching:
+```
+php spark database model -export cache
+```
+
 ## Handlers
 
-Right now only a few basic handlers are available:
+Current supported handlers:
 * Database (import only)
-* Model (imports only)
+* Model (import only)
 * Cache
 
-The eventual goal is to support mapping and deploying schemas from any possible source,
-so **Schemas** functions as an alternative method of database management.
+### Development
 
-**COMING SOON**
+The eventual goal is to support mapping from and deploying to any source. Planned handler
+implementations include:
+
 * `DatabaseHandler->export()`: Recreate a live database from its schema
 * `MigrationsHandler`: Create a schema from migration files, or vice versa
 * `FileHandler`: A wrapper for importing and exporting from popular schema file formats
 * `XmlHandler`: The first file handler, supporting Doctrine-style XML files
+* More to come...
 
+Want to help out? All code and issues are managed on GitHub at [Tatter\Schemas](https://github.com/tattersoftware/codeigniter4-schemas)

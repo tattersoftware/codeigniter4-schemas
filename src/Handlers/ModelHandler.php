@@ -75,7 +75,7 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			// (some model constructors can be troublesome)
 			$instance = new \ReflectionClass($class);
 			$properties = $instance->getDefaultProperties();
-    		unset($instance);
+			unset($instance);
 
 			// Start a new table
 			$table             = new Table($properties['table']);
