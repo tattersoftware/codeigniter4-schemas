@@ -134,8 +134,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				if (isset($foreignKey->column_name))
 				{
 					$pivot = [
-						$foreignKey->foreign_table_name,
+						$foreignKey->table_name,
 						$foreignKey->column_name,
+						$foreignKey->foreign_table_name,
 						$foreignKey->foreign_column_name,
 					];
 					$relation->pivots = [$pivot];
@@ -174,13 +175,15 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 
 					// Build the pivots
 					$pivot1 = [
-						$tableName,       // groups_users
+						$tableName1,      // groups
 						$foreignField1,   // id
+						$tableName,       // groups_users
 						$fieldName1,      // group_id
 					];
 					$pivot2 = [
-						$tableName2,      // users
+						$tableName,       // groups_users
 						$fieldName2,      // user_id
+						$tableName2,      // users
 						$foreignField2,   // id
 					];
 					
@@ -195,13 +198,15 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 
 					// Build the pivots
 					$pivot1 = [
-						$tableName,       // groups_users
+						$tableName2,      // users
 						$foreignField2,   // id
+						$tableName,       // groups_users
 						$fieldName2,      // user_id
 					];
 					$pivot2 = [
-						$tableName1,      // groups
+						$tableName,       // groups_users
 						$fieldName1,      // group_id
+						$tableName1,      // groups
 						$foreignField1,   // id
 					];
 					
@@ -236,8 +241,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					{
 						// Build the pivot
 						$pivot = [
-							$tableName2,     // users
+							$tableName1,     // records
 							$fieldName,      // user_id
+							$tableName2,     // users
 							$foreignField,   // id
 						];
 					
@@ -252,8 +258,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 
 						// Build the reverse pivot
 						$pivot = [
-							$tableName1,     // records
+							$tableName2,     // users
 							$foreignField,   // id
+							$tableName1,     // records
 							$fieldName,      // user_id
 						];
 					

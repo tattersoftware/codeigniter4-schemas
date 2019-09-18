@@ -57,7 +57,7 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		
 		$this->assertEquals('belongsTo', $table1->relations->{$table2->name}->type);
 		
-		$pivot = ['servicers', 'servicer_id', 'id'];
+		$pivot = ['lawyers', 'servicer_id', 'servicers', 'id'];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 	
@@ -68,7 +68,7 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		
 		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
 		
-		$pivot = ['lawyers', 'id', 'servicer_id'];
+		$pivot = ['servicers', 'id', 'lawyers', 'servicer_id'];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 	
@@ -80,12 +80,12 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->assertEquals('manyToMany', $table1->relations->{$table2->name}->type);
 		$this->assertEquals('manyToMany', $table2->relations->{$table1->name}->type);
 		
-		$pivot1 = ['machines_servicers', 'id', 'servicer_id'];
-		$pivot2 = ['machines', 'machine_id', 'id'];
+		$pivot1 = ['servicers', 'id', 'machines_servicers', 'servicer_id'];
+		$pivot2 = ['machines_servicers', 'machine_id', 'machines', 'id'];
 		$this->assertEquals([$pivot1, $pivot2], $table1->relations->{$table2->name}->pivots);
 		
-		$pivot1 = ['machines_servicers', 'id', 'machine_id'];
-		$pivot2 = ['servicers', 'servicer_id', 'id'];
+		$pivot1 = ['machines', 'id', 'machines_servicers', 'machine_id'];
+		$pivot2 = ['machines_servicers', 'servicer_id', 'servicers', 'id'];
 		$this->assertEquals([$pivot1, $pivot2], $table2->relations->{$table1->name}->pivots);
 	}
 }

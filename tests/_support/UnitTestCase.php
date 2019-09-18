@@ -45,8 +45,8 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		$relation->type   = 'manyToMany';
 		$relation->table  = 'workers';
 		$relation->pivots = [
-			['factories_workers', 'id', 'factory_id'],
-			['workers', 'worker_id', 'id'],
+			['factories', 'id', 'factories_workers', 'factory_id'],
+			['factories_workers', 'worker_id', 'workers', 'id'],
 		];
 		$table1->relations->workers = $relation;
 		
@@ -61,8 +61,8 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		$relation->type   = 'manyToMany';
 		$relation->table  = 'factories';
 		$relation->pivots = [
-			['factories_workers', 'id', 'worker_id'],
-			['factories', 'factory_id', 'id'],
+			['workers', 'id', 'factories_workers', 'worker_id'],
+			['factories_workers', 'factory_id', 'factories', 'id'],
 		];
 		$table2->relations->factories = $relation;
 		
