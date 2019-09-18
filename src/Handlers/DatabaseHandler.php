@@ -127,8 +127,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				
 				// Create a relation
 				$relation = new Relation();
-				$relation->type  = 'belongsTo';
-				$relation->table = $this->stripPrefix($foreignKey->foreign_table_name);
+				$relation->type      = 'belongsTo';
+				$relation->singleton = true;
+				$relation->table     = $this->stripPrefix($foreignKey->foreign_table_name);
 				
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
@@ -249,9 +250,10 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					
 						// Build the relation
 						$relation = new Relation();
-						$relation->type   = 'belongsTo';
-						$relation->table  = $tableName2;
-						$relation->pivots = [$pivot];
+						$relation->type      = 'belongsTo';
+						$relation->singleton = 'belongsTo';
+						$relation->table     = $tableName2;
+						$relation->pivots    = [$pivot];
 
 						// Add it to the first table
 						$schema->tables->$tableName1->relations->$tableName2 = $relation;

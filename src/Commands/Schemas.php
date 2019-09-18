@@ -46,7 +46,7 @@ class Schemas extends BaseCommand
 		if ($export == 'output')
 		{
 			$schema = $schemas->get();
-			d($schema);
+			+d($schema); // plus disables Kint's depth limit
 			return;
 		}
 		

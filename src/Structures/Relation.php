@@ -3,6 +3,13 @@
 class Relation extends Mergeable
 {
 	/**
+	 * The related table name.
+	 *
+	 * @var string
+	 */
+	public $table;
+	
+	/**
 	 * The type of relationship.
 	 *
 	 * @var string
@@ -10,11 +17,11 @@ class Relation extends Mergeable
 	public $type;
 	
 	/**
-	 * The related table name.
+	 * Whether the relation will be to a single object.
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	public $table;
+	public $singleton;
 	
 	/**
 	 * Tables and columns for pivot and "through" relationships.
