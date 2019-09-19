@@ -1,85 +1,56 @@
 <?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use Tatter\Schemas\Exceptions\SchemasException;
+use Tatter\Schemas\Structures\Schema;
 
 class FileHandler extends BaseHandler
 {
-	/**
-	 * The file path.
-	 *
-	 * @var string
-	 */
-	protected $path;
-	
 	// Initiate library
-	public function __construct(BaseConfig $config = null, $path = null)
-	{		
+	public function __construct(BaseConfig $config = null)
+	{
 		parent::__construct($config);
-		
-		// Guess at a default file location
-		if (is_null($file))
+	}
+	
+	// Scan the schemas directory and process any files found
+	public function get(): ?Schema
+	{
+		helper('filesystem');
+		$files = get_filenames($this->config->schemasDirectory, true);
+
+		if (empty($files))
 		{
-			$this->file = WRITEPATH . 'uploads/schema.xml';
+			$this->errors[] = lang('Schemas.emptySchemaDirectory', [$this->config->schemasDirectory]);
+			return null;
 		}
-		// Save injected file path
-		else
-		{
-			$this->path = $path;
-		}
 		
-	}
-	
-	// Change the path
-	public function setPath(string $path)
-	{
-		$this->path = $path;
-		return $this;
-	}
-	
-	// Get the path
-	public function getPath()
-	{
-		return $this->path;
-	}
-	
-	// Validate the current file and get its contents
-	public function getContents(): ?string
-	{
-		if (! is_file($this->path))
+		// Try each file
+		foreach ($files as $path)
 		{
-			if ($this->config->silent)
+			// Make sure there is a handler for this extension
+			$handler = $this->getHandlerForFile($path);
+			if (is_null($handler))
 			{
-				$this->errors[] = lang('Files.fileNotFound', [$this->path]);
-				return null;
+				$this->errors[] = lang('Schemas.unsupportedHandler', [pathinfo($path, PATHINFO_EXTENSION)]);
+				continue;
+			}
+			
+			if (empty($schema))
+			{
+				$schema = $handler->get();
 			}
 			else
 			{
-				throw FileNotFoundException::forFileNotFound($this->path);
+				$schema->merge($handler->get());
 			}
 		}
 		
-		return file_get_contents($this->path);
+		return $schema ?? null;
 	}
 	
-	// Validate the target file and write to it
-	public function putContents(string $data): bool
+	public function save(Schema $schema): bool
 	{
-		if (! is_file($this->path))
-		{
-// WIP - should try to create the file
-			if ($this->config->silent)
-			{
-				$this->errors[] = lang('Files.fileNotFound', [$this->path]);
-				return null;
-			}
-			else
-			{
-				throw FileNotFoundException::forFileNotFound($this->path);
-			}
-		}
-		
-		return (bool)file_put_contents($this->path, $data);
+		$this->methodNotImplemented(__CLASS__, 'save');
+		return false;
 	}
 }

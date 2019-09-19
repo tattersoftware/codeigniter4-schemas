@@ -29,6 +29,7 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		$config                        = new \Tatter\Schemas\Config\Schemas();
 		$config->silent                = false;
 		$config->ignoreMigrationsTable = true;
+		$config->schemasDirectory      = SUPPORTPATH . 'Schemas/Good';
 
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);

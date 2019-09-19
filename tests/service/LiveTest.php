@@ -2,6 +2,7 @@
 
 use Tatter\Schemas\Handlers\CacheHandler;
 use Tatter\Schemas\Handlers\DatabaseHandler;
+use Tatter\Schemas\Handlers\FileHandler;
 
 class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 {
@@ -20,5 +21,16 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->assertEquals($schemaFromCache, $schemaFromService);
 		
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
+	}
+	
+	public function testDatabaseMergeFile()
+	{
+		$databaseHandler = new DatabaseHandler($this->config, 'tests');
+		$fileHandler     = new FileHandler($this->config);
+			
+		$schema = $this->schemas->import([$databaseHandler, $fileHandler])->get();
+		
+		$this->assertObjectHasAttribute('products', $schema->tables);
+		$this->assertCount(2, $schema->tables->workers->relations);
 	}
 }

@@ -68,8 +68,14 @@ class Schemas
 	 *
 	 * @return $this
 	 */
-	public function import(...$handlers)
+	public function import($handlers)
 	{
+		// Wrap singletons
+		if (! is_array($handlers))
+		{
+			$handlers = [$handlers];
+		}
+		
 		// Import from each handler in order
 		foreach ($handlers as $handler)
 		{

@@ -16,4 +16,7 @@ class Schemas extends BaseConfig
 	
 	// Default time-to-live for a stored schema (e.g. Cache)
 	public $ttl = 6000;
+	
+	// Path to a folder to scan for schema files 
+	public $schemasDirectory = APPPATH . 'Schemas';
 }

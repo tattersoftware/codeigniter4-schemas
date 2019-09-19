@@ -1,7 +1,10 @@
 <?php namespace Tatter\Schemas\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Files\Exceptions\FileNotFoundException;
+use CodeIgniter\Files\File;
 use Tatter\Schemas\Exceptions\SchemasException;
+use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
@@ -115,5 +118,75 @@ class BaseHandler
 			throw SchemasException::forMethodNotImplemented($class, $method);
 
 		$this->errors[] = lang('Schemas.methodNotImplemented', [$class, $method]);
+	}
+	
+	// COMMON FUNCTIONS FOR FILE HANDLERS
+	
+	/**
+	 * Validate a file and get its contents.
+	 *
+	 * @param string $path    The path to the file
+	 *
+	 * @throws 
+	 */
+	protected function getContents($path): ?string
+	{
+		$file = new File($path, $this->config->silent); // if not silent will throw for missing files
+		
+		if (! $file->isFile())
+		{
+			$this->errors[] = lang('Files.fileNotFound', [$path]);
+			return null;
+		}
+		
+		return file_get_contents($file->getRealPath());
+	}
+	
+	/**
+	 * Validate or create a file and write to it.
+	 *
+	 * @param string $path    The path to the file
+	 *
+	 * @throws 
+	 */
+	protected function putContents($path, string $data): bool
+	{
+		$file = new File($path);
+		
+		if (! $file->isWritable())
+		{
+			if ($this->config->silent)
+			{
+				$this->errors[] = lang('Files.fileNotFound', [$path]);
+				return null;
+			}
+			else
+			{
+				throw FileNotFoundException::forFileNotFound($path);
+			}
+		}
+
+	    $file = $file->openFile('w');
+		return (bool)$file->fwrite($data);
+	}
+	
+	/**
+	 * Tries to match a file extension to its handler
+	 *
+	 * @return SchemaHandlerInterface
+	 */	
+	protected function getHandlerForFile(string $path): ?SchemaHandlerInterface
+	{
+		$extension = pathinfo($path, PATHINFO_EXTENSION);
+		
+		$class = '\Tatter\Schemas\Handlers\\' . ucfirst(strtolower($extension)) . 'Handler';
+
+		if (! class_exists($class))
+		{
+			return null;
+		}
+		
+		$handler = new $class($this->config, $path);
+		return $handler;
 	}
 }

@@ -45,7 +45,7 @@ class Mergeable implements \Countable
 	}
 	
 	/**
-	 * Specify count of public properties to satisfy Countable
+	 * Specify count of public properties to satisfy Countable.
 	 *
 	 * @int Number of public properties
 	 */
@@ -53,4 +53,29 @@ class Mergeable implements \Countable
 	{
 		return count(get_object_vars($this));
 	}
+	
+	/**
+	 * Magic getter to prevent exceptions on missing property checks.
+	 *
+	 * @mixed
+	 */
+	public function __get($name)
+	{
+		if (property_exists($this, $name))
+		{
+			return $this->$name;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Magic checker to match the getter.
+	 *
+	 * @bool
+	 */
+	public function __isset($name): bool
+	{
+		return property_exists($this, $name);
+	}	
 }

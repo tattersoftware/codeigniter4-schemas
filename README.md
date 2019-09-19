@@ -48,7 +48,7 @@ $schemas = service('schemas');
 $this->schemas->import('database')->export('cache');
 
 // Load the schema from cache, add Model data, and get the updated schema
-$schema = $this->schemas->import('cache', 'model')->get();
+$schema = $this->schemas->import(['cache', 'model'])->get();
 ```
 
 If you need to deviate from the default configuration you can inject the handlers yourself:
@@ -73,6 +73,7 @@ Current supported handlers:
 * Database (import only)
 * Model (import only)
 * Cache
+* FileHandler (PHP import only)
 
 ### Development
 
@@ -82,7 +83,11 @@ implementations include:
 * `DatabaseHandler->export()`: Recreate a live database from its schema
 * `MigrationsHandler`: Create a schema from migration files, or vice versa
 * `FileHandler`: A wrapper for importing and exporting from popular schema file formats
-* `XmlHandler`: The first file handler, supporting Doctrine-style XML files
+* More to come...
+
+And the file-specific handlers:
+* `PhpHandler->export()`: Create a PHP file with a Schema object in `$schema`
+* `XmlHandler`: Support for Doctrine-style XML files
 * More to come...
 
 Want to help out? All code and issues are managed on GitHub at [Tatter\Schemas](https://github.com/tattersoftware/codeigniter4-schemas)

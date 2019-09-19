@@ -29,9 +29,4 @@ class Relation extends Mergeable
 	 * @var Array of [tableName, fieldName, foreignField]
 	 */
 	public $pivots = [];
-	
-	public function __construct()
-	{
-		$this->pivots = new Mergeable();
-	}
 }

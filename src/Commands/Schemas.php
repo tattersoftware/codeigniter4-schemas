@@ -47,7 +47,7 @@ class Schemas extends BaseCommand
 		// Try the import
 		try
 		{
-			$schemas->import(...$handlers);
+			$schemas->import($handlers);
 		}
 		catch (\Exception $e)
 		{
