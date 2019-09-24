@@ -64,7 +64,7 @@ $schema = $this->schemas->import($databaseHandler)->get();
 `php spark schemas [import_handler ...]` to test and troubleshoot, or add it to your cron
 for periodic schema caching:
 ```
-php spark database model -export cache
+php spark schemas database model -export cache
 ```
 
 ## Handlers
