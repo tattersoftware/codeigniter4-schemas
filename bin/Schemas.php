@@ -17,7 +17,7 @@ class Schemas extends \Tatter\Schemas\Config\Schemas
 	
 	// Default handlers used to generate a schema
 	// (Probably shouldn't change this unless you really know what you're doing)
-	public $defaultHandlers = ['database', 'model'];
+	public $defaultHandlers = ['database', 'model', 'file'];
 	
 	// Whether to ignore the migrations table
 	public $ignoreMigrationsTable = true;
