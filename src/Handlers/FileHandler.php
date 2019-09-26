@@ -2,6 +2,7 @@
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
+use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
 
 class FileHandler extends BaseHandler implements SchemaHandlerInterface
