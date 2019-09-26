@@ -4,7 +4,7 @@ use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Structures\Schema;
 
-class FileHandler extends BaseHandler
+class FileHandler extends BaseHandler implements SchemaHandlerInterface
 {
 	// Initiate library
 	public function __construct(BaseConfig $config = null)
