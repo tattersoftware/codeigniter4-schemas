@@ -56,27 +56,37 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		// Track confirmed pivot table names
 		$pivotTables = [];
 
-		// Proceed table by table
+		// Create all the tables
 		foreach ($this->db->listTables(true) as $tableName)
 		{
-			// Check for migrations table to ignore
-			if ($this->config->ignoreMigrationsTable && ($tableName == 'migrations' || $tableName == $this->prefix.'migrations'))
+			// Check for ignored tables
+			if (in_array($tableName, $this->config->ignoredTables))
 			{
 				continue;
 			}
+			
+			// Strip the prefix and check again`
 			$tableName = $this->stripPrefix($tableName);
-			
-			// Start a new table
-			$table = new Table($tableName);
-			
-			// Check for a relation table indicator
-			if (strpos($tableName, '_') !== false)
+			if (in_array($tableName, $this->config->ignoredTables))
 			{
-				$tableRelations[] = $tableName;
+				continue;
 			}
-			
+
+			// Create the table in the schema
+			$schema->tables->{$tableName} = new Table($tableName);
+		}
+		
+		// Analyze each table
+		foreach ($schema->tables as $table)
+		{
+			// Check for a relation table indicator
+			if (strpos($table->name, '_') !== false)
+			{
+				$tableRelations[] = $table->name;
+			}
+						
 			// Proceed field by field
-			foreach ($this->db->getFieldData($tableName) as $fieldData)
+			foreach ($this->db->getFieldData($table->name) as $fieldData)
 			{
 				// Start a new field
 				$field = new Field($fieldData);
@@ -84,29 +94,29 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				// Check for a relation field indicator
 				if (! $field->primary_key && preg_match($this->fieldRegex, $field->name))
 				{
-					if (! isset($fieldRelations[$tableName]))
+					if (! isset($fieldRelations[$table->name]))
 					{
-						$fieldRelations[$tableName] = [];
+						$fieldRelations[$table->name] = [];
 					}
-					$fieldRelations[$tableName][] = $field->name;
+					$fieldRelations[$table->name][] = $field->name;
 				}
 				
-				// Add the field to the table
-				$table->fields->{$field->name} = $field;
+				// Add the field to the schema
+				$schema->tables->{$table->name}->fields->{$field->name} = $field;
 			}
 			
 			// Proceed index by index
-			foreach ($this->db->getIndexData($tableName) as $indexData)
+			foreach ($this->db->getIndexData($table->name) as $indexData)
 			{
 				// Start a new index
 				$index = new Index($indexData);
 				
-				// Add the index to the table
-				$table->indexes->{$index->name} = $index;
+				// Add the index to the schema
+				$schema->tables->{$table->name}->indexes->{$index->name} = $index;
 			}
 			
 			// Proceed FK by FK
-			foreach ($this->db->getForeignKeyData($tableName) as $foreignKeyData)
+			foreach ($this->db->getForeignKeyData($table->name) as $foreignKeyData)
 			{
 				// Start a new foreign key
 				$foreignKey = new ForeignKey($foreignKeyData);
@@ -117,19 +127,19 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 				{
 					$foreignKey->table_name = $this->stripPrefix($foreignKey->table_name);
 				}
-				if (isset($foreignKey->table_name))
+				if (isset($foreignKey->foreign_table_name))
 				{
 					$foreignKey->foreign_table_name = $this->stripPrefix($foreignKey->foreign_table_name);
 				}
 				
-				// Add the FK to the table
-				$table->foreignKeys->{$foreignKey->constraint_name} = $foreignKey;
+				// Add the FK to the schema
+				$schema->tables->{$table->name}->foreignKeys->{$foreignKey->constraint_name} = $foreignKey;
 				
 				// Create a relation
-				$relation = new Relation();
+				$relation            = new Relation();
 				$relation->type      = 'belongsTo';
+				$relation->table     = $foreignKey->foreign_table_name;
 				$relation->singleton = true;
-				$relation->table     = $this->stripPrefix($foreignKey->foreign_table_name);
 				
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
@@ -143,12 +153,29 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 					$relation->pivots = [$pivot];
 				}
 				
+				// Add the relation to the schema
+				$schema->tables->{$table->name}->relations->{$relation->table} = $relation;
+				
+				// Create the inverse relation
+				$relation        = new Relation();
+				$relation->type  = 'hasMany';
+				$relation->table = $foreignKey->table_name;
+				
+				// Not all drivers supply the column names
+				if (isset($foreignKey->column_name))
+				{
+					$pivot = [
+						$foreignKey->foreign_table_name,
+						$foreignKey->foreign_column_name,
+						$foreignKey->table_name,
+						$foreignKey->column_name,
+					];
+					$relation->pivots = [$pivot];
+				}
+				
 				// Add the relation to the table
-				$table->relations->{$relation->table} = $relation;
+				$schema->tables->{$foreignKey->foreign_table_name}->relations->{$relation->table} = $relation;
 			}
-			
-			// Add the table to the schema
-			$schema->tables->{$table->name} = $table;
 		}
 
 		// Check tables flagged as possible pivots

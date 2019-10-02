@@ -6,7 +6,7 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 {
 	public function testHasAllTables()
 	{
-		$this->assertEquals(7, count($this->schema->tables));
+		$this->assertEquals(8, count($this->schema->tables));
 	}
 
 	public function testHasSpecificTable()
@@ -24,12 +24,12 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->assertTrue($this->schema->tables->machines_servicers->pivot);
 	}
 
-	public function testIgnoreMigrationsTable()
+	public function testIgnoredTables()
 	{
 		$this->assertObjectNotHasAttribute('migrations', $this->schema->tables);
 
 		$config = new \Tatter\Schemas\Config\Schemas();
-		$config->ignoreMigrationsTable = false;
+		$config->ignoredTables = [];
 
 		$handler = new DatabaseHandler($config, 'tests');
 		$schema = $this->schemas->import($handler)->get();
@@ -47,7 +47,7 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 			$relationsCount += count($table->relations);
 		}
 		
-		$this->assertEquals(8, $relationsCount);
+		$this->assertEquals(14, $relationsCount);
 	}
 	
 	public function testBelongsTo()
@@ -69,6 +69,17 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
 		
 		$pivot = ['servicers', 'id', 'lawyers', 'servicer_id'];
+		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
+	}
+	
+	public function testHasManyFromForeignKey()
+	{
+		$table1 = $this->schema->tables->workers;
+		$table2 = $this->schema->tables->lawsuits;
+		
+		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
+		
+		$pivot = ['workers', 'id', 'lawsuits', 'client'];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 	

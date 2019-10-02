@@ -138,6 +138,28 @@ class CreateTestTables extends Migration
 		$this->forge->createTable('lawyers');
 
 		$this->db->enableForeignKeyChecks();
+		
+		// Lawsuits
+		$fields = [
+			'client'      => ['type' => 'int', 'null' => true],
+			'factory_id'  => ['type' => 'int', 'null' => true],
+			'lawyer_id'   => ['type' => 'int', 'null' => true],
+			'created_at'  => ['type' => 'datetime', 'null' => true],
+			'updated_at'  => ['type' => 'datetime', 'null' => true],
+			'deleted_at'  => ['type' => 'datetime', 'null' => true],
+		];
+		
+		$this->forge->addField('id');
+		$this->forge->addField($fields);
+
+		$this->forge->addForeignKey('client', 'workers', 'id', false, 'CASCADE');
+		$this->forge->addKey('lawyer_id');
+		$this->forge->addKey(['deleted_at', 'id']);
+		$this->forge->addKey('created_at');
+		
+		$this->forge->createTable('lawsuits');
+
+		$this->db->enableForeignKeyChecks();
 	}
 
 	public function down()

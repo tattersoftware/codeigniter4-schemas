@@ -32,7 +32,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$schema = $this->schemas->import([$databaseHandler, $fileHandler])->get();
 		
 		$this->assertObjectHasAttribute('products', $schema->tables);
-		$this->assertCount(2, $schema->tables->workers->relations);
+		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 	
 	public function testMergeAllHandlers()
@@ -45,6 +45,6 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		
 		$this->assertObjectHasAttribute('products', $schema->tables);
 		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);
-		$this->assertCount(2, $schema->tables->workers->relations);
+		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 }

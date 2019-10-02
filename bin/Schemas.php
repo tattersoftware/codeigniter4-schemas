@@ -19,8 +19,8 @@ class Schemas extends \Tatter\Schemas\Config\Schemas
 	// (Probably shouldn't change this unless you really know what you're doing)
 	public $defaultHandlers = ['database', 'model', 'file'];
 	
-	// Whether to ignore the migrations table
-	public $ignoreMigrationsTable = true;
+	// Tables to ignore when creating the schema
+	public $ignoredTables = ['migrations'];
 	
 	// Default time-to-live for a stored schema (e.g. Cache)
 	public $ttl = 6000;
