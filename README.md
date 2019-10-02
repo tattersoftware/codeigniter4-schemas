@@ -67,6 +67,24 @@ for periodic schema caching:
 php spark schemas database model -export cache
 ```
 
+## Autodetection
+
+**Schemas** uses foreign keys, indexes, and naming convention to detect relationships
+automatically. Please make sure your database is setup using the appropriate keys and
+foreign keys to assist with the detection. Naming conventions follow the format of
+`{table}_id` for foreign keys and `{table1}_{table2}` for pivot tables. For more examples
+on relationship naming conventions consult the Rails Guide
+[Active Record Associations](https://guides.rubyonrails.org/association_basics.html#the-types-of-associations)
+(please excuse the Ruby reference).
+
+### Intervention
+
+Should autodetection fail or should you need to deviate from conventions there are a few
+tools you can use to overwrite or augment the generated Schema.
+
+* **Config/Schemas**: the Config file includes a variable for `$ignoredTables` that will let you skip tables entirely. By default this includes the framework's `migrations` table.
+* **app/Schemas/{file}.php**: The `FileHandler` will load any schemas detected in your **Schemas** directory - this gives you a chance to specify anything you want. See [tests/_support/Schemas/Good/Products.php](tests/_support/Schemas/Good/Products.php) for an example.
+
 ## Handlers
 
 Current supported handlers:
