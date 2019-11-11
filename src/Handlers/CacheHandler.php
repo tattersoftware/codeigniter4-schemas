@@ -30,9 +30,9 @@ class CacheHandler extends BaseHandler implements SchemaHandlerInterface
 	public function __construct(BaseConfig $config = null, $cache = null)
 	{		
 		parent::__construct($config);
-
-		$this->cacheKey = 'schema:' . ENVIRONMENT;
 		
+		$this->cacheKey = 'schema:' . ENVIRONMENT;
+
 		// Use injected cache handler, or get the default from its service
 		if (is_null($cache))
 		{
@@ -60,15 +60,28 @@ class CacheHandler extends BaseHandler implements SchemaHandlerInterface
 	}
 	
 	// Check the cache for a schema at $cacheKey
-	public function get(): ?Schema
+	// Optionally only fetch cache for specific $tables
+	public function get(array $tables = null): ?Schema
 	{
 		$schema = $this->cache->get($this->cacheKey);
+
 		return $schema;
 	}
 	
 	// Store the schema in a serialized format in the cache
 	public function save(Schema $schema): bool
 	{
-		return $this->cache->save($this->cacheKey, $schema, $this->config->ttl);
+		// Create a scaffold to indicate tables
+		$scaffold = new Mergable();
+		$scaffold->tables = new Mergable();
+		
+		// Save each individual table
+		foreach ($schema->tables as $table)
+		{
+			$scaffold->tables->{$table->name} = true;
+			$this->cache->save($this->cacheKey . ':' . $table->name, $table, $this->config->ttl);
+		}
+		
+		return $this->cache->save($this->cacheKey, $scaffold, $this->config->ttl);
 	}
 }
