@@ -1,4 +1,4 @@
-<?php namespace Tatter\Schemas\Publisher\Handlers;
+<?php namespace Tatter\Schemas\Archiver\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Config\BaseConfig;
@@ -8,7 +8,7 @@ use Tatter\Schemas\Publisher\PublisherInterface;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Mergeable;
 
-class CacheHandler extends BasePublisher implements PublisherInterface
+class CacheHandler extends BaseArchiver implements ArchiverInterface
 {
 	use CacheHandlerTrait;
 
@@ -26,13 +26,13 @@ class CacheHandler extends BasePublisher implements PublisherInterface
 	}
 
 	/**
-	 * Commit the scaffold and each individual table to cache
+	 * Store the scaffold and each individual table to cache
 	 *
 	 * @param Schema $schema
 	 *
 	 * @return bool  Success or failure
 	 */
-	public function publish(Schema $schema): bool
+	public function archive(Schema $schema): bool
 	{
 		// Grab the tables to store separately
 		$tables = $schema->tables;
