@@ -24,12 +24,14 @@ class CacheHandler extends BaseHandler implements SchemaHandlerInterface
 	 *
 	 * @var string
 	 */
-	protected $cacheKey = 'schema';
+	protected $cacheKey;
 	
 	// Initiate library
 	public function __construct(BaseConfig $config = null, $cache = null)
 	{		
 		parent::__construct($config);
+
+		$this->cacheKey = 'schema:' . ENVIRONMENT;
 		
 		// Use injected cache handler, or get the default from its service
 		if (is_null($cache))
