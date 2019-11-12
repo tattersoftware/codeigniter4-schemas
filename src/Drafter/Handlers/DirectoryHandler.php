@@ -15,13 +15,13 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 	protected $path;
 	
 	/**
-	 * Load the default directory path from the config
+	 * Save the directory path or load the default from the config
 	 */
-	public function __construct(BaseConfig $config = null)
+	public function __construct(BaseConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
 		
-		$this->path = $this->config->schemasDirectory;
+		$this->path = $path ?? $this->config->schemasDirectory;
 	}
 
 	/**

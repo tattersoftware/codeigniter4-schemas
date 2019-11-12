@@ -7,16 +7,47 @@ class Schemas extends BaseConfig
 	// Whether to continue instead of throwing exceptions
 	public $silent = true;
 	
-	// Default handlers used to generate a schema
+	//--------------------------------------------------------------------
+	// Drafting
+	//--------------------------------------------------------------------
+
+	// Default handlers used to create a schema (order sensitive)
 	// (Probably shouldn't change this unless you really know what you're doing)
-	public $defaultHandlers = ['database', 'model', 'file'];
+	public $draftHandlers = [
+		'Tatter\Schemas\Drafter\Handlers\DatabaseHandler',
+		'Tatter\Schemas\Drafter\Handlers\ModelHandler',
+		'Tatter\Schemas\Drafter\Handlers\DirectoryHandler',
+	];
 	
 	// Tables to ignore when creating the schema
 	public $ignoredTables = ['migrations'];
 	
-	// Default time-to-live for a stored schema (e.g. Cache)
-	public $ttl = 6000;
-	
-	// Path to a folder to scan for schema files 
+	// Path the directoryHandler should scan for schema files
 	public $schemasDirectory = APPPATH . 'Schemas';
+
+	//--------------------------------------------------------------------
+	// Archiving
+	//--------------------------------------------------------------------
+
+	// Default handlers to archive copies of the schema
+	public $archiveHandlers = [
+		'Tatter\Schemas\Archiver\Handlers\CacheHandler',
+	];
+	
+	// Default time-to-live for a stored schema (e.g. Cache) in seconds
+	public $ttl = 14400; // 4 hours
+
+	//--------------------------------------------------------------------
+	// Reading
+	//--------------------------------------------------------------------
+
+	// Default handler used to return and read a schema
+	public $readHandler = 'Tatter\Schemas\Reader\Handlers\CacheHandler';
+
+	//--------------------------------------------------------------------
+	// Publishing
+	//--------------------------------------------------------------------
+	
+	// Precaution to prevent accidental wiping of databases or files
+	public $safeMode = true;
 }

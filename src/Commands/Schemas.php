@@ -84,4 +84,26 @@ class Schemas extends BaseCommand
 		
 		CLI::write("New schema exported to {$export} from " . implode(', ', $handlers), 'green');
 	}
+
+	/**
+	 * Tries to match a class name or shortname to its handler
+	 *
+	 * @return SchemaHandlerInterface
+	 */	
+	protected function getHandlerFromClass(string $class): SchemaHandlerInterface
+	{		
+		// Check if its already namespaced
+		if (strpos($class, '\\') === false)
+		{
+			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
+		}
+
+		if (! class_exists($class))
+		{
+			throw SchemasException::forUnsupportedHandler($class);
+		}
+		
+		$handler = new $class($this->config);
+		return $handler;
+	}
 }
