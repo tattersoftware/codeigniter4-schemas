@@ -6,16 +6,17 @@ use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Reader\BaseReader;
 use Tatter\Schemas\Reader\ReaderInterface;
 use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Traits\CacheHandlerTrait;
 
 class CacheHandler extends BaseReader implements ReaderInterface
 {
 	use CacheHandlerTrait;
+	
+	protected $tables;
 
 	/**
-	 * Save the config and set up the cache
+	 * Save config and set up the cache
 	 *
 	 * @param BaseConfig      $config   The library config
 	 * @param CacheInterface  $cache    The cache handler to use, null to load a new default
@@ -26,43 +27,28 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		
 		$this->cacheInit($cache);
 		
-		// Fetch the scaffold and note each table
+		// Start $tables as the cached scaffold version
 		$scaffold = $this->cache->get($this->cacheKey);
-		
-		foreach ($scaffold->tables as $tableName => $bool)
-		{
-			$this->$tableName = $bool;
-		}
+
+		$this->tables = $scaffold->tables ?? new Mergeable();
 	}
 
 	/**
-	 * Intercept requests to load cached tables on-the-fly
+	 * Return the current tables, fetched or not
 	 *
-	 * @param string $tableName
-	 *
-	 * @return bool  Success or failure
+	 * @return array  String error messages
 	 */
-	public function __get(string $tableName): ?Table
+	public function getTables(): Mergeable
 	{
-		// If the property isn't there then the table is unknown
-		if (! property_exists($this, $tableName))
-		{
-			return null;
-		}
-		
-		// If boolean true (cached but not loaded) then load from cache
-		if ($this->$tableName === true)
-		{
-			$this->fetch($tableName);
-		}
-
-		return $this->$tableName;
+		return $this->tables;
 	}
 
 	/**
-	 * Fetch specified tables from the cache
+	 * Fetch specified table(s) from the cache
 	 *
 	 * @param array|string $tables
+	 *
+	 * @return $this
 	 */
 	public function fetch($tables)
 	{
@@ -73,7 +59,85 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		
 		foreach ($tables as $tableName)
 		{
-			$this->$tableName = $this->cache->get($this->cacheKey . ':' . $tableName);
+			if ($this->tables->$tableName === true)
+			{
+				$this->tables->$tableName = $this->cache->get($this->cacheKey . ':' . $tableName);
+			}
 		}
+		
+		return $this;
+	}
+
+	/**
+	 * Fetch every table noted in the scaffold
+	 *
+	 * @return $this
+	 */
+	public function fetchAll()
+	{
+		foreach ($this->tables as $tableName => $value)
+		{
+			if ($value === true)
+			{
+				$this->fetch($tableName);
+			}
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Intercept requests to load cached tables on-the-fly
+	 *
+	 * @param string $name Property (table) name to check for
+	 *
+	 * @return bool  Success or failure
+	 */
+	public function __get(string $name): ?Table
+	{
+		// If the property isn't there then the table is unknown
+		if (! property_exists($this->tables, $name))
+		{
+			return null;
+		}
+
+		// If boolean true (cached but not loaded) then load it from cache
+		if ($this->tables->$name === true)
+		{
+			$this->fetch($name);
+		}
+
+		return $this->tables->$name;
+	}
+	
+	/**
+	 * Magic checker to match the getter.
+	 *
+	 * @param string $name Property to check for
+	 *
+	 * @return bool
+	 */
+	public function __isset($name): bool
+	{
+		return property_exists($this->tables, $name);
+	}
+
+	/**
+	 * Specify count of public properties to satisfy Countable.
+	 *
+	 * @return int  Number of public properties
+	 */
+	public function count(): int
+	{
+		return count($this->tables);
+	}
+
+	/**
+	 * Fetch all the tables and return them for iteration.
+	 *
+	 * @return ArrayIterator
+	 */
+	public function getIterator() {
+		return $this->fetchAll()->tables;
 	}
 }

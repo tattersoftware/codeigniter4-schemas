@@ -1,7 +1,6 @@
 <?php namespace CIModuleTests\Support;
 
 use CodeIgniter\Config\Services;
-use Tatter\Schemas\Handlers\DatabaseHandler;
 
 class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 {
@@ -57,15 +56,13 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	{
 		parent::setUp();
 		
-		$config                        = new \Tatter\Schemas\Config\Schemas();
-		$config->silent                = false;
-		$config->ignoredTables         = ['migrations'];
-		$config->schemasDirectory      = SUPPORTPATH . 'Schemas/Good';
+		$config                   = new \Tatter\Schemas\Config\Schemas();
+		$config->silent           = false;
+		$config->ignoredTables    = ['migrations'];
+		$config->schemasDirectory = SUPPORTPATH . 'Schemas/Good';
 		
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
-		$this->handler = new DatabaseHandler($config, 'tests');
-		$this->schema  = $this->schemas->import($this->handler)->get();
 	}
 	
 	public function tearDown(): void

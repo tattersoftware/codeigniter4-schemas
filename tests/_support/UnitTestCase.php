@@ -1,8 +1,5 @@
 <?php namespace CIModuleTests\Support;
 
-use CodeIgniter\Config\Services;
-use Tatter\Schemas\Handlers\DatabaseHandler;
-use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
@@ -26,10 +23,10 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 	{
 		parent::setUp();
 		
-		$config                        = new \Tatter\Schemas\Config\Schemas();
-		$config->silent                = false;
-		$config->ignoredTables         = ['migrations'];
-		$config->schemasDirectory      = SUPPORTPATH . 'Schemas/Good';
+		$config                   = new \Tatter\Schemas\Config\Schemas();
+		$config->silent           = false;
+		$config->ignoredTables    = ['migrations'];
+		$config->schemasDirectory = SUPPORTPATH . 'Schemas/Good';
 
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
@@ -37,12 +34,12 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		// Create a mock schema so we don't have to call any handlers
 
 		// Factories
-		$table1                     = new Table('factories');
-		$table1->fields->id         = new Field('id');
-		$table1->fields->name       = new Field('name');
-		$table1->fields->uid        = new Field('uid');
+		$table1               = new Table('factories');
+		$table1->fields->id   = new Field('id');
+		$table1->fields->name = new Field('name');
+		$table1->fields->uid  = new Field('uid');
 		
-		$relation         = new Relation;
+		$relation         = new Relation();
 		$relation->type   = 'manyToMany';
 		$relation->table  = 'workers';
 		$relation->pivots = [
@@ -58,7 +55,7 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		$table2->fields->lastname  = new Field('lastname');
 		$table2->fields->role      = new Field('role');
 		
-		$relation         = new Relation;
+		$relation         = new Relation();
 		$relation->type   = 'manyToMany';
 		$relation->table  = 'factories';
 		$relation->pivots = [

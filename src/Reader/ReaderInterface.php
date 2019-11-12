@@ -2,7 +2,7 @@
 
 use Tatter\Schemas\Structures\Schema;
 
-interface ReaderInterface
+interface ReaderInterface extends \Countable, \IteratorAggregate
 {
 	/**
 	 * Fetch specified tables into the scaffold
@@ -10,4 +10,9 @@ interface ReaderInterface
 	 * @param array|string $tables
 	 */
 	public function fetch($tables);
+
+	/**
+	 * Fetch all available tables into the scaffold
+	 */
+	public function fetchAll();
 }

@@ -64,11 +64,11 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 			
 			if (empty($schema))
 			{
-				$schema = $handler->get();
+				$schema = $handler->draft();
 			}
 			else
 			{
-				$schema->merge($handler->get());
+				$schema->merge($handler->draft());
 			}
 		}
 		
@@ -80,7 +80,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 	 *
 	 * @return SchemaHandlerInterface
 	 */	
-	protected function getHandlerForFile(string $path): ?SchemaHandlerInterface
+	protected function getHandlerForFile(string $path): ?DrafterInterface
 	{
 		$extension = pathinfo($path, PATHINFO_EXTENSION);
 		$class = '\Tatter\Schemas\Drafter\Handlers\\' . ucfirst(strtolower($extension)) . 'Handler';

@@ -22,4 +22,14 @@ class BaseReader extends BaseHandler
 	{
 
 	}
+
+	/**
+	 * Dummy implementation for classes that only bulk load
+	 *
+	 * @param array|string $tables
+	 */
+	public function fetchAll()
+	{
+
+	}
 }
