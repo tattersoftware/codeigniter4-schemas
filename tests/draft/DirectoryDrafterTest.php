@@ -7,7 +7,7 @@ class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
 	public function testEmptyDirectoryReturnsNull()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = SUPPORTPATH . 'Schemas/NoFiles';
+		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/NoFiles';
 		$handler = new DirectoryHandler($config);
 		
 		$this->assertNull($handler->draft());
@@ -16,7 +16,7 @@ class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
 	public function testNoHandlersReturnsNull()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = SUPPORTPATH . 'Schemas/NoHandler';
+		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/NoHandler';
 		$handler = new DirectoryHandler($config);
 		
 		$this->assertNull($handler->draft());
@@ -25,7 +25,7 @@ class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
 	public function testSuccessReturnsSchemaNoErrors()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = SUPPORTPATH . 'Schemas/Good';
+		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
 		$handler = new DirectoryHandler($config);
 		
 		$schema = $handler->draft();

@@ -23,7 +23,7 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	 *
 	 * @var string
 	 */
-	protected $basePath = SUPPORTPATH . 'Database/';
+	protected $basePath = MODULESUPPORTPATH . 'Database/';
 
 	/**
 	 * The namespace to help us find the migration classes.
@@ -59,7 +59,7 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		$config                   = new \Tatter\Schemas\Config\Schemas();
 		$config->silent           = false;
 		$config->ignoredTables    = ['migrations'];
-		$config->schemasDirectory = SUPPORTPATH . 'Schemas/Good';
+		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
 		
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
