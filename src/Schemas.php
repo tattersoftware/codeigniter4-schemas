@@ -2,13 +2,7 @@
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
 
 class Schemas
 {

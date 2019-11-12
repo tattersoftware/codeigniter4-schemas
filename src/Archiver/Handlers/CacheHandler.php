@@ -3,10 +3,11 @@
 use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Publisher\BasePublisher;
-use Tatter\Schemas\Publisher\PublisherInterface;
+use Tatter\Schemas\Archiver\BaseArchiver;
+use Tatter\Schemas\Archiver\ArchiverInterface;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Mergeable;
+use Tatter\Schemas\Traits\CacheHandlerTrait;
 
 class CacheHandler extends BaseArchiver implements ArchiverInterface
 {
