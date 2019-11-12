@@ -2,6 +2,7 @@
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Tatter\Schemas\Exceptions\SchemasException;
 
 class Schemas extends BaseCommand
 {
@@ -9,63 +10,62 @@ class Schemas extends BaseCommand
     protected $name        = 'schemas';
     protected $description = 'Manage database schemas.';
     
-	protected $usage     = "schemas [import_handler ...] [-export handler]";
-	protected $arguments = [
-		'import_handler' => 'The handler(s) to use for importing the schema',
-	];
+	protected $usage   = "schemas [-draft handler1,handler2,...] [-archive handler1,... | -print]";
 	protected $options = [
-		'-export' => 'Optional handler for exporting the schema; defaults to standard output',
+		'-draft'   => 'Handler(s) for drafting the schema ("database", "model", etc)',
+		'-archive' => 'Handler(s) for archiving a copy of the schema',
+		'-print'   => 'Print out the drafted schema',
 	];
 
-	public function run(array $handlers = [])
+	public function run(array $params)
     {
 		$schemas = service('schemas');
 		$config  = config('Schemas');
 		
-		// If no handlers were provided then prompt for one
-		if (empty($handlers))
+		// Determine draft handlers
+		if ($drafters = $params['-draft'] ?? CLI::getOption('draft'))
 		{
-			$handler = CLI::prompt('Name of the first import handler (skip for defaults)');
+			$drafters = explode(',', $drafters);
 			
-			// If no handler was provided load the defaults from the config
-			if (empty($handler))
-			{
-				$handlers = $config->defaultHandlers;
-			}
-			// Keep asking for handlers until blank
-			else
-			{
-				$handlers = [$handler];
-				while ($handler = CLI::prompt('Name of the next import handler'))
-				{
-					$handlers[] = $handler;
-				}
-			}
+			// Map each name to its handler
+			$drafters = array_map([$this, 'getDraftHandler'], $drafters);
 		}
-		$export = $params['-export'] ?? CLI::getOption('export') ?? 'output';		
+		else
+		{
+			$drafters = $config->draftHandlers;
+		}
 
-		// Try the import
+		// Determine archive handlers
+		if ($params['-print'] ?? CLI::getOption('print'))
+		{
+			$archivers = '\Tatter\Schemas\Archiver\Handlers\CliHandler';
+		}
+		elseif ($archivers = $params['-archive'] ?? CLI::getOption('archive'))
+		{
+			$archivers = explode(',', $archivers);
+			
+			// Map each name to its handler
+			$archivers = array_map([$this, 'getArchiveHandler'], $archivers);
+		}
+		else
+		{
+			$archivers = $config->archiveHandlers;
+		}
+		
+		// Try the draft
 		try
 		{
-			$schemas->import($handlers);
+			$schemas->draft($drafters);
 		}
 		catch (\Exception $e)
 		{
 			$this->showError($e);
 		}
-		
-		// Intercept output requests
-		if ($export == 'output')
-		{
-			$schema = $schemas->get();
-			+d($schema); // plus disables Kint's depth limit
-			return;
-		}
-		
-		// Try the export
+
+		// Try the archive
 		try
 		{
-			$result = $schemas->export($export);
+			$result = $schemas->archive($archivers);
 		}
 		catch (\Exception $e)
 		{
@@ -82,28 +82,56 @@ class Schemas extends BaseCommand
 			return;
 		}
 		
-		CLI::write("New schema exported to {$export} from " . implode(', ', $handlers), 'green');
+		CLI::write('success', 'green');
 	}
 
 	/**
-	 * Tries to match a class name or shortname to its handler
+	 * Try to match a shorthand name to its full handler class
 	 *
-	 * @return SchemaHandlerInterface
-	 */	
-	protected function getHandlerFromClass(string $class): SchemaHandlerInterface
+	 * @param string $type  The type of handler (drafter, archiver, etc)
+	 * @param string $name  The name of the handler
+	 *
+	 * @return string 
+	 */
+	protected function getHandler(string $type, string $name): string
 	{		
-		// Check if its already namespaced
-		if (strpos($class, '\\') === false)
+		// Check if it is already namespaced
+		if (strpos($name, '\\') !== false)
 		{
-			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
-		}
-
-		if (! class_exists($class))
-		{
-			throw SchemasException::forUnsupportedHandler($class);
+			return $name;
 		}
 		
-		$handler = new $class($this->config);
-		return $handler;
+		$class = '\Tatter\Schemas\\' . $type . '\Handlers\\' . ucfirst($name) . 'Handler';
+		
+		if (! class_exists($class))
+		{
+			throw SchemasException::forUnsupportedHandler($name);
+		}
+
+		return $class;
+	}
+
+	/**
+	 * Helper for getHandler
+	 *
+	 * @param string $name  The name of the handler
+	 *
+	 * @return string 
+	 */
+	protected function getDraftHandler(string $name): string
+	{		
+		return $this->getHandler('Drafter', $name);
+	}
+
+	/**
+	 * Helper for getHandler
+	 *
+	 * @param string $name  The name of the handler
+	 *
+	 * @return string 
+	 */
+	protected function getArchiveHandler(string $name): string
+	{		
+		return $this->getHandler('Archiver', $name);
 	}
 }

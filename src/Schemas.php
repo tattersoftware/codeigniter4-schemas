@@ -86,7 +86,7 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			$this->schema->merge($drafter->draft());
+			$this->schema->merge($handler->draft());
 
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
@@ -99,7 +99,7 @@ class Schemas
 	 *
 	 * @param array|string|null  $handlers
 	 *
-	 * @return $this
+	 * @return bool Success or failure
 	 */
 	public function archive($handlers = null)
 	{
@@ -115,6 +115,7 @@ class Schemas
 		}
 		
 		// Archive a copy to each handler's destination
+		$result = true;
 		foreach ($handlers as $handler)
 		{
 			if (is_string($handler))
@@ -122,12 +123,12 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			$handler->archive($this->schema);
+			$result = $result && $handler->archive($this->schema);
 			
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
-		return $this;
+		return $result;
 	}
 	
 	/**
