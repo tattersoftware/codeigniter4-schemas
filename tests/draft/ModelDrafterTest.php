@@ -1,8 +1,8 @@
 <?php
 
-use Tatter\Schemas\Handlers\ModelHandler;
+use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 
-class ModelHandlerTest extends CIModuleTests\Support\UnitTestCase
+class ModelDrafterTest extends CIModuleTests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{
@@ -10,7 +10,7 @@ class ModelHandlerTest extends CIModuleTests\Support\UnitTestCase
 		$this->handler = new ModelHandler($this->config);
 	}
 
-	public function testGetSetGroup()
+	public function testSetGroup()
 	{
 		$this->assertEquals('tests', $this->handler->getGroup());
 		$this->handler->setGroup('foobar');
@@ -36,15 +36,9 @@ class ModelHandlerTest extends CIModuleTests\Support\UnitTestCase
 		$this->assertCount(0, $models);
 	}
 
-	public function testSaveNotImplemented()
-	{
-		$this->expectException('Tatter\Schemas\Exceptions\SchemasException', 'Tatter\Schemas\Handlers\ModelHandler does not have a save method');
-		$this->handler->save($this->schema);
-	}
-
-	public function testGet()
+	public function testDraftsSchemaFromModels()
 	{		
-		$schema = $this->handler->get();
+		$schema = $this->handler->draft();
 
 		$this->assertEquals('servicers', $schema->tables->servicers->name);
 		$this->assertEquals('CIModuleTests\Support\Models\WorkerModel', $schema->tables->workers->model);

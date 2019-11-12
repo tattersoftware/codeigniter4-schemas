@@ -2,7 +2,7 @@
 
 use Tatter\Schemas\Structures\Mergeable;
 
-class StructuresTest extends \CodeIgniter\Test\CIUnitTestCase
+class MergeableTest extends \CodeIgniter\Test\CIUnitTestCase
 {
 	public function testMergeHasItem()
 	{
@@ -46,5 +46,30 @@ class StructuresTest extends \CodeIgniter\Test\CIUnitTestCase
 		$object3->merge($object2);
 				
 		$this->assertEquals($object3->nest->foo, 'yes');
+	}
+
+	public function testMergeableIsCountable()
+	{
+		$object = new Mergeable();
+		$object->foo = 'yes';
+		$object->bar = 'no thanks';
+		
+		$this->assertCount(2, $object);
+	}
+
+	public function testMergeableIsIterable()
+	{
+		$object = new Mergeable();
+		$object->foo = 'yes';
+		$object->bar = 'no thanks';
+
+		$counted = 0;
+		foreach ($object as $key => $value)
+		{
+			$this->assertEquals($value, $object->$key);
+			$counted++;
+		}
+		
+		$this->assertEquals(2, $counted);
 	}
 }

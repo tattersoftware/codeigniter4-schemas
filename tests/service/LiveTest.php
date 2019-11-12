@@ -1,24 +1,23 @@
 <?php
 
-use Tatter\Schemas\Handlers\CacheHandler;
-use Tatter\Schemas\Handlers\DatabaseHandler;
-use Tatter\Schemas\Handlers\FileHandler;
-use Tatter\Schemas\Handlers\ModelHandler;
+use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
+use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
+use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 
 class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 {
-	// Probably the most likely scenario for use
+	// Probably a quite common scenario
 	public function testDatabaseToCache()
 	{
 		$cache           = \Config\Services::cache();
-		$cacheHandler    = new CacheHandler($this->config, $cache);
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		
-		$this->schemas->import($databaseHandler)->export($cacheHandler);
+		$cacheHandler    = new \Tatter\Schemas\Archiver\Handlers\CacheHandler($this->config, $cache);
+				
+		$this->schemas->draft($databaseHandler)->archive($cacheHandler);
 		$this->assertEmpty($this->schemas->getErrors());
 		
 		$schemaFromService = $this->schemas->get();
-		$schemaFromCache   = $cache->get('schema');
+		$schemaFromCache   = $cache->get('schema:testing');
 		$this->assertEquals($schemaFromCache, $schemaFromService);
 		
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
@@ -27,21 +26,21 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 	public function testDatabaseMergeFile()
 	{
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$fileHandler     = new FileHandler($this->config);
+		$fileHandler     = new DirectoryHandler($this->config);
 			
-		$schema = $this->schemas->import([$databaseHandler, $fileHandler])->get();
+		$schema = $this->schemas->draft([$databaseHandler, $fileHandler])->get();
 		
 		$this->assertObjectHasAttribute('products', $schema->tables);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 	
-	public function testMergeAllHandlers()
+	public function testMergeAllDrafters()
 	{
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		$modelHandler    = new ModelHandler($this->config);
-		$fileHandler     = new FileHandler($this->config);
+		$fileHandler     = new DirectoryHandler($this->config);
 			
-		$schema = $this->schemas->import([$databaseHandler, $modelHandler, $fileHandler])->get();
+		$schema = $this->schemas->draft([$databaseHandler, $modelHandler, $fileHandler])->get();
 		
 		$this->assertObjectHasAttribute('products', $schema->tables);
 		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);

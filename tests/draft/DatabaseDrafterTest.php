@@ -1,9 +1,17 @@
 <?php
 
-use Tatter\Schemas\Handlers\DatabaseHandler;
+use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 
-class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
+class DatabaseDrafterTest extends CIModuleTests\Support\DatabaseTestCase
 {
+	public function setUp(): void
+	{
+		parent::setUp();
+
+		$this->handler = new DatabaseHandler($this->config, 'tests');
+		$this->schema  = $this->handler->draft();
+	}
+	
 	public function testHasAllTables()
 	{
 		$this->assertEquals(8, count($this->schema->tables));
@@ -32,7 +40,7 @@ class DatabaseImportTest extends CIModuleTests\Support\DatabaseTestCase
 		$config->ignoredTables = [];
 
 		$handler = new DatabaseHandler($config, 'tests');
-		$schema = $this->schemas->import($handler)->get();
+		$schema = $handler->draft();
 		
 		$this->assertObjectHasAttribute('migrations', $schema->tables);
 	}

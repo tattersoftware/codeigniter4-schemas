@@ -1,11 +1,11 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Mergeable implements \Countable
-{	
+class Mergeable implements \Countable, \IteratorAggregate
+{
 	/**
 	 * Merge two structures together.
 	 *
-	 * @var $this
+	 * @return $this
 	 */
 	public function merge(?Mergeable $object): Mergeable
 	{
@@ -13,7 +13,7 @@ class Mergeable implements \Countable
 		{
 			return $this;
 		}
-		
+
 		foreach ($object as $key => $item)
 		{
 			if (! isset($this->$key))
@@ -40,24 +40,14 @@ class Mergeable implements \Countable
 				$this->$key = $item;
 			}
 		}
-		
+
 		return $this;
 	}
-	
-	/**
-	 * Specify count of public properties to satisfy Countable.
-	 *
-	 * @int Number of public properties
-	 */
-	public function count(): int
-	{
-		return count(get_object_vars($this));
-	}
-	
+
 	/**
 	 * Magic getter to prevent exceptions on missing property checks.
 	 *
-	 * @mixed
+	 * @return mixed
 	 */
 	public function __get($name)
 	{
@@ -65,17 +55,36 @@ class Mergeable implements \Countable
 		{
 			return $this->$name;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Magic checker to match the getter.
 	 *
-	 * @bool
+	 * @return bool
 	 */
 	public function __isset($name): bool
 	{
 		return property_exists($this, $name);
-	}	
+	}
+
+	/**
+	 * Specify count of public properties to satisfy Countable.
+	 *
+	 * @return int  Number of public properties
+	 */
+	public function count(): int
+	{
+		return count(get_object_vars($this));
+	}
+
+	/**
+	 * Use simple properties array to satisfy Iterable.
+	 *
+	 * @return ArrayIterator
+	 */
+	public function getIterator() {
+		return new \ArrayIterator($this);
+	}
 }

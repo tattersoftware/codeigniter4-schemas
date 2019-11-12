@@ -1,25 +1,26 @@
-<?php namespace Tatter\Schemas\Handlers;
+<?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Drafter\BaseDrafter;
+use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
 
-class PhpHandler extends BaseHandler implements SchemaHandlerInterface
+class PhpHandler extends BaseDrafter implements DrafterInterface
 {
 	/**
-	 * The file path.
+	 * The path to the file.
 	 *
 	 * @var string
 	 */
 	protected $path;
 	
-	// Initiate library
+	/**
+	 * Save the config and the path to the file
+	 *
+	 * @param BaseConfig  $config   The library config
+	 * @param string      $path     Path to the file to process
+	 */
 	public function __construct(BaseConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
@@ -27,9 +28,13 @@ class PhpHandler extends BaseHandler implements SchemaHandlerInterface
 		// Save the path
 		$this->path = $path;
 	}
-	
-	// Read in data from the file and fit it into a schema
-	public function get(): ?Schema
+
+	/**
+	 * Read in data from the file and fit it into a schema
+	 *
+	 * @return Schema|null
+	 */
+	public function draft(): ?Schema
 	{
 		$contents = $this->getContents($this->path);
 		if (is_null($contents))
@@ -42,18 +47,12 @@ class PhpHandler extends BaseHandler implements SchemaHandlerInterface
 		// So the path just needs to be included and the variable checked
 		try {
 			require $this->path;
-		} catch (\Exception $e) {
+		}
+		catch (\Exception $e) {
 			$this->errors[] = $e->getMessage();
 			return null;
 		}
 
 		return $schema ?? null;
-	}
-	
-	// Write out the schema to file
-	public function save(Schema $schema): bool
-	{
-		$this->methodNotImplemented(__CLASS__, 'save');
-		return false;		
 	}
 }

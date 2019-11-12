@@ -2,19 +2,22 @@
 
 use Tatter\Schemas\Handlers\BaseHandler;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
+use Tatter\Schemas\Structures\Schema;
 
 class SchemasTest extends CIModuleTests\Support\UnitTestCase
 {
-	public function testGetConfig()
+	public function testGetErrors()
 	{
-		$this->assertEquals($this->config, $this->schemas->getConfig());
+		$this->assertEquals([], $this->schemas->getErrors());
 	}
 
-	public function testStartsWithoutSchema()
+	public function testStartsWithEmptySchema()
 	{
-		$this->assertNull($this->schemas->get());
+		$schema = new Schema();
+		
+		$this->assertEquals($schema, $this->schemas->get());
 	}
-
+/*
 	public function testGetHandlerFromClass()
 	{
 		$method = $this->getPrivateMethodInvoker($this->schemas, 'getHandlerFromClass');
@@ -25,4 +28,5 @@ class SchemasTest extends CIModuleTests\Support\UnitTestCase
 		$handler = $method('cache');
 		$this->assertInstanceOf(SchemaHandlerInterface::class, $handler);
 	}
+*/
 }

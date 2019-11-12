@@ -35,9 +35,13 @@ in the comments. If no config file is found in **app/Config** the library will u
 
 ## Usage
 
-**Schemas** works on an import/export model, allowing dynamic loading and storing of schemas
-from a variety of handlers. The **Schemas** service is also available to simplify a workflow
-with convenient wrapper functions.
+**Schemas** has four main functions, each with a variety of handlers available:
+* *Draft*: Generates a new schema from a variety of sources
+* *Archive*: Stores a copy of a schema for later use
+* *Read*: Loads a schema for live access
+* *Publish*: (not yet available) Modifies environments to match schema specs
+
+The **Schemas** service is also available to simplify a workflow with convenient wrapper functions.
 
 Here is an example of one common process, mapping the default database group and storing
 the resulting schema to the cache:
@@ -45,66 +49,72 @@ the resulting schema to the cache:
 ```
 // Map the database and store the schema in cache
 $schemas = service('schemas');
-$this->schemas->import('database')->export('cache');
+$schemas->draft('database')->archive('cache');
 
 // Load the schema from cache, add Model data, and get the updated schema
-$schema = $this->schemas->import(['cache', 'model'])->get();
+$schema = $schemas->read('cache')->draft('model')->get();
 ```
 
 If you need to deviate from the default configuration you can inject the handlers yourself:
 ```
 $db = db_connect('alternate_database');
-$databaseHandler = new \Tatter\Schemas\Handlers\DatabaseHandler(null, $db);
-$schema = $this->schemas->import($databaseHandler)->get();
+$databaseHandler = new \Tatter\Schemas\Drafter\Handlers\DatabaseHandler(null, $db);
+$schema = $schemas->draft($databaseHandler)->get();
 ```
 
 ## Command
 
-**Schemas** comes with a `spark` command for convenient schema generation and display. Use
-`php spark schemas [import_handler ...]` to test and troubleshoot, or add it to your cron
-for periodic schema caching:
-```
-php spark schemas database model -export cache
-```
+**Schemas** comes with a `spark` command for convenient schema generation and display:
+
+	`schemas [-draft handler1,handler2,...] [-archive handler1,... | -print]`
+
+Use the command to test and troubleshoot, or add it to your cron for periodic schema caching:
+
+	php spark schemas -draft database,model -archive cache
 
 ## Autodetection
 
 **Schemas** uses foreign keys, indexes, and naming convention to detect relationships
-automatically. Please make sure your database is setup using the appropriate keys and
+automatically. Make sure your database is setup using the appropriate keys and
 foreign keys to assist with the detection. Naming conventions follow the format of
 `{table}_id` for foreign keys and `{table1}_{table2}` for pivot tables. For more examples
 on relationship naming conventions consult the Rails Guide
 [Active Record Associations](https://guides.rubyonrails.org/association_basics.html#the-types-of-associations)
-(please excuse the Ruby reference).
+(and please excuse the Ruby reference).
 
 ### Intervention
 
 Should autodetection fail or should you need to deviate from conventions there are a few
-tools you can use to overwrite or augment the generated Schema.
+tools you can use to overwrite or augment the generated schema.
 
 * **Config/Schemas**: the Config file includes a variable for `$ignoredTables` that will let you skip tables entirely. By default this includes the framework's `migrations` table.
-* **app/Schemas/{file}.php**: The `FileHandler` will load any schemas detected in your **Schemas** directory - this gives you a chance to specify anything you want. See [tests/_support/Schemas/Good/Products.php](tests/_support/Schemas/Good/Products.php) for an example.
+* **app/Schemas/{file}.php**: The `DirectoryHandler` will load any schemas detected in your **Schemas** directory - this gives you a chance to specify anything you want. See [tests/_support/Schemas/Good/Products.php](tests/_support/Schemas/Good/Products.php) for an example.
 
-## Handlers
+## Drafting
 
-Current supported handlers:
-* Database (import only)
-* Model (import only)
+Currently supported handlers:
+
+* Database
+* Model
+* PHP
+* Directory (PHP import only)
+
+## Archiving/reading
+
 * Cache
-* FileHandler (PHP import only)
 
-### Development
+## Development
 
 The eventual goal is to support mapping from and deploying to any source. Planned handler
 implementations include:
 
-* `DatabaseHandler->export()`: Recreate a live database from its schema
+* `Publisher\DatabaseHandler`: Recreate a live database from its schema
 * `MigrationsHandler`: Create a schema from migration files, or vice versa
 * `FileHandler`: A wrapper for importing and exporting from popular schema file formats
-* More to come...
+* Lots more...
 
 And the file-specific handlers:
-* `PhpHandler->export()`: Create a PHP file with a Schema object in `$schema`
+* `PhpHandler->archive()`: Create a PHP file with a Schema object in `$schema`
 * `XmlHandler`: Support for Doctrine-style XML files
 * More to come...
 
