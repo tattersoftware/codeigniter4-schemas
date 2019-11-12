@@ -1,7 +1,8 @@
-<?php namespace Tatter\Schemas\Handlers;
+<?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
+use Tatter\Schemas\Drafter\BaseDrafter;
+use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
@@ -10,7 +11,7 @@ use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Index;
 use Tatter\Schemas\Structures\ForeignKey;
 
-class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
+class DatabaseHandler extends BaseDrafter implements DrafterInterface
 {
 	/**
 	 * The main database connection.
@@ -32,8 +33,13 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	 * @var string
 	 */
 	protected $fieldRegex = '/^.+_id$/';
-	
-	// Initiate library
+
+	/**
+	 * Save the config and set up the database connection
+	 *
+	 * @param BaseConfig  $config   The library config
+	 * @param string      $db       A database connection, or null to use the default
+	 */
 	public function __construct(BaseConfig $config = null, $db = null)
 	{		
 		parent::__construct($config);
@@ -42,11 +48,15 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		$this->db     = db_connect($db);
 		$this->prefix = $this->db->getPrefix();
 	}
-	
-	// Map the database from $this->db into a new schema
-	public function get(): ?Schema
+
+	/**
+	 * Map the database from $this->db into a new schema
+	 *
+	 * @return Schema|null
+	 */
+	public function draft(): ?Schema
 	{
-		// Start with a fresh Schema
+		// Start with a fresh schema
 		$schema = new Schema();
 		
 		// Track possible relations to check
@@ -322,15 +332,8 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 		return $schema;
 	}
 	
-	// Create all the schema structures in the database
-	public function save(Schema $schema): bool
-	{
-		$this->methodNotImplemented(__CLASS__, 'save');
-		return false;
-	}
-	
 	/**
-	 * Return a string without DBPrefix.
+	 * Return a database object name without its prefix.
 	 *
 	 * @param string    $str  Name of a database object
 	 *
@@ -339,7 +342,9 @@ class DatabaseHandler extends BaseHandler implements SchemaHandlerInterface
 	protected function stripPrefix(string $str): string
 	{
 		if (empty($str) || empty($this->prefix))
+		{
 			return $str;
+		}
 
 		// Strip the first occurence of the prefix
 		return preg_replace("/^{$this->prefix}/", '', $str, 1);

@@ -1,21 +1,15 @@
-<?php namespace Tatter\Schemas\Handlers;
+<?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
 use Config\Services;
-use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
+use Tatter\Schemas\Drafter\BaseDrafter;
+use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
 
-class ModelHandler extends BaseHandler implements SchemaHandlerInterface
-{
-	// Trait the Reflection helper to get table names from models
-	use \CodeIgniter\Test\ReflectionHelper;
-	
+class ModelHandler extends BaseDrafter implements DrafterInterface
+{	
 	/**
 	 * The default database group.
 	 *
@@ -30,7 +24,12 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 	 */
 	protected $group;
 	
-	// Initiate library
+	/**
+	 * Save the config and set the initial database group
+	 *
+	 * @param BaseConfig  $config   The library config
+	 * @param string      $group    A database group to use as a filter; null = default group, false = no filtering
+	 */
 	public function __construct(BaseConfig $config = null, $group = null)
 	{		
 		parent::__construct($config);
@@ -50,53 +49,62 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			$this->group = $group;
 		}
 	}
-	
-	// Change the name of the database group constraint
+
+	/**
+	 * Change the name of the database group constraint
+	 *
+	 * @param string  $group    A database group to use as a filter; false = no filtering
+	 */
 	public function setGroup(string $group)
 	{
 		$this->group = $group;
 		return $group;
 	}
-	
-	// Get the name of the database group constraint
+
+	/**
+	 * Get the name of the database group constraint
+	 *
+	 * @return string|null  The current group
+	 */
 	public function getGroup(): ?string
 	{
 		return $this->group;
 	}
-	
-	// Load models and build table data off their properties
-	public function get(): ?Schema
+
+	/**
+	 * Load models and build table data off their properties
+	 *
+	 * @return Schema|null
+	 */
+	public function draft(): ?Schema
 	{
+		// Start with an empty schema
 		$schema = new Schema();
 
 		foreach ($this->getModels() as $class)
 		{
-			// Create a Reflection class so we don't need to instantiate the model
-			// (some model constructors can be troublesome)
-			$instance = new \ReflectionClass($class);
-			$properties = $instance->getDefaultProperties();
-			unset($instance);
+			$instance = new $class();
 
 			// Start a new table
-			$table             = new Table($properties['table']);
+			$table             = new Table($instance->table);
 			$table->model      = $class;
-			$table->returnType = $properties['returnType'];
+			$table->returnType = $instance->returnType;
 			
 			// Create a field for the primary key
-			$field = new Field($properties['primaryKey']);
+			$field = new Field($instance->primaryKey);
 			$field->primary_key = true;
 			$table->fields->{$field->name} = $field;
 			
 			// Create a field for each allowed field
-			foreach ($properties['allowedFields'] as $fieldName)
+			foreach ($instance->allowedFields as $fieldName)
 			{
 				$field = new Field($fieldName);
 				$table->fields->$fieldName = $field;
 			}
 			
 			// Figure out which timestamp fields (if any) this model uses and add them
-			$timestamps = $properties['useTimestamps'] ? ['createdField', 'updatedField'] : [];
-			if ($properties['useSoftDeletes'])
+			$timestamps = $instance->useTimestamps ? ['createdField', 'updatedField'] : [];
+			if ($instance->useSoftDeletes)
 			{
 				$timestamps[] = 'deletedField';
 			}
@@ -104,9 +112,9 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 			// Get field names from each timestamp attribute
 			foreach ($timestamps as $attribute)
 			{
-				$fieldName = $properties[$attribute];
-				$field = new Field($fieldName);
-				$field->type = $properties['dateFormat'];
+				$fieldName   = $instance->$attribute;
+				$field       = new Field($fieldName);
+				$field->type = $instance->dateFormat;
 
 				$table->fields->$fieldName = $field;
 			}
@@ -115,13 +123,6 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 		}
 		
 		return $schema;
-	}
-	
-	// Not yet implemented
-	public function save(Schema $schema): bool
-	{
-		$this->methodNotImplemented(__CLASS__, 'save');
-		return false;
 	}
 	
 	/**
@@ -138,6 +139,12 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 		// Get each namespace
 		foreach ($loader->getNamespace() as $namespace => $path)
 		{
+			// Skip namespaces that are ignored
+			if (in_array($namespace, $this->config->ignoredNamespaces))
+			{
+				continue;
+			}
+			
 			// Get files under this namespace's "/Models" path
 			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
 			{
@@ -145,7 +152,7 @@ class ModelHandler extends BaseHandler implements SchemaHandlerInterface
 				require_once $file;
 			}
 		}
-		
+
 		// Filter loaded class on likely models
 		$classes = preg_grep('/model/i', get_declared_classes());
 		

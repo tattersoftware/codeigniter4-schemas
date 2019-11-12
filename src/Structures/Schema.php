@@ -8,9 +8,17 @@ class Schema extends Mergeable
 	 * @var Mergeable of Tables
 	 */
 	public $tables;
-	
-	public function __construct()
+
+	/**
+	 * Set up the tables property. If a ReaderHandler was passed
+	 * then use it, which will generate Mergeables on return.
+	 * Otherwise use an empty, generic Mergeable.
+	 *
+	 * @param BaseConfig  $config   The library config
+	 * @param string      $db       A database connection, or null to use the default
+	 */
+	public function __construct($reader = null)
 	{
-		$this->tables = new Mergeable();
+		$this->tables = $reader ?? new Mergeable();
 	}
 }

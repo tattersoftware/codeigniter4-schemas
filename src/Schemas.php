@@ -2,13 +2,7 @@
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
 
 class Schemas
 {
@@ -38,62 +32,62 @@ class Schemas
 	{
 		$this->config = $config;
 		
-		// Store starting schema
-		if (! is_null($schema))
-		{
-			$this->schema = $schema;
-		}
+		// Store an initial schema
+		$this->schema = $schema ?? new Schema();
 	}
-	
-	// Return a copy of the config - usually used by handlers
-	public function getConfig(): BaseConfig
+
+	/**
+	 * Return and clear any error messages
+	 *
+	 * @return array  String error messages
+	 */
+	public function getErrors(): array
 	{
-		return $this->config;
+		$tmpErrors    = $this->errors;
+		$this->errors = [];
+		return $this->errors;
 	}
-	
-	// Return the schema
+
+	/**
+	 * Return the current schema
+	 *
+	 * @return Schema  The current schema object
+	 */
 	public function get(): ?Schema
 	{
 		return $this->schema;
 	}
-	
-	// Return any error messages
-	public function getErrors(): array
-	{
-		return $this->errors;
-	}
-	
+
 	/**
-	 * Uses the provided handlers or handler names to import a new schema
+	 * Draft a new schema from the given or default handler(s)
+	 *
+	 * @param array|string|null  $handlers Handler class string(s) or instance(s)
 	 *
 	 * @return $this
 	 */
-	public function import($handlers)
+	public function draft($handlers = null)
 	{
+		if (empty($handlers))
+		{
+			$handlers = $this->config->draftHandlers;
+		}
+		
 		// Wrap singletons
 		if (! is_array($handlers))
 		{
 			$handlers = [$handlers];
 		}
 		
-		// Import from each handler in order
+		// Draft and merge the schema from each handler in order
 		foreach ($handlers as $handler)
 		{
-			// Check for a handler name
 			if (is_string($handler))
 			{
-				$handler = $this->getHandlerFromClass($handler);
+				$handler = new $handler($this->config);
 			}
 
-			if (is_null($this->schema))
-			{
-				$this->schema = $handler->get();
-			}
-			else
-			{
-				$this->schema->merge($handler->get());
-			}
-			
+			$this->schema->merge($handler->draft());
+
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
@@ -101,43 +95,67 @@ class Schemas
 	}
 	
 	/**
-	 * Uses the provided handler or handler name to export the current schema
+	 * Archive a copy of the current schema using the handler(s)
 	 *
-	 * @return $this
+	 * @param array|string|null  $handlers
+	 *
+	 * @return bool Success or failure
 	 */
-	public function export($handler)
-	{		
-		// Check for a handler name
-		if (is_string($handler))
+	public function archive($handlers = null)
+	{
+		if (empty($handlers))
 		{
-			$handler = $this->getHandlerFromClass($handler);
+			$handlers = $this->config->archiveHandlers;
+		}
+		
+		// Wrap singletons
+		if (! is_array($handlers))
+		{
+			$handlers = [$handlers];
+		}
+		
+		// Archive a copy to each handler's destination
+		$result = true;
+		foreach ($handlers as $handler)
+		{
+			if (is_string($handler))
+			{
+				$handler = new $handler($this->config);
+			}
+
+			$result = $result && $handler->archive($this->schema);
+			
+			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
-		$handler->save($this->schema);
-		$this->errors = array_merge($this->errors, $handler->getErrors());
-		
-		return $this;
+		return $result;
 	}
 	
 	/**
-	 * Tries to match a class name or shortname to its handler
+	 * Read in a schema from the given or default handler
 	 *
-	 * @return SchemaHandlerInterface
-	 */	
-	protected function getHandlerFromClass(string $class): SchemaHandlerInterface
-	{		
-		// Check if its already namespaced
-		if (strpos($class, '\\') === false)
+	 * @param array|string|null  $handlers
+	 *
+	 * @return $this
+	 */
+	public function read($handler = null)
+	{
+		if (empty($handler))
 		{
-			$class = '\Tatter\Schemas\Handlers\\' . ucfirst($class) . 'Handler';
+			$handler = $this->config->readHandler;
 		}
 
-		if (! class_exists($class))
+		// Create the reader instance
+		if (is_string($handler))
 		{
-			throw SchemasException::forUnsupportedHandler($class);
+			$handler = new $handler($this->config);
 		}
-		
-		$handler = new $class($this->config);
-		return $handler;
+
+		$this->errors = array_merge($this->errors, $handler->getErrors());
+
+		// Replace the current schema with a new one using the injected readHandler
+		$this->schema = new Schema($reader);
+
+		return $this;
 	}
 }

@@ -1,16 +1,17 @@
 <?php
 
-use Tatter\Schemas\Handlers\BaseHandler;
+use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Table;
 
-class BaseHandlerTest extends CIModuleTests\Support\UnitTestCase
+class BaseDrafterTest extends CIModuleTests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{
 		parent::setUp();
-		$this->handler = new BaseHandler($this->config);
+
+		$this->handler = new BaseDrafter($this->config);
 	}
 
 	public function testFindKeyToForeignTable()
