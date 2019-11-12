@@ -154,7 +154,7 @@ class Schemas
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 
 		// Replace the current schema with a new one using the injected readHandler
-		$this->schema = new Schema($reader);
+		$this->schema = new Schema($handler);
 
 		return $this;
 	}
