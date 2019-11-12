@@ -5,8 +5,9 @@ use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Reader\BaseReader;
 use Tatter\Schemas\Reader\ReaderInterface;
-use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Mergeable;
+use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Traits\CacheHandlerTrait;
 
 class CacheHandler extends BaseReader implements ReaderInterface
@@ -29,22 +30,42 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Intercept requests to load cached tables on-the-fly
 	 *
-	 * @param string $name
+	 * @param string $tableName
 	 *
 	 * @return bool  Success or failure
 	 */
-	public function __get(string $name)
+	public function __get(string $tableName): ?Table
 	{
-		if ($name == 'tables')
+		// If the property isn't there then the table is unknown
+		if (! property_exists($this, $tableName))
 		{
-			// WIP
+			return null;
+		}
+		
+		// If boolean true (cached but not loaded) then load from cache
+		if ($this->$tableName === true)
+		{
+			$this->fetch($tableName);
 		}
 
-		if (property_exists($this, $name))
+		return $this->$tableName;
+	}
+	
+	/**
+	 * Fetch specified tables from the cache
+	 *
+	 * @param array|string $tables
+	 */
+	public function fetch($tables)
+	{
+		if (is_string($tables))
 		{
-			return $this->{$name};
+			$tables = [$tables];
 		}
-
-		return null;
+		
+		foreach ($tables as $tableName)
+		{
+			$this->$tableName = $this->cache->get($this->cacheKey . ':' . $tableName);
+		}
 	}
 }
