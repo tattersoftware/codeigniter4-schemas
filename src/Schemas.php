@@ -61,7 +61,7 @@ class Schemas
 	/**
 	 * Draft a new schema from the given or default handler(s)
 	 *
-	 * @param array|string|null  $handlers
+	 * @param array|string|null  $handlers Handler class string(s) or instance(s)
 	 *
 	 * @return $this
 	 */
@@ -81,11 +81,14 @@ class Schemas
 		// Draft and merge the schema from each handler in order
 		foreach ($handlers as $handler)
 		{
-			$drafter = new $handler($this->config);
+			if (is_string($handler))
+			{
+				$handler = new $handler($this->config);
+			}
 
 			$this->schema->merge($drafter->draft());
 
-			$this->errors = array_merge($this->errors, $drafter->getErrors());
+			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
 		return $this;
@@ -114,11 +117,14 @@ class Schemas
 		// Archive a copy to each handler's destination
 		foreach ($handlers as $handler)
 		{
-			$archiver = new $handler($this->config);
+			if (is_string($handler))
+			{
+				$handler = new $handler($this->config);
+			}
 
 			$handler->archive($this->schema);
 			
-			$this->errors = array_merge($this->errors, $archiver->getErrors());
+			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
 		return $this;
@@ -139,8 +145,12 @@ class Schemas
 		}
 
 		// Create the reader instance
-		$reader = new $handler($this->config);
-		$this->errors = array_merge($this->errors, $reader->getErrors());
+		if (is_string($handler))
+		{
+			$handler = new $handler($this->config);
+		}
+
+		$this->errors = array_merge($this->errors, $handler->getErrors());
 
 		// Replace the current schema with a new one using the injected readHandler
 		$this->schema = new Schema($reader);
