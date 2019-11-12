@@ -22,6 +22,11 @@ class Schemas extends BaseConfig
 	// Tables to ignore when creating the schema
 	public $ignoredTables = ['migrations'];
 	
+	// Namespaces to ignore (mostly for ModelHandler)
+	public $ignoredNamespaces = [
+		'Tests\Support',
+	];
+	
 	// Path the directoryHandler should scan for schema files
 	public $schemasDirectory = APPPATH . 'Schemas';
 

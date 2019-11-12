@@ -1,13 +1,13 @@
 <?php
 
-use Tatter\Schemas\Handlers\CacheHandler;
-use Tatter\Schemas\Handlers\DatabaseHandler;
-use Tatter\Schemas\Handlers\FileHandler;
-use Tatter\Schemas\Handlers\ModelHandler;
+use Tatter\Schemas\Drafter\Handlers\CacheHandler;
+use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
+use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
+use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 
 class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 {
-	// Probably the most likely scenario for use
+	// Probably a quite common scenario
 	public function testDatabaseToCache()
 	{
 		$cache           = \Config\Services::cache();
@@ -27,7 +27,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 	public function testDatabaseMergeFile()
 	{
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$fileHandler     = new FileHandler($this->config);
+		$fileHandler     = new DirectoryHandler($this->config);
 			
 		$schema = $this->schemas->import([$databaseHandler, $fileHandler])->get();
 		
@@ -39,7 +39,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 	{
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		$modelHandler    = new ModelHandler($this->config);
-		$fileHandler     = new FileHandler($this->config);
+		$fileHandler     = new DirectoryHandler($this->config);
 			
 		$schema = $this->schemas->import([$databaseHandler, $modelHandler, $fileHandler])->get();
 		

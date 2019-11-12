@@ -139,6 +139,12 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		// Get each namespace
 		foreach ($loader->getNamespace() as $namespace => $path)
 		{
+			// Skip namespaces that are ignored
+			if (in_array($namespace, $this->config->ignoredNamespaces))
+			{
+				continue;
+			}
+			
 			// Get files under this namespace's "/Models" path
 			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
 			{
@@ -146,7 +152,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 				require_once $file;
 			}
 		}
-		
+
 		// Filter loaded class on likely models
 		$classes = preg_grep('/model/i', get_declared_classes());
 		
