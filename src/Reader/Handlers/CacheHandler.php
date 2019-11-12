@@ -25,6 +25,14 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		parent::__construct($config);
 		
 		$this->cacheInit($cache);
+		
+		// Fetch the scaffold and note each table
+		$scaffold = $this->cache->get($this->cacheKey);
+		
+		foreach ($scaffold->tables as $tableName => $bool)
+		{
+			$this->$tableName = $bool;
+		}
 	}
 
 	/**
@@ -50,7 +58,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 
 		return $this->$tableName;
 	}
-	
+
 	/**
 	 * Fetch specified tables from the cache
 	 *
