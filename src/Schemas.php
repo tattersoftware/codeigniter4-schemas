@@ -32,8 +32,11 @@ class Schemas
 	{
 		$this->config = $config;
 		
-		// Store an initial schema
-		$this->schema = $schema ?? new Schema();
+		// Store initial schema
+		if (! is_null($schema))
+		{
+			$this->schema = $schema;
+		}
 	}
 
 	/**
@@ -51,7 +54,7 @@ class Schemas
 	/**
 	 * Return the current schema
 	 *
-	 * @return Schema  The current schema object
+	 * @return Schema|null  The current schema object
 	 */
 	public function get(): ?Schema
 	{
@@ -86,7 +89,14 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			$this->schema->merge($handler->draft());
+			if (is_null($this->schema))
+			{
+				$this->schema = $handler->draft();
+			}
+			else
+			{
+				$this->schema->merge($handler->draft());
+			}
 
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}

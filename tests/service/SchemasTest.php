@@ -17,16 +17,21 @@ class SchemasTest extends CIModuleTests\Support\UnitTestCase
 		
 		$this->assertEquals($schema, $this->schemas->get());
 	}
-/*
+
+	public function testStartsWithoutSchema()
+	{
+		$this->assertNull($this->schemas->get());
+	}
+
 	public function testGetHandlerFromClass()
 	{
-		$method = $this->getPrivateMethodInvoker($this->schemas, 'getHandlerFromClass');
+		$command = new \Tatter\Schemas\Commands\Schemas()_;
+		$method = $this->getPrivateMethodInvoker($command, 'getHandlerFromClass');
 		
-		$handler = $method('database');
-		$this->assertInstanceOf(SchemaHandlerInterface::class, $handler);
+		$handler = $method('Drafter', 'database');
+		$this->assertInstanceOf(BaseHandler::class, $handler);
 
-		$handler = $method('cache');
-		$this->assertInstanceOf(SchemaHandlerInterface::class, $handler);
+		$handler = $method('Archiver', 'cache');
+		$this->assertInstanceOf(BaseHandler::class, $handler);
 	}
-*/
 }
