@@ -228,8 +228,11 @@ class Schemas
 
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 
-		// Replace the current schema with a new one using the injected readHandler
-		$this->schema = new Schema($handler);
+		// If all went well then set the current schema to a new one using the injected reader
+		if ($handler->ready())
+		{
+			$this->schema = new Schema($handler);
+		}
 
 		return $this;
 	}
