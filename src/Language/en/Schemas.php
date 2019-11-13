@@ -7,4 +7,5 @@ return [
 	'emptySchemaFile'      => 'Could not read file contents from {0}',
 	'emptySchemaDirectory' => 'No files found in schema directory: {0}',
 	'noSchema'             => 'No schema is available and automation failed or is disabled',
+	'readerNotReady'       => 'Unable to use Reader: not ready',
 ];

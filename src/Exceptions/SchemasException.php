@@ -24,4 +24,9 @@ class SchemasException extends \RuntimeException implements ExceptionInterface
 	{
 		return new static(lang('Schemas.noSchema'));
 	}
+	
+	public static function forReaderNotReady()
+	{
+		return new static(lang('Schemas.readerNotReady'));
+	}
 }
