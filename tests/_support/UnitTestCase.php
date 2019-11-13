@@ -27,6 +27,11 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		$config->silent           = false;
 		$config->ignoredTables    = ['migrations'];
 		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
+		$config->automate = [
+			'draft'   => false,
+			'archive' => false,
+			'read'    => false,
+		];
 
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
@@ -73,6 +78,9 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 	public function tearDown(): void
 	{
 		parent::tearDown();
+		
+		$this->schemas->reset();
+		
 		unset($this->schema);
 	}
 }

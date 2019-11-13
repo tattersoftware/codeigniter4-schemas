@@ -11,21 +11,16 @@ class SchemasTest extends CIModuleTests\Support\UnitTestCase
 		$this->assertEquals([], $this->schemas->getErrors());
 	}
 
-	public function testStartsWithEmptySchema()
-	{
-		$schema = new Schema();
-		
-		$this->assertEquals($schema, $this->schemas->get());
-	}
-
 	public function testStartsWithoutSchema()
 	{
+		$this->config->silent = true;
 		$this->assertNull($this->schemas->get());
 	}
 
+/*
 	public function testGetHandlerFromClass()
 	{
-		$command = new \Tatter\Schemas\Commands\Schemas()_;
+		$command = new \Tatter\Schemas\Commands\Schemas();
 		$method = $this->getPrivateMethodInvoker($command, 'getHandlerFromClass');
 		
 		$handler = $method('Drafter', 'database');
@@ -34,4 +29,5 @@ class SchemasTest extends CIModuleTests\Support\UnitTestCase
 		$handler = $method('Archiver', 'cache');
 		$this->assertInstanceOf(BaseHandler::class, $handler);
 	}
+*/
 }

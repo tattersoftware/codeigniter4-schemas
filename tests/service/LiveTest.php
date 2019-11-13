@@ -46,4 +46,33 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
+	
+	public function testGetReturnsSchemaWithReader()
+	{
+		// Draft & archive a copy of the schema so we can test reading it
+		$result = $this->schemas->draft()->archive();
+		$this->assertTrue($result);
+		
+		$this->schemas->reset();
+		
+		$schema = $this->schemas->read()->get();
+		
+		$this->assertInstanceOf('\Tatter\Schemas\Reader\BaseReader', $schema->tables);
+	}
+	
+	public function testAutoRead()
+	{
+		$this->config->automate['read'] = true;
+		
+		// Draft & archive a copy of the schema so we can test reading it
+		$result = $this->schemas->draft()->archive();
+		$this->assertTrue($result);
+		
+		$this->schemas->reset();
+
+		$schema = $this->schemas->get();
+
+		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);
+		$this->assertCount(3, $schema->tables->workers->relations);
+	}
 }

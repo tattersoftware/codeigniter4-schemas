@@ -52,13 +52,78 @@ class Schemas
 	}
 
 	/**
-	 * Return the current schema
+	 * Reset the current schema and errors
+	 *
+	 * @return $this
+	 */
+	public function reset()
+	{
+		$this->schema = null;
+		$this->errors = [];
+		
+		return $this;
+	}
+
+	/**
+	 * Set the current schema; used mostly for testing
+	 *
+	 * @return $this
+	 */
+	public function setSchema(Schema $schema)
+	{
+		$this->schema = $schema;
+		
+		return $this;
+	}
+
+	/**
+	 * Return the current schema; if automation is enabled then read or draft a missing schema
 	 *
 	 * @return Schema|null  The current schema object
 	 */
 	public function get(): ?Schema
 	{
-		return $this->schema;
+		if (! is_null($this->schema))
+		{
+			return $this->schema;
+		}
+		
+		// No schema loaded - try the default reader
+		if ($this->config->automate['read'])
+		{
+			$this->read();
+			
+			if (! is_null($this->schema))
+			{
+				return $this->schema;
+			}
+		}
+		
+		// Still no schema - try a default draft
+		if ($this->config->automate['draft'])
+		{
+			$this->draft();
+			
+			if (! is_null($this->schema))
+			{
+				// If the draft succeeded check if we should archive it
+				if ($this->config->automate['archive'])
+				{
+					$this->archive();
+				}
+
+				return $this->schema;
+			}
+		}
+		
+		// Absolute failure
+		if (! $this->config->silent)
+		{
+			throw SchemasException::forNoSchema();
+		}
+
+		$this->errors[] = lang('Schemas.noSchema');
+		return null;
 	}
 
 	/**

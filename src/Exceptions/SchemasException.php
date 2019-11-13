@@ -19,4 +19,9 @@ class SchemasException extends \RuntimeException implements ExceptionInterface
 	{
 		return new static(lang('Schemas.methodNotImplemented', [$class, $method]));
 	}
+	
+	public static function forNoSchema()
+	{
+		return new static(lang('Schemas.noSchema'));
+	}
 }
