@@ -42,7 +42,12 @@ in the comments. If no config file is found in **app/Config** the library will u
 * *Publish*: (not yet available) Modifies environments to match schema specs
 
 The **Schemas** service is also available to simplify a workflow with convenient wrapper functions.
+At its most basic (with automation enabled), the service will draft, archive, and return
+a schema with one simple command:
 
+	$schema = service('schemas')->get();
+
+You may want to control when portions of the workflow take place to optimize performance.
 Here is an example of one common process, mapping the default database group and storing
 the resulting schema to the cache:
 
@@ -55,7 +60,7 @@ $schemas->draft('database')->archive('cache');
 $schema = $schemas->read('cache')->draft('model')->get();
 ```
 
-If you need to deviate from the default configuration you can inject the handlers yourself:
+If you need to deviate from default handler configurations you can inject the handlers yourself:
 ```
 $db = db_connect('alternate_database');
 $databaseHandler = new \Tatter\Schemas\Drafter\Handlers\DatabaseHandler(null, $db);
@@ -72,7 +77,16 @@ Use the command to test and troubleshoot, or add it to your cron for periodic sc
 
 	php spark schemas -draft database,model -archive cache
 
-## Autodetection
+## Automation
+
+By default automation is turned on, but this can be configured via the `$automate` toggles
+in your config file. Automation will allow the service to fall back on a Reader, or even on
+a Drafter should it fail to have a schema already loaded. While automation makes using the
+library very easy, it can come at a performance cost if your application is not configured
+correctly, since it may draft a schema on every page load. Use automation to help but don't
+let it become a crutch.
+
+## Structure
 
 **Schemas** uses foreign keys, indexes, and naming convention to detect relationships
 automatically. Make sure your database is setup using the appropriate keys and
