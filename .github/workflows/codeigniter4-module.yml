@@ -1,6 +1,9 @@
 name: CodeIgniter4 ModuleTests
 
-on: [push]
+on:
+  push:
+    branches: 
+      - develop
 
 jobs:
   build:
@@ -10,14 +13,18 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Setup PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: '7.2'
+        extension-csv: intl, json, mbstring, mysqlnd, xdebug, xml
+        coverage: xdebug
+
     - name: Validate composer.json
       run: composer validate
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
 
     - name: Run test suite
       run: composer run-script test
