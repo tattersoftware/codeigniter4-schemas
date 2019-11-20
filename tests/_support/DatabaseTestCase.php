@@ -60,6 +60,11 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		$config->silent           = false;
 		$config->ignoredTables    = ['migrations'];
 		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
+		$config->automate = [
+			'draft'   => false,
+			'archive' => false,
+			'read'    => false,
+		];
 		
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
@@ -68,6 +73,9 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	public function tearDown(): void
 	{
 		parent::tearDown();
+		
+		$this->schemas->reset();
+		
 		unset($this->schema);
 		unset($this->handler);
 	}

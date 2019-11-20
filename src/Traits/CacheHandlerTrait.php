@@ -1,7 +1,7 @@
 <?php namespace Tatter\Schemas\Traits;
 
 use CodeIgniter\Cache\CacheInterface;
-use CodeIgniter\Config\Services;
+use Config\Services;
 use Tatter\Schemas\Exceptions\SchemasException;
 
 trait CacheHandlerTrait

@@ -32,8 +32,11 @@ class Schemas
 	{
 		$this->config = $config;
 		
-		// Store an initial schema
-		$this->schema = $schema ?? new Schema();
+		// Store initial schema
+		if (! is_null($schema))
+		{
+			$this->schema = $schema;
+		}
 	}
 
 	/**
@@ -49,13 +52,78 @@ class Schemas
 	}
 
 	/**
-	 * Return the current schema
+	 * Reset the current schema and errors
 	 *
-	 * @return Schema  The current schema object
+	 * @return $this
+	 */
+	public function reset()
+	{
+		$this->schema = null;
+		$this->errors = [];
+		
+		return $this;
+	}
+
+	/**
+	 * Set the current schema; used mostly for testing
+	 *
+	 * @return $this
+	 */
+	public function setSchema(Schema $schema)
+	{
+		$this->schema = $schema;
+		
+		return $this;
+	}
+
+	/**
+	 * Return the current schema; if automation is enabled then read or draft a missing schema
+	 *
+	 * @return Schema|null  The current schema object
 	 */
 	public function get(): ?Schema
 	{
-		return $this->schema;
+		if (! is_null($this->schema))
+		{
+			return $this->schema;
+		}
+		
+		// No schema loaded - try the default reader
+		if ($this->config->automate['read'])
+		{
+			$this->read();
+			
+			if (! is_null($this->schema))
+			{
+				return $this->schema;
+			}
+		}
+		
+		// Still no schema - try a default draft
+		if ($this->config->automate['draft'])
+		{
+			$this->draft();
+			
+			if (! is_null($this->schema))
+			{
+				// If the draft succeeded check if we should archive it
+				if ($this->config->automate['archive'])
+				{
+					$this->archive();
+				}
+
+				return $this->schema;
+			}
+		}
+		
+		// Absolute failure
+		if (! $this->config->silent)
+		{
+			throw SchemasException::forNoSchema();
+		}
+
+		$this->errors[] = lang('Schemas.noSchema');
+		return null;
 	}
 
 	/**
@@ -86,7 +154,14 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			$this->schema->merge($handler->draft());
+			if (is_null($this->schema))
+			{
+				$this->schema = $handler->draft();
+			}
+			else
+			{
+				$this->schema->merge($handler->draft());
+			}
 
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
@@ -153,8 +228,11 @@ class Schemas
 
 		$this->errors = array_merge($this->errors, $handler->getErrors());
 
-		// Replace the current schema with a new one using the injected readHandler
-		$this->schema = new Schema($handler);
+		// If all went well then set the current schema to a new one using the injected reader
+		if ($handler->ready())
+		{
+			$this->schema = new Schema($handler);
+		}
 
 		return $this;
 	}

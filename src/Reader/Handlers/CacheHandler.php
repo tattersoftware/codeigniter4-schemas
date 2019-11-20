@@ -28,17 +28,22 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		$this->cacheInit($cache);
 		
 		// Start $tables as the cached scaffold version
-		$scaffold = $this->cache->get($this->cacheKey);
-
-		$this->tables = $scaffold->tables ?? new Mergeable();
+		if ($scaffold = $this->cache->get($this->cacheKey))
+		{
+			if (isset($scaffold->tables))
+			{
+				$this->tables = $scaffold->tables ?? new Mergeable();
+				$this->ready = true;
+			}
+		}
 	}
 
 	/**
 	 * Return the current tables, fetched or not
 	 *
-	 * @return array  String error messages
+	 * @return array|null
 	 */
-	public function getTables(): Mergeable
+	public function getTables(): ?Mergeable
 	{
 		return $this->tables;
 	}
@@ -52,6 +57,11 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	 */
 	public function fetch($tables)
 	{
+		if (! $this->ensureReady())
+		{
+			return $this;
+		}
+
 		if (is_string($tables))
 		{
 			$tables = [$tables];
@@ -75,6 +85,11 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	 */
 	public function fetchAll()
 	{
+		if (! $this->ensureReady())
+		{
+			return $this;
+		}
+
 		foreach ($this->tables as $tableName => $value)
 		{
 			if ($value === true)

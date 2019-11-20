@@ -5,6 +5,13 @@ use Tatter\Schemas\Structures\Schema;
 interface ReaderInterface extends \Countable, \IteratorAggregate
 {
 	/**
+	 * Indicate whether the reader is in a state to be used
+	 *
+	 * @return bool
+	 */
+	public function ready(): bool;
+
+	/**
 	 * Fetch specified tables into the scaffold
 	 *
 	 * @param array|string $tables

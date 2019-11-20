@@ -6,6 +6,13 @@ class Schemas extends BaseConfig
 {
 	// Whether to continue instead of throwing exceptions
 	public $silent = true;
+
+	// Which tasks to automate when a schema is not available from the service
+	public $automate = [
+		'draft'   => true,
+		'archive' => true,
+		'read'    => true,
+	];
 	
 	//--------------------------------------------------------------------
 	// Drafting
