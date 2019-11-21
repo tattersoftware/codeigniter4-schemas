@@ -198,7 +198,7 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			$result = $result && $handler->archive($this->schema);
+			$result = $result && $handler->archive(clone $this->schema);
 			
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}

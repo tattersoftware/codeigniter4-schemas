@@ -7,7 +7,7 @@ use Tatter\Schemas\Structures\Schema;
 class CliHandler extends BaseArchiver implements ArchiverInterface
 {
 	/**
-	 * Write out teh schema to standard output via Kint
+	 * Write out the schema to standard output via Kint
 	 *
 	 * @param Schema $schema
 	 *
