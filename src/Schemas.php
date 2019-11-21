@@ -19,6 +19,13 @@ class Schemas
 	 * @var Tatter\Schemas\Structures\Schema
 	 */
 	protected $schema;
+
+	/**
+	 * The timer service for benchmarking.
+	 *
+	 * @var Tatter\Schemas\Structures\Schema
+	 */
+	protected $timer;
 	
 	/**
 	 * Array of error messages assigned on failure.
@@ -33,10 +40,10 @@ class Schemas
 		$this->config = $config;
 		
 		// Store initial schema
-		if (! is_null($schema))
-		{
-			$this->schema = $schema;
-		}
+		$this->schema = $schema;
+		
+		// Grab the Timer service for benchmarking
+		$this->timer = service('timer');
 	}
 
 	/**
@@ -135,6 +142,8 @@ class Schemas
 	 */
 	public function draft($handlers = null)
 	{
+		$this->timer->start('schema draft');
+
 		if (empty($handlers))
 		{
 			$handlers = $this->config->draftHandlers;
@@ -166,6 +175,8 @@ class Schemas
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
+		$this->timer->stop('schema draft');
+
 		return $this;
 	}
 	
@@ -178,6 +189,8 @@ class Schemas
 	 */
 	public function archive($handlers = null)
 	{
+		$this->timer->start('schema archive');
+
 		if (empty($handlers))
 		{
 			$handlers = $this->config->archiveHandlers;
@@ -203,6 +216,8 @@ class Schemas
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
+		$this->timer->stop('schema archive');
+
 		return $result;
 	}
 	
@@ -215,6 +230,8 @@ class Schemas
 	 */
 	public function read($handler = null)
 	{
+		$this->timer->start('schema read');
+
 		if (empty($handler))
 		{
 			$handler = $this->config->readHandler;
@@ -233,6 +250,8 @@ class Schemas
 		{
 			$this->schema = new Schema($handler);
 		}
+
+		$this->timer->stop('schema read');
 
 		return $this;
 	}
