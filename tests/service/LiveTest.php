@@ -18,7 +18,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		
 		$schemaFromService = $this->schemas->get();
 		$schemaFromCache   = $cache->get('schema:testing');
-		$this->assertEquals($schemaFromCache, $schemaFromService);
+		$this->assertEquals(count($schemaFromCache->tables), count($schemaFromService->tables));
 		
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
 	}
