@@ -1,4 +1,4 @@
-<?php namespace Myth\Auth\Collectors;
+<?php namespace Tatter\Schemas\Collectors;
 
 /**
  * Auth collector
@@ -52,7 +52,7 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
      */
 	public function __construct()
 	{
-		$this->schema = service('schemas')->get()
+		$this->schema = service('schemas')->get();
 	}
 
 	/**
@@ -64,14 +64,14 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 	{
 		if (empty($this->schema))
 		{
-			return 'Schema failure'
+			return '(Failure)';
 		}
 		elseif (empty($this->schema->tables))
 		{
-			return 'No tables'
+			return '(No tables)';
 		}
 
-		return count($this->schema->tables) . ' tables';
+		return '(' . count($this->schema->tables) . ' tables)';
 	}
 
 	//--------------------------------------------------------------------
@@ -85,14 +85,21 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 	{
 		if (empty($this->schema))
 		{
-			return '<p><em>Schema failed to load.</em></p>'
+			return '<p><em>Schema failed to load.</em></p>';
 		}
 		elseif (empty($this->schema->tables))
 		{
-			return '<p><em>No tables found.</em></p>'
+			return '<p><em>No tables found.</em></p>';
 		}
 
-		return @d($this->schema);
+		$html = '';
+		foreach ($this->schema->tables as $table)
+		{
+			$html .= '<h4>' . $table->name . '</h4>' . PHP_EOL;
+			$html .= '<pre><code>' . print_r($table, true) . '</pre></code>' . PHP_EOL;
+		}
+
+		return $html;
 	}
 
 	//--------------------------------------------------------------------
