@@ -74,7 +74,7 @@ class Schemas extends BaseCommand
 		
 		if (! $result)
 		{
-			CLI::write('Export failed!', 'red');
+			CLI::write('Archive failed!', 'red');
 			foreach ($schemas->getErrors() as $error)
 			{
 				CLI::write($error, 'yellow');
