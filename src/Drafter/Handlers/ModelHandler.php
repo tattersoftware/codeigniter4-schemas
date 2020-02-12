@@ -154,7 +154,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		}
 
 		// Filter loaded class on likely models
-		$classes = preg_grep('/model/i', get_declared_classes());
+		$classes = preg_grep('/model$/i', get_declared_classes());
 		
 		// Try to load each class
 		foreach ($classes as $class)
