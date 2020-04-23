@@ -144,12 +144,15 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			{
 				continue;
 			}
-			
+
 			// Get files under this namespace's "/Models" path
 			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
 			{
-				// Load the file
-				require_once $file;
+				if (is_file($file) && pathinfo($file, PATHINFO_EXTENSION) == 'php')
+				{
+					// Load the file
+					require_once $file;
+				}
 			}
 		}
 
