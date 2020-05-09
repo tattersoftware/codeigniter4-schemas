@@ -9,6 +9,22 @@ use Tatter\Schemas\Structures\Table;
 class BaseDrafter extends BaseHandler
 {
 	/**
+	 * Load the helper
+	 *
+	 * @param BaseConfig  $config   The library config
+	 */
+	public function __construct(BaseConfig $config = null)
+	{
+		parent::__construct($config);
+
+		// Load the inflector helper for singular <-> plural
+		if (! function_exists('singular'))
+		{
+			helper('inflector');
+		}
+	}
+
+	/**
 	 * Search a table for its primary key.
 	 *
 	 * @param Table    $table      A Table
@@ -44,12 +60,6 @@ class BaseDrafter extends BaseHandler
 	 */
 	protected function findKeyToForeignTable(Table $table, string $tableName): ?string
 	{
-		// Load the inflector helper for singular <-> plural
-		if (! function_exists('singular'))
-		{
-			helper('inflector');
-		}
-
 		// Check a few common conventions
 		$tests = [
 			$tableName,

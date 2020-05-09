@@ -25,7 +25,7 @@ class BaseHandler
 	 */
 	public function __construct(BaseConfig $config = null)
 	{
-		// If no configuration was supplied then laod one
+		// If no configuration was supplied then load one
 		$this->config = $config ?? config('Schemas');
 	}
 
