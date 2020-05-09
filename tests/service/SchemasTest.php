@@ -4,7 +4,7 @@ use Tatter\Schemas\Handlers\BaseHandler;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
 
-class SchemasTest extends CIModuleTests\Support\UnitTestCase
+class SchemasTest extends Tests\Support\UnitTestCase
 {
 	public function testGetErrors()
 	{

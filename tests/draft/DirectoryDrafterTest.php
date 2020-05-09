@@ -2,12 +2,12 @@
 
 use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
 
-class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
+class DirectoryDrafterTest extends Tests\Support\UnitTestCase
 {
 	public function testEmptyDirectoryReturnsNull()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/NoFiles';
+		$config->schemasDirectory = SUPPORTPATH . 'Schemas/NoFiles';
 		$handler = new DirectoryHandler($config);
 		
 		$this->assertNull($handler->draft());
@@ -16,7 +16,7 @@ class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
 	public function testNoHandlersReturnsNull()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/NoHandler';
+		$config->schemasDirectory = SUPPORTPATH . 'Schemas/NoHandler';
 		$handler = new DirectoryHandler($config);
 		
 		$this->assertNull($handler->draft());
@@ -25,7 +25,7 @@ class DirectoryDrafterTest extends CIModuleTests\Support\UnitTestCase
 	public function testSuccessReturnsSchemaNoErrors()
 	{
 		$config = $this->config;
-		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
+		$config->schemasDirectory = SUPPORTPATH . 'Schemas/Good';
 		$handler = new DirectoryHandler($config);
 		
 		$schema = $handler->draft();

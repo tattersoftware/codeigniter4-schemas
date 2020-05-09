@@ -2,7 +2,7 @@
 
 use Tatter\Schemas\BaseHandler;
 
-class BaseHandlerTest extends CIModuleTests\Support\UnitTestCase
+class BaseHandlerTest extends Tests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{

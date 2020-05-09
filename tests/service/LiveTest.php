@@ -4,7 +4,7 @@ use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
 use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 
-class LiveTest extends CIModuleTests\Support\DatabaseTestCase
+class LiveTest extends Tests\Support\DatabaseTestCase
 {
 	// Probably a quite common scenario
 	public function testDatabaseToCache()
@@ -43,7 +43,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 		$schema = $this->schemas->draft([$databaseHandler, $modelHandler, $fileHandler])->get();
 		
 		$this->assertObjectHasAttribute('products', $schema->tables);
-		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);
+		$this->assertEquals('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 	
@@ -72,7 +72,7 @@ class LiveTest extends CIModuleTests\Support\DatabaseTestCase
 
 		$schema = $this->schemas->get();
 
-		$this->assertEquals('CIModuleTests\Support\Models\FactoryModel', $schema->tables->factories->model);
+		$this->assertEquals('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 }

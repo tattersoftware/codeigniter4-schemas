@@ -2,11 +2,11 @@
 
 use Tatter\Schemas\Drafter\Handlers\PhpHandler;
 
-class PhpDrafterTest extends CIModuleTests\Support\UnitTestCase
+class PhpDrafterTest extends Tests\Support\UnitTestCase
 {
 	public function testSuccessReturnsSchemaFromFile()
 	{
-		$path    = MODULESUPPORTPATH . 'Schemas/Good/Products.php';
+		$path    = SUPPORTPATH . 'Schemas/Good/Products.php';
 		$handler = new PhpHandler($this->config, $path);
 		$schema  = $handler->draft();
 		
@@ -16,7 +16,7 @@ class PhpDrafterTest extends CIModuleTests\Support\UnitTestCase
 	
 	public function testEmptyFileReturnsNull()
 	{
-		$path = MODULESUPPORTPATH . 'Schemas/Empty/NothingToSee.php';
+		$path = SUPPORTPATH . 'Schemas/Empty/NothingToSee.php';
 		$handler = new PhpHandler($this->config, $path);
 		
 		$this->assertNull($handler->draft());
@@ -24,7 +24,7 @@ class PhpDrafterTest extends CIModuleTests\Support\UnitTestCase
 	
 	public function testMissingVariableReturnsNull()
 	{
-		$path = MODULESUPPORTPATH . 'Schemas/Invalid/NoSchemaVariable.php';
+		$path = SUPPORTPATH . 'Schemas/Invalid/NoSchemaVariable.php';
 		$handler = new PhpHandler($this->config, $path);
 		
 		$this->assertNull($handler->draft());

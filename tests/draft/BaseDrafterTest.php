@@ -5,7 +5,7 @@ use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Table;
 
-class BaseDrafterTest extends CIModuleTests\Support\UnitTestCase
+class BaseDrafterTest extends Tests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{

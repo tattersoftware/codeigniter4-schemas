@@ -4,7 +4,7 @@ use Tatter\Schemas\Reader\Handlers\CacheHandler;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 
-class CacheReaderTest extends CIModuleTests\Support\UnitTestCase
+class CacheReaderTest extends Tests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{

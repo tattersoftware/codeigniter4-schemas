@@ -2,7 +2,7 @@
 
 use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 
-class ModelDrafterTest extends CIModuleTests\Support\UnitTestCase
+class ModelDrafterTest extends Tests\Support\UnitTestCase
 {
 	public function setUp(): void
 	{
@@ -23,7 +23,7 @@ class ModelDrafterTest extends CIModuleTests\Support\UnitTestCase
 		$models = $method($this->handler);		
 
 		$this->assertCount(4, $models);
-		$this->assertContains('CIModuleTests\Support\Models\FactoryModel', $models);
+		$this->assertContains('Tests\Support\Models\FactoryModel', $models);
 	}
 
 	public function testGetModelsRespectsGroup()
@@ -41,7 +41,7 @@ class ModelDrafterTest extends CIModuleTests\Support\UnitTestCase
 		$schema = $this->handler->draft();
 
 		$this->assertEquals('servicers', $schema->tables->servicers->name);
-		$this->assertEquals('CIModuleTests\Support\Models\WorkerModel', $schema->tables->workers->model);
+		$this->assertEquals('Tests\Support\Models\WorkerModel', $schema->tables->workers->model);
 		$this->assertCount(6, $schema->tables->machines->fields);
 		$this->assertTrue($schema->tables->factories->fields->id->primary_key);
 	}

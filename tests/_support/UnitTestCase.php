@@ -1,4 +1,4 @@
-<?php namespace CIModuleTests\Support;
+<?php namespace Tests\Support;
 
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
@@ -23,10 +23,11 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 	{
 		parent::setUp();
 		
-		$config                   = new \Tatter\Schemas\Config\Schemas();
-		$config->silent           = false;
-		$config->ignoredTables    = ['migrations'];
-		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
+		$config                    = new \Tatter\Schemas\Config\Schemas();
+		$config->silent            = false;
+		$config->ignoredTables     = ['migrations'];
+		$config->ignoredNamespaces = [];
+		$config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
 		$config->automate = [
 			'draft'   => false,
 			'archive' => false,

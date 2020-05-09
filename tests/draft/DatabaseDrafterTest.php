@@ -2,7 +2,7 @@
 
 use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 
-class DatabaseDrafterTest extends CIModuleTests\Support\DatabaseTestCase
+class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 {
 	public function setUp(): void
 	{

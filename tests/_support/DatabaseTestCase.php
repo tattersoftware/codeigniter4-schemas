@@ -1,4 +1,4 @@
-<?php namespace CIModuleTests\Support;
+<?php namespace Tests\Support;
 
 use CodeIgniter\Config\Services;
 
@@ -16,21 +16,21 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	 *
 	 * @var string
 	 */
-	protected $seed = 'CIModuleTests\Support\Database\Seeds\TestSeeder';
+	protected $seed = 'Tests\Support\Database\Seeds\TestSeeder';
 
 	/**
 	 * The path to where we can find the test Seeds directory.
 	 *
 	 * @var string
 	 */
-	protected $basePath = MODULESUPPORTPATH . 'Database/';
+	protected $basePath = SUPPORTPATH . 'Database/';
 
 	/**
 	 * The namespace to help us find the migration classes.
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'CIModuleTests\Support';
+	protected $namespace = 'Tests\Support';
 
 	/**
 	 * Preconfigured config instance.
@@ -56,10 +56,11 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 	{
 		parent::setUp();
 		
-		$config                   = new \Tatter\Schemas\Config\Schemas();
-		$config->silent           = false;
-		$config->ignoredTables    = ['migrations'];
-		$config->schemasDirectory = MODULESUPPORTPATH . 'Schemas/Good';
+		$config                    = new \Tatter\Schemas\Config\Schemas();
+		$config->silent            = false;
+		$config->ignoredTables     = ['migrations'];
+		$config->ignoredNamespaces = [];
+		$config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
 		$config->automate = [
 			'draft'   => false,
 			'archive' => false,
