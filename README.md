@@ -1,6 +1,8 @@
 # Tatter\Schemas
 Database schema management, for CodeIgniter 4
 
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3APHPUnit)
+
 ## Quick Start
 
 1. Install with Composer: `> composer require tatter/schemas`
@@ -116,6 +118,11 @@ Currently supported handlers:
 ## Archiving/reading
 
 * Cache
+
+## Database Support
+
+All CodeIgniter 4 database drivers work but due to some differences in index handling they
+may not all report the same results. Example: see skipped tests for SQLite3.
 
 ## Development
 

@@ -49,6 +49,11 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 	
 	public function testDetectsAllRelationships()
 	{
+		if ($this->db->DBDriver === 'SQLite3')
+		{
+			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+		}
+
 		$relationsCount = 0;
 		foreach ($this->schema->tables as $table)
 		{
@@ -82,6 +87,11 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 	
 	public function testHasManyFromForeignKey()
 	{
+		if ($this->db->DBDriver === 'SQLite3')
+		{
+			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+		}
+
 		$table1 = $this->schema->tables->workers;
 		$table2 = $this->schema->tables->lawsuits;
 		

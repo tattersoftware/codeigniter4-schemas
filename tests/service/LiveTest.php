@@ -25,6 +25,11 @@ class LiveTest extends Tests\Support\DatabaseTestCase
 	
 	public function testDatabaseMergeFile()
 	{
+		if ($this->db->DBDriver === 'SQLite3')
+		{
+			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+		}
+
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		$fileHandler     = new DirectoryHandler($this->config);
 			
@@ -36,6 +41,11 @@ class LiveTest extends Tests\Support\DatabaseTestCase
 	
 	public function testMergeAllDrafters()
 	{
+		if ($this->db->DBDriver === 'SQLite3')
+		{
+			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+		}
+
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		$modelHandler    = new ModelHandler($this->config);
 		$fileHandler     = new DirectoryHandler($this->config);
@@ -62,6 +72,11 @@ class LiveTest extends Tests\Support\DatabaseTestCase
 	
 	public function testAutoRead()
 	{
+		if ($this->db->DBDriver === 'SQLite3')
+		{
+			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+		}
+
 		$this->config->automate['read'] = true;
 		
 		// Draft & archive a copy of the schema so we can test reading it

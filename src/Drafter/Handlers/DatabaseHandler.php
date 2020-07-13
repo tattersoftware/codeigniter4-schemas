@@ -288,7 +288,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 						// Build the relation
 						$relation = new Relation();
 						$relation->type      = 'belongsTo';
-						$relation->singleton = 'belongsTo';
+						$relation->singleton = true;
 						$relation->table     = $tableName2;
 						$relation->pivots    = [$pivot];
 

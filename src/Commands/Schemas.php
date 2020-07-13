@@ -6,10 +6,10 @@ use Tatter\Schemas\Exceptions\SchemasException;
 
 class Schemas extends BaseCommand
 {
-    protected $group       = 'Schemas';
-    protected $name        = 'schemas';
-    protected $description = 'Manage database schemas.';
-    
+	protected $group       = 'Schemas';
+	protected $name        = 'schemas';
+	protected $description = 'Manage database schemas.';
+
 	protected $usage   = "schemas [-draft handler1,handler2,...] [-archive handler1,... | -print]";
 	protected $options = [
 		'-draft'   => 'Handler(s) for drafting the schema ("database", "model", etc)',
@@ -18,10 +18,16 @@ class Schemas extends BaseCommand
 	];
 
 	public function run(array $params)
-    {
-		$schemas = service('schemas');
+	{
+		// Always use a clean library with automation disabled
 		$config  = config('Schemas');
-		
+		$config->automate = [
+			'draft'   => false,
+			'archive' => false,
+			'read'    => false,
+		];
+		$schemas = new \Tatter\Schemas\Schemas($config, null);
+
 		// Determine draft handlers
 		if ($drafters = $params['-draft'] ?? CLI::getOption('draft'))
 		{
@@ -72,7 +78,7 @@ class Schemas extends BaseCommand
 			$this->showError($e);
 		}
 		
-		if (! $result)
+		if (empty($result))
 		{
 			CLI::write('Archive failed!', 'red');
 			foreach ($schemas->getErrors() as $error)
