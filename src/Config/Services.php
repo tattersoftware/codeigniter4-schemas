@@ -7,7 +7,8 @@ class Services extends BaseService
 {
     public static function schemas(BaseConfig $config = null, bool $getShared = true)
     {
-		if ($getShared) {
+		if ($getShared)
+		{
 			return static::getSharedInstance('schemas', $config);
 		}
 

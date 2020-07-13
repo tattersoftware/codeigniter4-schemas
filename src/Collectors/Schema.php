@@ -96,7 +96,7 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 		foreach ($this->schema->tables as $table)
 		{
 			$html .= '<h4>' . $table->name . '</h4>' . PHP_EOL;
-			$html .= '<pre><code>' . print_r($table, true) . '</pre></code>' . PHP_EOL;
+			$html .= '<pre style="color: gray;"><code>' . print_r($table, true) . '</pre></code>' . PHP_EOL;
 		}
 
 		return $html;

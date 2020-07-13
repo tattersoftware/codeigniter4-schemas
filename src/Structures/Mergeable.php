@@ -32,7 +32,14 @@ class Mergeable implements \Countable, \IteratorAggregate
 			{
 				foreach ($item as $mykey => $value)
 				{
-					$this->$key->$mykey = $value;
+					if ($item instanceof Mergeable && $this->$key instanceof Mergeable)
+					{
+						$this->$key->merge($item);
+					}
+					else
+					{
+						$this->$key->$mykey = $value;
+					}
 				}
 			}
 			else
