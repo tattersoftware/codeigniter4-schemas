@@ -119,6 +119,11 @@ Currently supported handlers:
 
 * Cache
 
+## Database Support
+
+All CodeIgniter 4 database drivers work but due to some differences in index handling they
+may not all report the same results. Example: see skipped tests for SQLite3.
+
 ## Development
 
 The eventual goal is to support mapping from and deploying to any source. Planned handler
