@@ -1,6 +1,8 @@
 # Tatter\Schemas
 Database schema management, for CodeIgniter 4
 
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3APHPUnit)
+
 ## Quick Start
 
 1. Install with Composer: `> composer require tatter/schemas`
