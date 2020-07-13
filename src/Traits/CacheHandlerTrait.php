@@ -28,7 +28,7 @@ trait CacheHandlerTrait
 	 public function cacheInit(CacheInterface $cache = null)
 	 {
 		// By default use an enviroment-specific name (helps with testing collisions)
-		$this->cacheKey = 'schema:' . ENVIRONMENT;
+		$this->cacheKey = 'schema-' . ENVIRONMENT;
 
 		// Use injected cache handler, or get the default from its service
 		if (is_null($cache))

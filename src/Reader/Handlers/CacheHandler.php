@@ -71,7 +71,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		{
 			if ($this->tables->$tableName === true)
 			{
-				$this->tables->$tableName = $this->cache->get($this->cacheKey . ':' . $tableName);
+				$this->tables->$tableName = $this->cache->get($this->cacheKey . '-' . $tableName);
 			}
 		}
 		
