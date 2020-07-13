@@ -76,8 +76,8 @@ class DatabaseTestCase extends \CodeIgniter\Test\CIDatabaseTestCase
 		parent::tearDown();
 		
 		$this->schemas->reset();
-		
 		unset($this->schema);
 		unset($this->handler);
+		cache()->clean();
 	}
 }

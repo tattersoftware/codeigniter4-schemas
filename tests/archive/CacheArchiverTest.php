@@ -18,7 +18,7 @@ class CacheArchiverTest extends Tests\Support\UnitTestCase
 
 	public function testGetKeyUsesEnvironment()
 	{
-		$this->assertEquals('schema:testing', $this->handler->getKey());
+		$this->assertEquals('schema-testing', $this->handler->getKey());
 	}
 
 	public function testSetKeyChangesKey()
@@ -58,7 +58,7 @@ class CacheArchiverTest extends Tests\Support\UnitTestCase
 
 		foreach ($tables as $tableName => $table)
 		{
-			$this->assertEquals($table, $this->cache->get($key . ':' . $tableName));
+			$this->assertEquals($table, $this->cache->get($key . '-' . $tableName));
 		}
 	}
 	

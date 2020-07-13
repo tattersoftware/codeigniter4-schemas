@@ -17,7 +17,7 @@ class LiveTest extends Tests\Support\DatabaseTestCase
 		$this->assertEmpty($this->schemas->getErrors());
 		
 		$schemaFromService = $this->schemas->get();
-		$schemaFromCache   = $cache->get('schema:testing');
+		$schemaFromCache   = $cache->get('schema-testing');
 		$this->assertEquals(count($schemaFromCache->tables), count($schemaFromService->tables));
 		
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);

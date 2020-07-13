@@ -81,7 +81,7 @@ class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
 		parent::tearDown();
 		
 		$this->schemas->reset();
-		
 		unset($this->schema);
+		cache()->clean();
 	}
 }
