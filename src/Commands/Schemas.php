@@ -6,7 +6,7 @@ use Tatter\Schemas\Exceptions\SchemasException;
 
 class Schemas extends BaseCommand
 {
-	protected $group       = 'Schemas';
+	protected $group       = 'Database';
 	protected $name        = 'schemas';
 	protected $description = 'Manage database schemas.';
 
