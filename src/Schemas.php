@@ -55,7 +55,8 @@ class Schemas
 	{
 		$tmpErrors    = $this->errors;
 		$this->errors = [];
-		return $this->errors;
+		
+		return $tmpErrors;
 	}
 
 	/**
