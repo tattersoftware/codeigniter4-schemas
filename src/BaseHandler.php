@@ -38,6 +38,7 @@ class BaseHandler
 	{
 		$tmpErrors    = $this->errors;
 		$this->errors = [];
-		return $this->errors;
+		
+		return $tmpErrors;
 	}
 }
