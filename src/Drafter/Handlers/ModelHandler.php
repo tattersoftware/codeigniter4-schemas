@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Model;
 use Config\Services;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
@@ -162,12 +163,27 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		// Try to load each class
 		foreach ($classes as $class)
 		{
-			// Try to instantiate
-			try { $instance = new $class(); }
-			catch (\Exception $e) { continue; }
-			
+			// Check for ignored namespaces
+			foreach ($this->config->ignoredNamespaces as $namespace)
+			{
+				if (strpos($class, $namespace) === 0)
+				{
+					continue 2;
+				}
+			}
+
 			// Make sure it's really a model
-			if (! ($instance instanceof \CodeIgniter\Model))
+			if (! is_a($class, Model::class, true))
+			{
+				continue;
+			}
+
+			// Try to instantiate
+			try
+			{
+				$instance = new $class();
+			}
+			catch (\Exception $e)
 			{
 				continue;
 			}
