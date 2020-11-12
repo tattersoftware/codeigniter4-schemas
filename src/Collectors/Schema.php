@@ -1,7 +1,7 @@
 <?php namespace Tatter\Schemas\Collectors;
 
 /**
- * Auth collector
+ * Schema collector
  */
 class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 {
@@ -46,7 +46,7 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 
 	//--------------------------------------------------------------------
 
-	
+
     /**
      * Load a copy of the schema.
      */
@@ -75,7 +75,7 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 	}
 
 	//--------------------------------------------------------------------
-	
+
 	/**
 	 * Returns the data of this collector to be formatted in the toolbar
 	 *
