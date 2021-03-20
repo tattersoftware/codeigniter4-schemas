@@ -34,7 +34,7 @@ class UnitTestCase extends CIUnitTestCase
 		$config                    = new \Tatter\Schemas\Config\Schemas();
 		$config->silent            = false;
 		$config->ignoredTables     = ['migrations'];
-		$config->ignoredNamespaces = [];
+		$config->ignoredNamespaces = ['Tatter\Agents'];
 		$config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
 		$config->automate = [
 			'draft'   => false,

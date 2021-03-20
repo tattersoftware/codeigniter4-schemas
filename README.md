@@ -1,7 +1,9 @@
 # Tatter\Schemas
 Database schema management, for CodeIgniter 4
 
-[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3APHPUnit)
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3A%22PHPUnit)
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPStan/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3A%22PHPStan)
+[![Coverage Status](https://coveralls.io/repos/github/tattersoftware/codeigniter4-schemas/badge.svg?branch=develop)](https://coveralls.io/github/tattersoftware/codeigniter4-schemas?branch=develop)
 
 ## Quick Start
 
