@@ -1,6 +1,9 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Database\BaseConnection;
+use CodeIgniter\Database\ConnectionInterface;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Structures\Mergeable;
@@ -16,7 +19,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * The main database connection.
 	 *
-	 * @var ConnectionInterface
+	 * @var BaseConnection
 	 */
 	protected $db;
 
@@ -37,10 +40,10 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Save the config and set up the database connection
 	 *
-	 * @param BaseConfig  $config   The library config
-	 * @param string      $db       A database connection, or null to use the default
+	 * @param SchemasConfig $config The library config
+	 * @param string $db            A database connection, or null to use the default
 	 */
-	public function __construct(BaseConfig $config = null, $db = null)
+	public function __construct(SchemasConfig $config = null, $db = null)
 	{		
 		parent::__construct($config);
 		

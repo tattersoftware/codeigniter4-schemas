@@ -11,7 +11,7 @@ class BaseDrafterTest extends Tests\Support\UnitTestCase
 	{
 		parent::setUp();
 
-		$this->handler = new BaseDrafter($this->config);
+		$this->handler = new class($this->config) extends BaseDrafter {};
 	}
 
 	public function testFindKeyToForeignTable()

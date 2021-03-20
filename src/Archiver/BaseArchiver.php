@@ -1,17 +1,24 @@
 <?php namespace Tatter\Schemas\Archiver;
 
+use CodeIgniter\Files\Exceptions\FileNotFoundException;
+use CodeIgniter\Files\File;
 use Tatter\Schemas\BaseHandler;
 
-class BaseArchiver extends BaseHandler
+/**
+ * Base Archiver Class
+ *
+ * Provides common methods for Archiver classes.
+ */
+abstract class BaseArchiver extends BaseHandler
 {
-	// COMMON FUNCTIONS FOR FILE HANDLERS
-	
 	/**
 	 * Validate or create a file and write to it.
 	 *
-	 * @param string $path    The path to the file
+	 * @param string $path The path to the file
 	 *
-	 * @throws 
+	 * @return bool Success or failure
+	 *
+	 * @throws FileNotFoundException
 	 */
 	protected function putContents($path, string $data): bool
 	{
@@ -22,7 +29,7 @@ class BaseArchiver extends BaseHandler
 			if ($this->config->silent)
 			{
 				$this->errors[] = lang('Files.fileNotFound', [$path]);
-				return null;
+				return false;
 			}
 			else
 			{
@@ -31,6 +38,7 @@ class BaseArchiver extends BaseHandler
 		}
 
 	    $file = $file->openFile('w');
-		return (bool)$file->fwrite($data);
+
+		return (bool) $file->fwrite($data);
 	}
 }

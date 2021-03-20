@@ -1,8 +1,9 @@
 <?php namespace Tatter\Schemas\Reader;
 
-use Tatter\Schemas\Structures\Schema;
+use Countable;
+use IteratorAggregate;
 
-interface ReaderInterface extends \Countable, \IteratorAggregate
+interface ReaderInterface extends Countable, IteratorAggregate
 {
 	/**
 	 * Indicate whether the reader is in a state to be used

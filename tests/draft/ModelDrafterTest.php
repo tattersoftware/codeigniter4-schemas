@@ -22,7 +22,7 @@ class ModelDrafterTest extends Tests\Support\UnitTestCase
 		$method = $this->getPrivateMethodInvoker($this->handler, 'getModels');
 		$models = $method($this->handler);		
 
-		$this->assertCount(4, $models);
+		$this->assertCount(4, $models, implode(PHP_EOL, $models));
 		$this->assertContains('Tests\Support\Models\FactoryModel', $models);
 	}
 

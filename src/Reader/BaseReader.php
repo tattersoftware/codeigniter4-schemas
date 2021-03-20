@@ -1,8 +1,14 @@
 <?php namespace Tatter\Schemas\Reader;
 
 use Tatter\Schemas\BaseHandler;
+use Tatter\Schemas\Exceptions\SchemasException;
 
-class BaseReader extends BaseHandler
+/**
+ * Base Drafter Class
+ *
+ * Provides common methods for Reader classes.
+ */
+abstract class BaseReader extends BaseHandler
 {
 	/**
 	 * Whether the reader is in a state to be used
@@ -23,7 +29,7 @@ class BaseReader extends BaseHandler
 	/**
 	 * Indicate whether the reader is in a state to be used
 	 *
-	 * @param array|string $tables
+	 * @return bool
 	 */
 	public function ready(): bool
 	{
@@ -33,7 +39,7 @@ class BaseReader extends BaseHandler
 	/**
 	 * Check that reader is ready before using its functions
 	 *
-	 * @param array|string $tables
+	 * @return bool
 	 */
 	protected function ensureReady(): bool
 	{
@@ -58,16 +64,12 @@ class BaseReader extends BaseHandler
 	 */
 	public function fetch($tables)
 	{
-
 	}
 
 	/**
 	 * Dummy implementation for classes that only bulk load
-	 *
-	 * @param array|string $tables
 	 */
 	public function fetchAll()
 	{
-
 	}
 }

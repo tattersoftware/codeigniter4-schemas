@@ -1,7 +1,9 @@
 # Tatter\Schemas
 Database schema management, for CodeIgniter 4
 
-[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3APHPUnit)
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3A%22PHPUnit)
+[![](https://github.com/tattersoftware/codeigniter4-schemas/workflows/PHPStan/badge.svg)](https://github.com/tattersoftware/codeigniter4-schemas/actions?query=workflow%3A%22PHPStan)
+[![Coverage Status](https://coveralls.io/repos/github/tattersoftware/codeigniter4-schemas/badge.svg?branch=develop)](https://coveralls.io/github/tattersoftware/codeigniter4-schemas?branch=develop)
 
 ## Quick Start
 
@@ -32,7 +34,7 @@ Or, install manually by downloading the source files and adding the directory to
 ## Configuration (optional)
 
 The library's default behavior can be altered by extending its config file. Copy
-**bin/Schemas.php** to **app/Config/** and follow the instructions
+**examples/Schemas.php** to **app/Config/** and follow the instructions
 in the comments. If no config file is found in **app/Config** the library will use its own.
 
 ## Usage

@@ -1,23 +1,19 @@
 <?php namespace Tatter\Schemas\Config;
 
-use CodeIgniter\Config\BaseService;
+use Config\Services as BaseService;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
+use Tatter\Schemas\Schemas;
 use Tatter\Schemas\Structures\Schema;
 
 class Services extends BaseService
 {
-    public static function schemas(BaseConfig $config = null, bool $getShared = true)
+    public static function schemas(SchemasConfig $config = null, bool $getShared = true)
     {
 		if ($getShared)
 		{
 			return static::getSharedInstance('schemas', $config);
 		}
 
-		// If no config was injected then load one
-		if (empty($config))
-		{
-			$config = config('Schemas');
-		}
-		
-		return new \Tatter\Schemas\Schemas($config);
+		return new Schemas($config ?? config('Schemas'));
 	}
 }

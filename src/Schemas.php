@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas;
 
-use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Debug\Timer;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Structures\Schema;
 
@@ -9,47 +10,52 @@ class Schemas
 	/**
 	 * The current config.
 	 *
-	 * @var Tatter\Schemas\Config\Schemas
+	 * @var SchemasConfig
 	 */
 	protected $config;
 
 	/**
 	 * The current schema.
 	 *
-	 * @var Tatter\Schemas\Structures\Schema
+	 * @var Schema|null
 	 */
 	protected $schema;
 
 	/**
 	 * The timer service for benchmarking.
 	 *
-	 * @var Tatter\Schemas\Structures\Schema
+	 * @var Timer
 	 */
 	protected $timer;
 	
 	/**
 	 * Array of error messages assigned on failure.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected $errors = [];
-	
-	// Initiate library
-	public function __construct(BaseConfig $config, Schema $schema = null)
+
+	/**
+	 * Initiates the library.
+	 *
+	 * @param SchemasConfig $config
+	 * @param Schema|null $schema
+	 */
+	public function __construct(SchemasConfig $config, Schema $schema = null)
 	{
 		$this->config = $config;
-		
+
 		// Store initial schema
 		$this->schema = $schema;
-		
+
 		// Grab the Timer service for benchmarking
 		$this->timer = service('timer');
 	}
 
 	/**
-	 * Return and clear any error messages
+	 * Return and clear any error messages.
 	 *
-	 * @return array  String error messages
+	 * @return string[]
 	 */
 	public function getErrors(): array
 	{
@@ -225,7 +231,7 @@ class Schemas
 	/**
 	 * Read in a schema from the given or default handler
 	 *
-	 * @param array|string|null  $handlers
+	 * @param array|string|null $handler
 	 *
 	 * @return $this
 	 */

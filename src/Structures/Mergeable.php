@@ -1,6 +1,10 @@
 <?php namespace Tatter\Schemas\Structures;
 
-class Mergeable implements \Countable, \IteratorAggregate
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+
+class Mergeable implements Countable, IteratorAggregate
 {
 	/**
 	 * Merge two structures together.
@@ -91,7 +95,8 @@ class Mergeable implements \Countable, \IteratorAggregate
 	 *
 	 * @return ArrayIterator
 	 */
-	public function getIterator() {
-		return new \ArrayIterator($this);
+	public function getIterator()
+	{
+		return new ArrayIterator($this); // @phpstan-ignore-line
 	}
 }
