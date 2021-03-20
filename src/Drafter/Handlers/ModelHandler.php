@@ -3,6 +3,7 @@
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Model;
 use Config\Services;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Structures\Schema;
@@ -28,10 +29,10 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Save the config and set the initial database group
 	 *
-	 * @param BaseConfig  $config   The library config
-	 * @param string      $group    A database group to use as a filter; null = default group, false = no filtering
+	 * @param SchemasConfig $config The library config
+	 * @param string $group         A database group to use as a filter; null = default group, false = no filtering
 	 */
-	public function __construct(BaseConfig $config = null, $group = null)
+	public function __construct(SchemasConfig $config = null, $group = null)
 	{		
 		parent::__construct($config);
 		

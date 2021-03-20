@@ -4,16 +4,22 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use CodeIgniter\Files\File;
 use Tatter\Schemas\BaseHandler;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Structures\Table;
 
-class BaseDrafter extends BaseHandler
+/**
+ * Base Drafter Class
+ *
+ * Provides common methods for Drafter classes.
+ */
+abstract class BaseDrafter extends BaseHandler
 {
 	/**
 	 * Load the helper
 	 *
-	 * @param BaseConfig  $config   The library config
+	 * @param SchemasConfig $config The library config
 	 */
-	public function __construct(BaseConfig $config = null)
+	public function __construct(SchemasConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -86,18 +92,18 @@ class BaseDrafter extends BaseHandler
 	 *
 	 * @param string $path    The path to the file
 	 *
-	 * @throws 
+	 * @throws FileNotFoundException
 	 */
 	protected function getContents($path): ?string
 	{
-		$file = new File($path, $this->config->silent); // if not silent then will throw for missing files
+		$file = new File($path, $this->config->silent); // If not silent then will throw for missing files
 		
 		if (! $file->isFile())
 		{
 			$this->errors[] = lang('Files.fileNotFound', [$path]);
 			return null;
 		}
-		
+
 		return file_get_contents($file->getRealPath());
 	}
 }

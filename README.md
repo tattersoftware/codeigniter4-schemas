@@ -32,7 +32,7 @@ Or, install manually by downloading the source files and adding the directory to
 ## Configuration (optional)
 
 The library's default behavior can be altered by extending its config file. Copy
-**bin/Schemas.php** to **app/Config/** and follow the instructions
+**examples/Schemas.php** to **app/Config/** and follow the instructions
 in the comments. If no config file is found in **app/Config** the library will use its own.
 
 ## Usage

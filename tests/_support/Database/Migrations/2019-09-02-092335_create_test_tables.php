@@ -2,6 +2,9 @@
 
 use CodeIgniter\Database\Migration;
 
+/**
+ * @property \CodeIgniter\Database\BaseConnection $db
+ */
 class CreateTestTables extends Migration
 {
 	public function up()
@@ -62,8 +65,8 @@ class CreateTestTables extends Migration
 
 		$this->forge->addUniqueKey(['factory_id', 'worker_id']);
 		$this->forge->addUniqueKey(['worker_id', 'factory_id']);
-		$this->forge->addForeignKey('factory_id', 'factories', 'id', false, 'CASCADE');
-		$this->forge->addForeignKey('worker_id', 'workers', 'id', false, 'CASCADE');
+		$this->forge->addForeignKey('factory_id', 'factories', 'id', '', 'CASCADE');
+		$this->forge->addForeignKey('worker_id', 'workers', 'id', '', 'CASCADE');
 		
 		$this->forge->createTable('factories_workers');
 		
@@ -133,7 +136,7 @@ class CreateTestTables extends Migration
 		$this->forge->addKey(['deleted_at', 'id']);
 		$this->forge->addKey('created_at');
 		
-		$this->forge->addForeignKey('servicer_id', 'servicers', 'id', false, 'CASCADE');
+		$this->forge->addForeignKey('servicer_id', 'servicers', 'id', '', 'CASCADE');
 		
 		$this->forge->createTable('lawyers');
 
@@ -152,7 +155,7 @@ class CreateTestTables extends Migration
 		$this->forge->addField('id');
 		$this->forge->addField($fields);
 
-		$this->forge->addForeignKey('client', 'workers', 'id', false, 'CASCADE');
+		$this->forge->addForeignKey('client', 'workers', 'id', '', 'CASCADE');
 		$this->forge->addKey('lawyer_id');
 		$this->forge->addKey(['deleted_at', 'id']);
 		$this->forge->addKey('created_at');

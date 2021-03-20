@@ -78,7 +78,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Try to match a file to its handler by the extension
 	 *
-	 * @return SchemaHandlerInterface
+	 * @return DrafterInterface|null
 	 */	
 	protected function getHandlerForFile(string $path): ?DrafterInterface
 	{

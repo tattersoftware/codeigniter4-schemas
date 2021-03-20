@@ -1,6 +1,7 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Exceptions\SchemasException;
@@ -18,10 +19,10 @@ class PhpHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Save the config and the path to the file
 	 *
-	 * @param BaseConfig  $config   The library config
-	 * @param string      $path     Path to the file to process
+	 * @param SchemasConfig $config The library config
+	 * @param string $path          Path to the file to process
 	 */
-	public function __construct(BaseConfig $config = null, $path = null)
+	public function __construct(SchemasConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
 		

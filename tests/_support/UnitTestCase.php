@@ -1,5 +1,8 @@
 <?php namespace Tests\Support;
 
+use CodeIgniter\Test\CIUnitTestCase;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
+use Tatter\Schemas\Schemas;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Table;
@@ -7,17 +10,22 @@ use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Index;
 use Tatter\Schemas\Structures\ForeignKey;
 
-class UnitTestCase extends \CodeIgniter\Test\CIUnitTestCase
+class UnitTestCase extends CIUnitTestCase
 {
 	/**
-	 * Preconfigured config instance.
+	 * @var SchemasConfig
 	 */
 	protected $config;
 
 	/**
-	 * Instance of the library.
+	 * @var Schemas|null
 	 */
 	protected $schemas;
+
+	/**
+	 * @var Schema|null
+	 */
+	protected $schema;
 
 	public function setUp(): void
 	{

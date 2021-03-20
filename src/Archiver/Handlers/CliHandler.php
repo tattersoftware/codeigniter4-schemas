@@ -15,6 +15,7 @@ class CliHandler extends BaseArchiver implements ArchiverInterface
 	 */
 	public function archive(Schema $schema): bool
 	{
+		// @phpstan-ignore-next-line
 		+d($schema); // plus disables Kint's depth limit
 
 		return true;

@@ -8,11 +8,15 @@ use Tatter\Schemas\Reader\ReaderInterface;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Traits\CacheHandlerTrait;
+use ArrayIterator;
 
 class CacheHandler extends BaseReader implements ReaderInterface
 {
 	use CacheHandlerTrait;
-	
+
+	/**
+	 * @var Mergeable|null
+	 */
 	protected $tables;
 
 	/**
@@ -41,7 +45,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Return the current tables, fetched or not
 	 *
-	 * @return array|null
+	 * @return Mergeable|null
 	 */
 	public function getTables(): ?Mergeable
 	{
@@ -106,7 +110,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	 *
 	 * @param string $name Property (table) name to check for
 	 *
-	 * @return bool  Success or failure
+	 * @return Table|null
 	 */
 	public function __get(string $name): ?Table
 	{
@@ -150,9 +154,10 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Fetch all the tables and return them for iteration.
 	 *
-	 * @return ArrayIterator
+	 * @return Mergeable
 	 */
-	public function getIterator() {
+	public function getIterator(): Mergeable
+	{
 		return $this->fetchAll()->tables;
 	}
 }

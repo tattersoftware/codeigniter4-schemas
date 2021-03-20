@@ -25,6 +25,7 @@
 	},
 	"require-dev": {
 		"codeigniter4/codeigniter4": "dev-develop",
+		"tatter/agents": "^1.2",
 		"tatter/tools": "^1.7"
 	},
 	"autoload": {
