@@ -1,7 +1,7 @@
 <?php namespace Tatter\Schemas\Reader\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
-use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Reader\BaseReader;
 use Tatter\Schemas\Reader\ReaderInterface;
@@ -22,10 +22,10 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Save config and set up the cache
 	 *
-	 * @param BaseConfig      $config   The library config
-	 * @param CacheInterface  $cache    The cache handler to use, null to load a new default
+	 * @param SchemasConfig $config The library config
+	 * @param CacheInterface $cache The cache handler to use, null to load a new default
 	 */
-	public function __construct(BaseConfig $config = null, CacheInterface $cache = null)
+	public function __construct(SchemasConfig $config = null, CacheInterface $cache = null)
 	{		
 		parent::__construct($config);
 		

@@ -33,7 +33,7 @@ trait CacheHandlerTrait
 		// Use injected cache handler, or get the default from its service
 		if (is_null($cache))
 		{
-			$cache = \Config\Services::cache();
+			$cache = Services::cache();
 		}
 		
 		if (! $cache->isSupported())
@@ -54,6 +54,7 @@ trait CacheHandlerTrait
 	public function setKey(string $name)
 	{
 		$this->cacheKey = $name;
+
 		return $this;
 	}
 

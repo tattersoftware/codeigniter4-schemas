@@ -1,42 +1,36 @@
 <?php
 
-use Tatter\Schemas\Archiver\Handlers\CacheHandler;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
+use Tests\Support\CacheTrait;
+use Tests\Support\MockSchemaTrait;
+use Tests\Support\SchemasTestCase;
 
-class CacheArchiverTest extends Tests\Support\UnitTestCase
+class CacheArchiverTest extends SchemasTestCase
 {
-	public function setUp(): void
-	{
-		parent::setUp();
-				
-//		$this->cache = new MockCache(); ??
-		$this->cache = \Config\Services::cache();
-		
-		$this->handler = new CacheHandler($this->config, $this->cache);
-	}
+	use CacheTrait, MockSchemaTrait;
 
 	public function testGetKeyUsesEnvironment()
 	{
-		$this->assertEquals('schema-testing', $this->handler->getKey());
+		$this->assertEquals('schema-testing', $this->archiver->getKey());
 	}
 
 	public function testSetKeyChangesKey()
 	{
-		$this->handler->setKey('testKey');
+		$this->archiver->setKey('testKey');
 
-		$this->assertEquals('testKey', $this->handler->getKey());
+		$this->assertEquals('testKey', $this->archiver->getKey());
 	}
 
 	public function testArchiveReturnsTrueOnSuccess()
 	{		
-		$this->assertTrue($this->handler->archive($this->schema));
+		$this->assertTrue($this->archiver->archive($this->schema));
 	}
 
 	public function testArchiveStoresScaffold()
 	{
-		$key = $this->handler->getKey();
-		$this->handler->archive($this->schema);
+		$key = $this->archiver->getKey();
+		$this->archiver->archive($this->schema);
 		
 		$expected = new Schema();
 		$expected->tables = new Mergeable();
@@ -51,24 +45,14 @@ class CacheArchiverTest extends Tests\Support\UnitTestCase
 
 	public function testArchiveStoresEachTable()
 	{
-		$key = $this->handler->getKey();
+		$key = $this->archiver->getKey();
 		$tables = $this->schema->tables;
 
-		$this->handler->archive($this->schema);
+		$this->archiver->archive($this->schema);
 
 		foreach ($tables as $tableName => $table)
 		{
 			$this->assertEquals($table, $this->cache->get($key . '-' . $tableName));
 		}
-	}
-	
-	public function tearDown(): void
-	{
-		parent::tearDown();
-
-		$this->cache->clean();
-
-		$cache = $this->getPrivateProperty($this->handler, 'cache');
-		$cache->clean();
 	}
 }

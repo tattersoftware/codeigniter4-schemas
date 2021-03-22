@@ -29,7 +29,7 @@ class SchemasTestCase extends CIUnitTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		
+
 		$config                    = new SchemasConfig();
 		$config->silent            = false;
 		$config->ignoredTables     = ['migrations'];
