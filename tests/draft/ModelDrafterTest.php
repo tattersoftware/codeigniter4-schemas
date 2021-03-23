@@ -1,8 +1,9 @@
 <?php
 
 use Tatter\Schemas\Drafter\Handlers\ModelHandler;
+use Tests\Support\SchemasTestCase;
 
-class ModelDrafterTest extends Tests\Support\UnitTestCase
+class ModelDrafterTest extends SchemasTestCase
 {
 	public function setUp(): void
 	{

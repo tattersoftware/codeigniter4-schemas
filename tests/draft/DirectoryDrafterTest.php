@@ -1,8 +1,9 @@
 <?php
 
 use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
+use Tests\Support\SchemasTestCase;
 
-class DirectoryDrafterTest extends Tests\Support\UnitTestCase
+class DirectoryDrafterTest extends SchemasTestCase
 {
 	public function testEmptyDirectoryReturnsNull()
 	{

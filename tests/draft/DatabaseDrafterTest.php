@@ -1,9 +1,25 @@
 <?php
 
+use CodeIgniter\Test\DatabaseTestTrait;
 use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
+use Tests\Support\Database\Seeds\TestSeeder;
+use Tests\Support\SchemasTestCase;
 
-class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
+class DatabaseDrafterTest extends SchemasTestCase
 {
+	use DatabaseTestTrait;
+
+	// Configure the database to be migrated and seeded once
+	protected $migrateOnce = true;
+	protected $seedOnce    = true;
+	protected $seed        = TestSeeder::class;
+	protected $basePath    = SUPPORTPATH . 'Database/';
+
+	/**
+	 * @var DatabaseHandler
+	 */
+	private $handler;
+
 	public function setUp(): void
 	{
 		parent::setUp();

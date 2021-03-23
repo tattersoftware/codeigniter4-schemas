@@ -1,8 +1,9 @@
 <?php
 
+use CodeIgniter\Test\CIUnitTestCase;
 use Tatter\Schemas\Structures\Mergeable;
 
-class MergeableTest extends \CodeIgniter\Test\CIUnitTestCase
+class MergeableTest extends CIUnitTestCase
 {
 	public function testMergeHasItem()
 	{

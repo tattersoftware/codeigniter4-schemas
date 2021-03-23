@@ -1,17 +1,30 @@
 <?php
 
+use CodeIgniter\Test\DatabaseTestTrait;
+use Config\Services;
+use Tatter\Schemas\Archiver\Handlers\CacheHandler as CacheArchiver;
 use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
 use Tatter\Schemas\Drafter\Handlers\ModelHandler;
+use Tests\Support\Database\Seeds\TestSeeder;
+use Tests\Support\SchemasTestCase;
 
-class LiveTest extends Tests\Support\DatabaseTestCase
+class LiveTest extends SchemasTestCase
 {
+	use DatabaseTestTrait;
+
+	// Configure the database to be migrated and seeded once
+	protected $migrateOnce = true;
+	protected $seedOnce    = true;
+	protected $seed        = TestSeeder::class;
+	protected $basePath    = SUPPORTPATH . 'Database/';
+
 	// Probably a quite common scenario
 	public function testDatabaseToCache()
 	{
-		$cache           = \Config\Services::cache();
+		$cache           = Services::cache();
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$cacheHandler    = new \Tatter\Schemas\Archiver\Handlers\CacheHandler($this->config, $cache);
+		$cacheHandler    = new CacheArchiver($this->config, $cache);
 				
 		$this->schemas->draft($databaseHandler)->archive($cacheHandler);
 		$this->assertEmpty($this->schemas->getErrors());

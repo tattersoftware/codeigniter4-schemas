@@ -1,8 +1,9 @@
 <?php
 
 use Tatter\Schemas\Drafter\Handlers\PhpHandler;
+use Tests\Support\SchemasTestCase;
 
-class PhpDrafterTest extends Tests\Support\UnitTestCase
+class PhpDrafterTest extends SchemasTestCase
 {
 	public function testSuccessReturnsSchemaFromFile()
 	{

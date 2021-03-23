@@ -23,6 +23,13 @@ class SchemasTestCase extends CIUnitTestCase
 	protected $schema;
 
 	/**
+	 * The namespace to help us find the migration classes.
+	 *
+	 * @var string
+	 */
+	protected $namespace = 'Tests\Support';
+
+	/**
 	 * Creates a standard, stable testing config
 	 * and initializes the library with it.
 	 */

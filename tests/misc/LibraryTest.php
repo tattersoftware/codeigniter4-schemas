@@ -3,8 +3,9 @@
 use Tatter\Schemas\Handlers\BaseHandler;
 use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
 use Tatter\Schemas\Structures\Schema;
+use Tests\Support\SchemasTestCase;
 
-class SchemasTest extends Tests\Support\UnitTestCase
+class LibraryTest extends SchemasTestCase
 {
 	public function testGetErrors()
 	{

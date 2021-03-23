@@ -4,8 +4,9 @@ use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Table;
+use Tests\Support\SchemasTestCase;
 
-class BaseDrafterTest extends Tests\Support\UnitTestCase
+class BaseDrafterTest extends SchemasTestCase
 {
 	public function setUp(): void
 	{
