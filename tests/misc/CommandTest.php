@@ -10,7 +10,7 @@ class CommandTest extends SchemasTestCase
 	{
 		$command = new SchemasCommand(Services::logger(), Services::commands());
 		$method  = $this->getPrivateMethodInvoker($command, 'getHandler');
-		
+
 		$handler = $method('Drafter', 'database');
 		$this->assertEquals('\Tatter\Schemas\Drafter\Handlers\DatabaseHandler', $handler);
 

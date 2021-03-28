@@ -8,7 +8,7 @@ interface ReaderInterface extends Countable, IteratorAggregate
 	/**
 	 * Indicate whether the reader is in a state to be used
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function ready(): bool;
 

@@ -38,7 +38,7 @@ abstract class BaseHandler
 	{
 		$tmpErrors    = $this->errors;
 		$this->errors = [];
-		
+
 		return $tmpErrors;
 	}
 }

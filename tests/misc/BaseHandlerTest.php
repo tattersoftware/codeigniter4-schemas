@@ -11,7 +11,7 @@ class BaseHandlerTest extends SchemasTestCase
 
 		$this->handler = new class($this->config) extends BaseHandler {};
 	}
-	
+
 	public function testGetErrors()
 	{
 		$this->assertEquals([], $this->handler->getErrors());

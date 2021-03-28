@@ -3,12 +3,11 @@
 use Tatter\Schemas\Reader\ReaderInterface;
 
 class Schema extends Mergeable
-{	
-	/**
-	 * The schema tables.
-	 *
-	 * @var Mergeable of Tables
-	 */
+{        /**
+		  * The schema tables.
+		  *
+		  * @var Mergeable of Tables
+		  */
 	public $tables;
 
 	/**

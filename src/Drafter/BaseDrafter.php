@@ -33,7 +33,7 @@ abstract class BaseDrafter extends BaseHandler
 	/**
 	 * Search a table for its primary key.
 	 *
-	 * @param Table    $table      A Table
+	 * @param Table $table A Table
 	 *
 	 * @return ?string The name of the field, or null if not found
 	 */
@@ -46,21 +46,21 @@ abstract class BaseDrafter extends BaseHandler
 				return $field->name;
 			}
 		}
-		
+
 		// Hail Mary for `id`
 		if (isset($table->fields->id))
 		{
 			return 'id';
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Search a table for fields that may be foreign keys to tableName.
 	 *
-	 * @param Table    $table      A Table
-	 * @param string   $tableName  The foreign table to try to match
+	 * @param Table  $table     A Table
+	 * @param string $tableName The foreign table to try to match
 	 *
 	 * @return ?String The name of the field, or null if not found
 	 */
@@ -86,18 +86,18 @@ abstract class BaseDrafter extends BaseHandler
 	}
 
 	// COMMON FUNCTIONS FOR FILE HANDLERS
-	
+
 	/**
 	 * Validate a file and get its contents.
 	 *
-	 * @param string $path    The path to the file
+	 * @param string $path The path to the file
 	 *
 	 * @throws FileNotFoundException
 	 */
 	protected function getContents($path): ?string
 	{
 		$file = new File($path, $this->config->silent); // If not silent then will throw for missing files
-		
+
 		if (! $file->isFile())
 		{
 			$this->errors[] = lang('Files.fileNotFound', [$path]);

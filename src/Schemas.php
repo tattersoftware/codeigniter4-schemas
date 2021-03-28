@@ -27,7 +27,7 @@ class Schemas
 	 * @var Timer
 	 */
 	protected $timer;
-	
+
 	/**
 	 * Array of error messages assigned on failure.
 	 *
@@ -39,7 +39,7 @@ class Schemas
 	 * Initiates the library.
 	 *
 	 * @param SchemasConfig $config
-	 * @param Schema|null $schema
+	 * @param Schema|null   $schema
 	 */
 	public function __construct(SchemasConfig $config, Schema $schema = null)
 	{
@@ -61,7 +61,7 @@ class Schemas
 	{
 		$tmpErrors    = $this->errors;
 		$this->errors = [];
-		
+
 		return $tmpErrors;
 	}
 
@@ -74,7 +74,7 @@ class Schemas
 	{
 		$this->schema = null;
 		$this->errors = [];
-		
+
 		return $this;
 	}
 
@@ -86,7 +86,7 @@ class Schemas
 	public function setSchema(Schema $schema)
 	{
 		$this->schema = $schema;
-		
+
 		return $this;
 	}
 
@@ -101,23 +101,23 @@ class Schemas
 		{
 			return $this->schema;
 		}
-		
+
 		// No schema loaded - try the default reader
 		if ($this->config->automate['read'])
 		{
 			$this->read();
-			
+
 			if (! is_null($this->schema))
 			{
 				return $this->schema;
 			}
 		}
-		
+
 		// Still no schema - try a default draft
 		if ($this->config->automate['draft'])
 		{
 			$this->draft();
-			
+
 			if (! is_null($this->schema))
 			{
 				// If the draft succeeded check if we should archive it
@@ -129,7 +129,7 @@ class Schemas
 				return $this->schema;
 			}
 		}
-		
+
 		// Absolute failure
 		if (! $this->config->silent)
 		{
@@ -143,7 +143,7 @@ class Schemas
 	/**
 	 * Draft a new schema from the given or default handler(s)
 	 *
-	 * @param array|string|null  $handlers Handler class string(s) or instance(s)
+	 * @param array|string|null $handlers Handler class string(s) or instance(s)
 	 *
 	 * @return $this
 	 */
@@ -155,13 +155,13 @@ class Schemas
 		{
 			$handlers = $this->config->draftHandlers;
 		}
-		
+
 		// Wrap singletons
 		if (! is_array($handlers))
 		{
 			$handlers = [$handlers];
 		}
-		
+
 		// Draft and merge the schema from each handler in order
 		foreach ($handlers as $handler)
 		{
@@ -186,13 +186,13 @@ class Schemas
 
 		return $this;
 	}
-	
+
 	/**
 	 * Archive a copy of the current schema using the handler(s)
 	 *
-	 * @param array|string|null  $handlers
+	 * @param array|string|null $handlers
 	 *
-	 * @return bool Success or failure
+	 * @return boolean Success or failure
 	 */
 	public function archive($handlers = null)
 	{
@@ -202,13 +202,13 @@ class Schemas
 		{
 			$handlers = $this->config->archiveHandlers;
 		}
-		
+
 		// Wrap singletons
 		if (! is_array($handlers))
 		{
 			$handlers = [$handlers];
 		}
-		
+
 		// Archive a copy to each handler's destination
 		$result = true;
 		foreach ($handlers as $handler)
@@ -219,7 +219,7 @@ class Schemas
 			}
 
 			$result = $result && $handler->archive(clone $this->schema);
-			
+
 			$this->errors = array_merge($this->errors, $handler->getErrors());
 		}
 
@@ -227,7 +227,7 @@ class Schemas
 
 		return $result;
 	}
-	
+
 	/**
 	 * Read in a schema from the given or default handler
 	 *

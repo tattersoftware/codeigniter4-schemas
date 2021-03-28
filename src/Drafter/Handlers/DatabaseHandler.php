@@ -41,12 +41,12 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	 * Save the config and set up the database connection
 	 *
 	 * @param SchemasConfig $config The library config
-	 * @param string $db            A database connection, or null to use the default
+	 * @param string        $db     A database connection, or null to use the default
 	 */
 	public function __construct(SchemasConfig $config = null, $db = null)
-	{		
+	{
 		parent::__construct($config);
-		
+
 		// Use injected database connection, or start a new one with the default group
 		$this->db     = db_connect($db);
 		$this->prefix = $this->db->getPrefix();
@@ -61,11 +61,11 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	{
 		// Start with a fresh schema
 		$schema = new Schema();
-		
+
 		// Track possible relations to check
 		$tableRelations = [];
 		$fieldRelations = [];
-		
+
 		// Track confirmed pivot table names
 		$pivotTables = [];
 
@@ -77,7 +77,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 			{
 				continue;
 			}
-			
+
 			// Strip the prefix and check again`
 			$tableName = $this->stripPrefix($tableName);
 			if (in_array($tableName, $this->config->ignoredTables))
@@ -88,7 +88,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 			// Create the table in the schema
 			$schema->tables->{$tableName} = new Table($tableName);
 		}
-		
+
 		// Analyze each table
 		foreach ($schema->tables as $table)
 		{
@@ -97,13 +97,13 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 			{
 				$tableRelations[] = $table->name;
 			}
-						
+
 			// Proceed field by field
 			foreach ($this->db->getFieldData($table->name) as $fieldData)
 			{
 				// Start a new field
 				$field = new Field($fieldData);
-				
+
 				// Check for a relation field indicator
 				if (! $field->primary_key && preg_match($this->fieldRegex, $field->name))
 				{
@@ -113,27 +113,27 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 					}
 					$fieldRelations[$table->name][] = $field->name;
 				}
-				
+
 				// Add the field to the schema
 				$schema->tables->{$table->name}->fields->{$field->name} = $field;
 			}
-			
+
 			// Proceed index by index
 			foreach ($this->db->getIndexData($table->name) as $indexData)
 			{
 				// Start a new index
 				$index = new Index($indexData);
-				
+
 				// Add the index to the schema
 				$schema->tables->{$table->name}->indexes->{$index->name} = $index;
 			}
-			
+
 			// Proceed FK by FK
 			foreach ($this->db->getForeignKeyData($table->name) as $foreignKeyData)
 			{
 				// Start a new foreign key
 				$foreignKey = new ForeignKey($foreignKeyData);
-				
+
 				// Resolve prefixes on any names
 				$foreignKey->constraint_name = $this->stripPrefix($foreignKey->constraint_name);
 				if (isset($foreignKey->table_name))
@@ -144,20 +144,20 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 				{
 					$foreignKey->foreign_table_name = $this->stripPrefix($foreignKey->foreign_table_name);
 				}
-				
+
 				// Add the FK to the schema
 				$schema->tables->{$table->name}->foreignKeys->{$foreignKey->constraint_name} = $foreignKey;
-				
+
 				// Create a relation
 				$relation            = new Relation();
 				$relation->type      = 'belongsTo';
 				$relation->table     = $foreignKey->foreign_table_name;
 				$relation->singleton = true;
-				
+
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
 				{
-					$pivot = [
+					$pivot            = [
 						$foreignKey->table_name,
 						$foreignKey->column_name,
 						$foreignKey->foreign_table_name,
@@ -165,19 +165,19 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 					];
 					$relation->pivots = [$pivot];
 				}
-				
+
 				// Add the relation to the schema
 				$schema->tables->{$table->name}->relations->{$relation->table} = $relation;
-				
+
 				// Create the inverse relation
 				$relation        = new Relation();
 				$relation->type  = 'hasMany';
 				$relation->table = $foreignKey->table_name;
-				
+
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
 				{
-					$pivot = [
+					$pivot            = [
 						$foreignKey->foreign_table_name,
 						$foreignKey->foreign_column_name,
 						$foreignKey->table_name,
@@ -185,7 +185,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 					];
 					$relation->pivots = [$pivot];
 				}
-				
+
 				// Add the relation to the table
 				$schema->tables->{$foreignKey->foreign_table_name}->relations->{$relation->table} = $relation;
 			}
@@ -196,23 +196,23 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 		{
 			list($tableName1, $tableName2) = explode('_', $tableName, 2);
 
-			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)			
+			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)
 			if (isset($schema->tables->$tableName1) && isset($schema->tables->$tableName2))
 			{
 				// A match! Look for foreign fields (may not be properly keyed)
 				$fieldName1    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName1);
 				$foreignField1 = $this->findPrimaryKey($schema->tables->$tableName1);
-				
+
 				$fieldName2    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName2);
 				$foreignField2 = $this->findPrimaryKey($schema->tables->$tableName2);
-			
+
 				// If all fields were found we have a relation
 				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
 				{
 					// Set the table as a pivot & clear its relations
-					$schema->tables->$tableName->pivot = true;
+					$schema->tables->$tableName->pivot     = true;
 					$schema->tables->$tableName->relations = new Mergeable();
-					$pivotTables[] = $tableName;
+					$pivotTables[]                         = $tableName;
 
 					// Build the pivots
 					$pivot1 = [
@@ -227,13 +227,16 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 						$tableName2,      // users
 						$foreignField2,   // id
 					];
-					
+
 					// Build the relation
-					$relation = new Relation();
+					$relation         = new Relation();
 					$relation->type   = 'manyToMany';
 					$relation->table  = $tableName2;
-					$relation->pivots = [$pivot1, $pivot2];
-					
+					$relation->pivots = [
+						$pivot1,
+						$pivot2,
+					];
+
 					// Add it to the first table
 					$schema->tables->$tableName1->relations->$tableName2 = $relation;
 
@@ -250,19 +253,22 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 						$tableName1,      // groups
 						$foreignField1,   // id
 					];
-					
+
 					// Build the relation
-					$relation = new Relation();
+					$relation         = new Relation();
 					$relation->type   = 'manyToMany';
 					$relation->table  = $tableName1;
-					$relation->pivots = [$pivot1, $pivot2];
-					
+					$relation->pivots = [
+						$pivot1,
+						$pivot2,
+					];
+
 					// Add it to the second table
 					$schema->tables->$tableName2->relations->$tableName1 = $relation;
 				}
 			}
 		}
-		
+
 		// Check fields flagged as possible pivot points (e.g. records->user_id <-> users->id)
 		foreach ($fieldRelations as $tableName1 => $fields)
 		{
@@ -276,7 +282,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 				{
 					// A match! Get the key from the target table
 					$foreignField = $this->findPrimaryKey($schema->tables->$tableName2);
-			
+
 					// If the field was found we have a relation
 					if ($foreignField)
 					{
@@ -287,9 +293,9 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 							$tableName2,     // users
 							$foreignField,   // id
 						];
-					
+
 						// Build the relation
-						$relation = new Relation();
+						$relation            = new Relation();
 						$relation->type      = 'belongsTo';
 						$relation->singleton = true;
 						$relation->table     = $tableName2;
@@ -305,40 +311,40 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 							$tableName1,     // records
 							$fieldName,      // user_id
 						];
-					
+
 						// Build the inverse relation
-						$relation = new Relation();
+						$relation         = new Relation();
 						$relation->type   = 'hasMany';
 						$relation->table  = $tableName1;
 						$relation->pivots = [$pivot];
-					
+
 						// Add it to the second table
 						$schema->tables->$tableName2->relations->$tableName1 = $relation;
 					}
 				}
 			}
 		}
-		
+
 		// Clear pivots from any relations
 		foreach ($pivotTables as $pivotTableName)
 		{
 			// Blank this table's relations
 			$schema->tables->$pivotTableName->relations = new Mergeable();
-						
+
 			// Remove the table from other relations
 			foreach ($schema->tables as $tableName => $table)
 			{
 				unset($schema->tables->$tableName->relations->$pivotTableName);
 			}
 		}
-		
+
 		return $schema;
 	}
-	
+
 	/**
 	 * Return a database object name without its prefix.
 	 *
-	 * @param string    $str  Name of a database object
+	 * @param string $str Name of a database object
 	 *
 	 * @return string   The updated name
 	 */

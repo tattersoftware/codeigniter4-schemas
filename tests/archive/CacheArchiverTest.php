@@ -23,29 +23,29 @@ class CacheArchiverTest extends SchemasTestCase
 	}
 
 	public function testArchiveReturnsTrueOnSuccess()
-	{		
-		$this->assertTrue($this->archiver->archive($this->schema));
+	{
+				$this->assertTrue($this->archiver->archive($this->schema));
 	}
 
 	public function testArchiveStoresScaffold()
 	{
 		$key = $this->archiver->getKey();
 		$this->archiver->archive($this->schema);
-		
-		$expected = new Schema();
+
+		$expected         = new Schema();
 		$expected->tables = new Mergeable();
 
 		foreach ($this->schema->tables as $tableName => $table)
 		{
 			$expected->tables->$tableName = true;
 		}
-		
+
 		$this->assertEquals($this->schema, $this->cache->get($key));
 	}
 
 	public function testArchiveStoresEachTable()
 	{
-		$key = $this->archiver->getKey();
+		$key    = $this->archiver->getKey();
 		$tables = $this->schema->tables;
 
 		$this->archiver->archive($this->schema);

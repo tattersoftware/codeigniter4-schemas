@@ -9,7 +9,7 @@ interface ArchiverInterface
 	 *
 	 * @param Schema $schema
 	 *
-	 * @return bool  Success or failure
+	 * @return boolean  Success or failure
 	 */
 	public function archive(Schema $schema): bool;
 }

@@ -59,26 +59,26 @@ class DatabaseTestCase extends CIUnitTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		
+
 		$config                    = new \Tatter\Schemas\Config\Schemas();
 		$config->silent            = false;
 		$config->ignoredTables     = ['migrations'];
 		$config->ignoredNamespaces = [];
 		$config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
-		$config->automate = [
+		$config->automate          = [
 			'draft'   => false,
 			'archive' => false,
 			'read'    => false,
 		];
-		
+
 		$this->config  = $config;
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
 	}
-	
+
 	public function tearDown(): void
 	{
 		parent::tearDown();
-		
+
 		$this->schemas->reset();
 		unset($this->schema);
 		unset($this->handler);

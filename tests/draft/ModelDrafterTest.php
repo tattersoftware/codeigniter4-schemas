@@ -21,8 +21,7 @@ class ModelDrafterTest extends SchemasTestCase
 	public function testGetModels()
 	{
 		$method = $this->getPrivateMethodInvoker($this->handler, 'getModels');
-		$models = $method($this->handler);		
-
+		$models = $method($this->handler);
 		$this->assertCount(4, $models, implode(PHP_EOL, $models));
 		$this->assertContains('Tests\Support\Models\FactoryModel', $models);
 	}
@@ -30,16 +29,15 @@ class ModelDrafterTest extends SchemasTestCase
 	public function testGetModelsRespectsGroup()
 	{
 		$this->handler->setGroup('default');
-		
-		$method = $this->getPrivateMethodInvoker($this->handler, 'getModels');
-		$models = $method($this->handler);		
 
+		$method = $this->getPrivateMethodInvoker($this->handler, 'getModels');
+		$models = $method($this->handler);
 		$this->assertCount(0, $models);
 	}
 
 	public function testDraftsSchemaFromModels()
-	{		
-		$schema = $this->handler->draft();
+	{
+				$schema = $this->handler->draft();
 
 		$this->assertEquals('servicers', $schema->tables->servicers->name);
 		$this->assertEquals('Tests\Support\Models\WorkerModel', $schema->tables->workers->model);

@@ -19,7 +19,7 @@ class CacheReaderTest extends SchemasTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
-		
+
 		// Archive a copy of the schema so we can test reading it
 		$schema = clone $this->schema;
 		$this->archiver->archive($schema);
@@ -48,7 +48,7 @@ class CacheReaderTest extends SchemasTestCase
 			'machines'  => true,
 			'workers'   => $this->schema->tables->workers,
 		];
-		
+
 		$this->assertEquals($expected, (array)$this->reader->getTables());
 	}
 
@@ -61,7 +61,7 @@ class CacheReaderTest extends SchemasTestCase
 			$this->assertEquals($table, $this->schema->tables->$tableName);
 			$counted++;
 		}
-		
+
 		$this->assertEquals(3, $counted);
 	}
 }

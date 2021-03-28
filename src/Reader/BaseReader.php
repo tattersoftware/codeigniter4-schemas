@@ -13,7 +13,7 @@ abstract class BaseReader extends BaseHandler
 	/**
 	 * Whether the reader is in a state to be used
 	 *
-	 * @var bool
+	 * @var boolean
 	 */
 	protected $ready = false;
 
@@ -29,7 +29,7 @@ abstract class BaseReader extends BaseHandler
 	/**
 	 * Indicate whether the reader is in a state to be used
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function ready(): bool
 	{
@@ -39,7 +39,7 @@ abstract class BaseReader extends BaseHandler
 	/**
 	 * Check that reader is ready before using its functions
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function ensureReady(): bool
 	{
@@ -47,7 +47,7 @@ abstract class BaseReader extends BaseHandler
 		{
 			return true;
 		}
-		
+
 		if (! $this->config->silent)
 		{
 			throw SchemasException::forReaderNotReady();

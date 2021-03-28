@@ -42,7 +42,7 @@ class SchemasTestCase extends CIUnitTestCase
 		$config->ignoredTables     = ['migrations'];
 		$config->ignoredNamespaces = ['Tatter\Agents'];
 		$config->schemasDirectory  = SUPPORTPATH . 'Schemas';
-		$config->automate = [
+		$config->automate          = [
 			'draft'   => false,
 			'archive' => false,
 			'read'    => false,

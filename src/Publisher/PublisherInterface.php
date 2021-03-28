@@ -9,7 +9,7 @@ interface PublisherInterface
 	 *
 	 * @param Schema $schema
 	 *
-	 * @return bool  Success or failure
+	 * @return boolean  Success or failure
 	 */
 	public function publish(Schema $schema): bool;
 }

@@ -8,12 +8,14 @@ class ForeignKey extends Mergeable
 	 * @var string
 	 */
 	public $constraint_name;
-	
+
 	public function __construct($foreignKeyData = null)
 	{
 		if (empty($foreignKeyData))
+		{
 			return;
-		
+		}
+
 		if (is_string($foreignKeyData))
 		{
 			$this->constraint_name = $foreignKeyData;
@@ -25,6 +27,5 @@ class ForeignKey extends Mergeable
 				$this->{$key} = $value;
 			}
 		}
-		
 	}
 }

@@ -3,6 +3,7 @@
 /**
  * Schema collector
  */
+
 class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 {
 	/**
@@ -46,10 +47,9 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 
 	//--------------------------------------------------------------------
 
-
-    /**
-     * Load a copy of the schema.
-     */
+	/**
+	 * Load a copy of the schema.
+	 */
 	public function __construct()
 	{
 		$this->schema = service('schemas')->get();
