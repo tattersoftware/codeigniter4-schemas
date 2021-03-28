@@ -1,7 +1,7 @@
 <?php namespace Tatter\Schemas\Archiver\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
-use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Archiver\BaseArchiver;
 use Tatter\Schemas\Archiver\ArchiverInterface;
@@ -16,10 +16,10 @@ class CacheHandler extends BaseArchiver implements ArchiverInterface
 	/**
 	 * Save the config and set up the cache
 	 *
-	 * @param BaseConfig      $config   The library config
-	 * @param CacheInterface  $cache    The cache handler to use, null to load a new default
+	 * @param SchemasConfig $config The library config
+	 * @param CacheInterface $cache The cache handler to use, null to load a new default
 	 */
-	public function __construct(BaseConfig $config = null, CacheInterface $cache = null)
+	public function __construct(SchemasConfig $config = null, CacheInterface $cache = null)
 	{		
 		parent::__construct($config);
 		

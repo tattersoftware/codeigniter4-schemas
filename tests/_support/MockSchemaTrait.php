@@ -22,7 +22,7 @@ trait MockSchemaTrait
 		// Include the file which will place the Schema into $schema
 		require SUPPORTPATH . 'Schemas' . DIRECTORY_SEPARATOR . 'MockSchema.php';
 
-		/** @var Schema $schema */
+		// @phpstan-ignore-next-line
 		$this->schema = $schema;
 	}
 }

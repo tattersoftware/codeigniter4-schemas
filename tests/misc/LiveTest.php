@@ -26,7 +26,7 @@ class LiveTest extends SchemasTestCase
 		$databaseHandler = new DatabaseHandler($this->config, 'tests');
 		$cacheHandler    = new CacheArchiver($this->config, $cache);
 				
-		$this->schemas->draft($databaseHandler)->archive($cacheHandler);
+		$this->schemas->draft([$databaseHandler])->archive([$cacheHandler]);
 		$this->assertEmpty($this->schemas->getErrors());
 		
 		$schemaFromService = $this->schemas->get();

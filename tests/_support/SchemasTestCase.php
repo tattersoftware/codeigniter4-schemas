@@ -33,7 +33,7 @@ class SchemasTestCase extends CIUnitTestCase
 	 * Creates a standard, stable testing config
 	 * and initializes the library with it.
 	 */
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

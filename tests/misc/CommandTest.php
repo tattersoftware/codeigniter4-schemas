@@ -1,6 +1,6 @@
 <?php
 
-use COnfig\Services;
+use Config\Services;
 use Tatter\Schemas\Commands\Schemas as SchemasCommand;
 use Tests\Support\SchemasTestCase;
 
