@@ -7,10 +7,14 @@ class MachineModel extends Model
 	protected $table      = 'machines';
 	protected $primaryKey = 'id';
 
-	protected $returnType = 'object';
+	protected $returnType     = 'object';
 	protected $useSoftDeletes = false;
 
-	protected $allowedFields = ['type', 'serial', 'factory_id'];
+	protected $allowedFields = [
+		'type',
+		'serial',
+		'factory_id',
+	];
 
 	protected $useTimestamps = true;
 

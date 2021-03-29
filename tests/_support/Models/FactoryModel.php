@@ -7,10 +7,16 @@ class FactoryModel extends Model
 	protected $table      = 'factories';
 	protected $primaryKey = 'id';
 
-	protected $returnType = 'object';
+	protected $returnType     = 'object';
 	protected $useSoftDeletes = true;
 
-	protected $allowedFields = ['name', 'uid', 'class', 'icon', 'summary'];
+	protected $allowedFields = [
+		'name',
+		'uid',
+		'class',
+		'icon',
+		'summary',
+	];
 
 	protected $useTimestamps = true;
 

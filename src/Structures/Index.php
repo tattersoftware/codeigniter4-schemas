@@ -8,12 +8,14 @@ class Index extends Mergeable
 	 * @var string
 	 */
 	public $name;
-	
+
 	public function __construct($indexData = null)
 	{
 		if (empty($indexData))
+		{
 			return;
-		
+		}
+
 		if (is_string($indexData))
 		{
 			$this->name = $indexData;
@@ -25,6 +27,5 @@ class Index extends Mergeable
 				$this->{$key} = $value;
 			}
 		}
-		
 	}
 }

@@ -18,6 +18,7 @@ parameters:
 	universalObjectCratesClasses:
 		- CodeIgniter\Entity
 		- Faker\Generator
+		- Tatter\Schemas\Reader\Handlers\CacheHandler
 		- Tatter\Schemas\Structures\Mergeable
 	scanDirectories:
 		- vendor/codeigniter4/codeigniter4/system/Helpers

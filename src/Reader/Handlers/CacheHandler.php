@@ -1,7 +1,7 @@
 <?php namespace Tatter\Schemas\Reader\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
-use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Reader\BaseReader;
 use Tatter\Schemas\Reader\ReaderInterface;
@@ -22,22 +22,22 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Save config and set up the cache
 	 *
-	 * @param BaseConfig      $config   The library config
-	 * @param CacheInterface  $cache    The cache handler to use, null to load a new default
+	 * @param SchemasConfig  $config The library config
+	 * @param CacheInterface $cache  The cache handler to use, null to load a new default
 	 */
-	public function __construct(BaseConfig $config = null, CacheInterface $cache = null)
-	{		
+	public function __construct(SchemasConfig $config = null, CacheInterface $cache = null)
+	{
 		parent::__construct($config);
-		
+
 		$this->cacheInit($cache);
-		
+
 		// Start $tables as the cached scaffold version
 		if ($scaffold = $this->cache->get($this->cacheKey))
 		{
 			if (isset($scaffold->tables))
 			{
 				$this->tables = $scaffold->tables ?? new Mergeable();
-				$this->ready = true;
+				$this->ready  = true;
 			}
 		}
 	}
@@ -70,7 +70,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		{
 			$tables = [$tables];
 		}
-		
+
 		foreach ($tables as $tableName)
 		{
 			if ($this->tables->$tableName === true)
@@ -78,7 +78,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 				$this->tables->$tableName = $this->cache->get($this->cacheKey . '-' . $tableName);
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -101,7 +101,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 				$this->fetch($tableName);
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -128,13 +128,13 @@ class CacheHandler extends BaseReader implements ReaderInterface
 
 		return $this->tables->$name;
 	}
-	
+
 	/**
 	 * Magic checker to match the getter.
 	 *
 	 * @param string $name Property to check for
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function __isset($name): bool
 	{
@@ -144,7 +144,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Specify count of public properties to satisfy Countable.
 	 *
-	 * @return int  Number of public properties
+	 * @return integer  Number of public properties
 	 */
 	public function count(): int
 	{

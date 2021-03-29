@@ -15,17 +15,17 @@ class PhpHandler extends BaseDrafter implements DrafterInterface
 	 * @var string
 	 */
 	protected $path;
-	
+
 	/**
 	 * Save the config and the path to the file
 	 *
 	 * @param SchemasConfig $config The library config
-	 * @param string $path          Path to the file to process
+	 * @param string        $path   Path to the file to process
 	 */
 	public function __construct(SchemasConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
-		
+
 		// Save the path
 		$this->path = $path;
 	}
@@ -43,13 +43,15 @@ class PhpHandler extends BaseDrafter implements DrafterInterface
 			$this->errors[] = lang('Schemas.emptySchemaFile', [$this->path]);
 			return null;
 		}
-		
+
 		// PHP files should contain pre-built schemas in the $schema variable
 		// So the path just needs to be included and the variable checked
-		try {
+		try
+		{
 			require $this->path;
 		}
-		catch (\Exception $e) {
+		catch (\Exception $e)
+		{
 			$this->errors[] = $e->getMessage();
 			return null;
 		}

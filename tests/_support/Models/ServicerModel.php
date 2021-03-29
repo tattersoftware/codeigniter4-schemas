@@ -7,7 +7,7 @@ class ServicerModel extends Model
 	protected $table      = 'servicers';
 	protected $primaryKey = 'id';
 
-	protected $returnType = 'object';
+	protected $returnType     = 'object';
 	protected $useSoftDeletes = true;
 
 	protected $allowedFields = ['company'];

@@ -8,42 +8,42 @@ class Table extends Mergeable
 	 * @var ?string
 	 */
 	public $name;
-	
+
 	/**
 	 * Whether the table is a pivot.
 	 *
-	 * @var bool
+	 * @var boolean
 	 */
 	public $pivot = false;
-	
+
 	/**
 	 * The table's fields.
 	 *
 	 * @var Mergeable of Field objects
 	 */
 	public $fields;
-	
+
 	/**
 	 * The table's indices.
 	 *
 	 * @var Mergeable of Index objects
 	 */
 	public $indexes;
-	
+
 	/**
 	 * The table's foreign keys.
 	 *
 	 * @var Mergeable of ForeignKey objects
 	 */
 	public $foreignKeys;
-	
+
 	/**
 	 * Relationships this table has with others
 	 *
 	 * @var Mergeable of Relations
 	 */
 	public $relations;
-	
+
 	public function __construct($name = null)
 	{
 		$this->name        = $name;

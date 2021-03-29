@@ -11,7 +11,7 @@ class CliHandler extends BaseArchiver implements ArchiverInterface
 	 *
 	 * @param Schema $schema
 	 *
-	 * @return bool  true
+	 * @return boolean  true
 	 */
 	public function archive(Schema $schema): bool
 	{

@@ -23,19 +23,19 @@ trait CacheHandlerTrait
 	/**
 	 * Set up the injected cache or load a default handler
 	 *
-	 * @param CacheInterface  $cache    The cache handler to use, null to load a new default
+	 * @param CacheInterface $cache The cache handler to use, null to load a new default
 	 */
-	 public function cacheInit(CacheInterface $cache = null)
-	 {
+	public function cacheInit(CacheInterface $cache = null)
+	{
 		// By default use an enviroment-specific name (helps with testing collisions)
 		$this->cacheKey = 'schema-' . ENVIRONMENT;
 
 		// Use injected cache handler, or get the default from its service
 		if (is_null($cache))
 		{
-			$cache = \Config\Services::cache();
+			$cache = Services::cache();
 		}
-		
+
 		if (! $cache->isSupported())
 		{
 			throw SchemasException::forUnsupportedHandler(get_class($this));
@@ -43,17 +43,18 @@ trait CacheHandlerTrait
 
 		$this->cache = $cache;
 	}
-	
+
 	/**
 	 * Change the name of the cache key
 	 *
-	 * @param string $name  New name for the cache key.
+	 * @param string $name New name for the cache key.
 	 *
 	 * @return $this
 	 */
 	public function setKey(string $name)
 	{
 		$this->cacheKey = $name;
+
 		return $this;
 	}
 

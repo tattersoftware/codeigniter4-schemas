@@ -1,36 +1,42 @@
 <?php
 
-use Tatter\Schemas\Reader\Handlers\CacheHandler;
+use Tatter\Schemas\Reader\Handlers\CacheHandler as CacheReader;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
+use Tests\Support\CacheTrait;
+use Tests\Support\MockSchemaTrait;
+use Tests\Support\SchemasTestCase;
 
-class CacheReaderTest extends Tests\Support\UnitTestCase
+class CacheReaderTest extends SchemasTestCase
 {
+	use CacheTrait, MockSchemaTrait;
+
+	/**
+	 * @var CacheReader
+	 */
+	private $reader;
+
 	public function setUp(): void
 	{
 		parent::setUp();
-				
-//		$this->cache = new MockCache(); ??
-		$this->cache = \Config\Services::cache();
-		
+
 		// Archive a copy of the schema so we can test reading it
 		$schema = clone $this->schema;
-		$archiver = new \Tatter\Schemas\Archiver\Handlers\CacheHandler($this->config, $this->cache);
-		$archiver->archive($schema);
-		unset($archiver);
-		unset($schema);
-		
-		$this->reader = new CacheHandler($this->config, $this->cache);
+		$this->archiver->archive($schema);
+
+		// Initializing the Reader also accesses the Cache, so do it last
+		$this->reader = new CacheReader($this->config, $this->cache);
 	}
 
 	public function testReaderHasScaffold()
 	{
 		$expected = [
 			'factories' => true,
+			'machines'  => true,
 			'workers'   => true,
 		];
-		
-		$this->assertEquals($expected, (array)$this->reader->getTables());
+
+		$this->assertEquals($expected, (array) $this->reader->getTables());
 	}
 
 	public function testReaderMagicGetsTable()
@@ -39,9 +45,10 @@ class CacheReaderTest extends Tests\Support\UnitTestCase
 
 		$expected = [
 			'factories' => true,
+			'machines'  => true,
 			'workers'   => $this->schema->tables->workers,
 		];
-		
+
 		$this->assertEquals($expected, (array)$this->reader->getTables());
 	}
 
@@ -54,17 +61,7 @@ class CacheReaderTest extends Tests\Support\UnitTestCase
 			$this->assertEquals($table, $this->schema->tables->$tableName);
 			$counted++;
 		}
-		
-		$this->assertEquals(2, $counted);
-	}
-	
-	public function tearDown(): void
-	{
-		parent::tearDown();
 
-		$this->cache->clean();
-
-		$cache = $this->getPrivateProperty($this->reader, 'cache');
-		$cache->clean();
+		$this->assertEquals(3, $counted);
 	}
 }

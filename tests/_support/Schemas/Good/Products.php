@@ -1,4 +1,4 @@
-<?php namespace CIModuleTests\Support;
+<?php namespace Tests\Support;
 
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;

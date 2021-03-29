@@ -11,12 +11,11 @@ use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
 class ModelHandler extends BaseDrafter implements DrafterInterface
-{	
-	/**
-	 * The default database group.
-	 *
-	 * @var string
-	 */
+{        /**
+		  * The default database group.
+		  *
+		  * @var string
+		  */
 	protected $defaultGroup;
 
 	/**
@@ -25,22 +24,22 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	 * @var string
 	 */
 	protected $group;
-	
+
 	/**
 	 * Save the config and set the initial database group
 	 *
 	 * @param SchemasConfig $config The library config
-	 * @param string $group         A database group to use as a filter; null = default group, false = no filtering
+	 * @param string        $group  A database group to use as a filter; null = default group, false = no filtering
 	 */
 	public function __construct(SchemasConfig $config = null, $group = null)
-	{		
+	{
 		parent::__construct($config);
-		
-		// Load the default database group		
-		$config = config('Database');
+
+		// Load the default database group
+		$config             = config('Database');
 		$this->defaultGroup = $config->defaultGroup;
 		unset($config);
-		
+
 		// If nothing was specified then constrain to the default database group
 		if (is_null($group))
 		{
@@ -55,7 +54,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Change the name of the database group constraint
 	 *
-	 * @param string  $group    A database group to use as a filter; false = no filtering
+	 * @param string $group A database group to use as a filter; false = no filtering
 	 */
 	public function setGroup(string $group)
 	{
@@ -91,26 +90,29 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			$table             = new Table($instance->table);
 			$table->model      = $class;
 			$table->returnType = $instance->returnType;
-			
+
 			// Create a field for the primary key
-			$field = new Field($instance->primaryKey);
-			$field->primary_key = true;
+			$field                         = new Field($instance->primaryKey);
+			$field->primary_key            = true;
 			$table->fields->{$field->name} = $field;
-			
+
 			// Create a field for each allowed field
 			foreach ($instance->allowedFields as $fieldName)
 			{
-				$field = new Field($fieldName);
+				$field                     = new Field($fieldName);
 				$table->fields->$fieldName = $field;
 			}
-			
+
 			// Figure out which timestamp fields (if any) this model uses and add them
-			$timestamps = $instance->useTimestamps ? ['createdField', 'updatedField'] : [];
+			$timestamps = $instance->useTimestamps ? [
+														 'createdField',
+														 'updatedField',
+													 ] : [];
 			if ($instance->useSoftDeletes)
 			{
 				$timestamps[] = 'deletedField';
 			}
-			
+
 			// Get field names from each timestamp attribute
 			foreach ($timestamps as $attribute)
 			{
@@ -120,13 +122,13 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 
 				$table->fields->$fieldName = $field;
 			}
-			
+
 			$schema->tables->{$table->name} = $table;
 		}
-		
+
 		return $schema;
 	}
-	
+
 	/**
 	 * Load model class names from all namespaces, filtered by group
 	 *
@@ -136,7 +138,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	{
 		$loader  = Services::autoloader();
 		$locator = Services::locator();
-		$models = [];
+		$models  = [];
 
 		// Get each namespace
 		foreach ($loader->getNamespace() as $namespace => $path)
@@ -150,7 +152,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			// Get files under this namespace's "/Models" path
 			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
 			{
-				if (is_file($file) && pathinfo($file, PATHINFO_EXTENSION) == 'php')
+				if (is_file($file) && pathinfo($file, PATHINFO_EXTENSION) === 'php')
 				{
 					// Load the file
 					require_once $file;
@@ -160,7 +162,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 
 		// Filter loaded class on likely models
 		$classes = preg_grep('/model$/i', get_declared_classes());
-		
+
 		// Try to load each class
 		foreach ($classes as $class)
 		{
@@ -188,23 +190,23 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			{
 				continue;
 			}
-			
+
 			// Make sure it has a valid table
 			$table = $instance->table;
 			if (empty($table))
 			{
 				continue;
 			}
-			
+
 			// Filter by group
 			$group = $instance->DBGroup ?? $this->defaultGroup;
-			if (empty($this->group) || $group == $this->group)
+			if (empty($this->group) || $group === $this->group)
 			{
 				$models[] = $class;
 			}
 			unset($instance);
 		}
-		
+
 		return $models;
 	}
 }

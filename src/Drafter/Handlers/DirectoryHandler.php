@@ -13,21 +13,21 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 	 * @var string
 	 */
 	protected $path;
-	
+
 	/**
 	 * Save the directory path or load the default from the config
 	 */
 	public function __construct(BaseConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
-		
+
 		$this->path = $path ?? $this->config->schemasDirectory;
 	}
 
 	/**
 	 * Change the schemas directory path
 	 *
-	 * @param string $path  Path to the directory with the schema files.
+	 * @param string $path Path to the directory with the schema files.
 	 */
 	public function setPath(string $path)
 	{
@@ -49,7 +49,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 			$this->errors[] = lang('Schemas.emptySchemaDirectory', [$this->config->schemasDirectory]);
 			return null;
 		}
-		
+
 		// Try each file
 		foreach ($files as $path)
 		{
@@ -61,7 +61,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 				$this->errors[] = lang('Schemas.unsupportedHandler', [pathinfo($path, PATHINFO_EXTENSION)]);
 				continue;
 			}
-			
+
 			if (empty($schema))
 			{
 				$schema = $handler->draft();
@@ -71,25 +71,25 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 				$schema->merge($handler->draft());
 			}
 		}
-		
+
 		return $schema ?? null;
 	}
-	
+
 	/**
 	 * Try to match a file to its handler by the extension
 	 *
 	 * @return DrafterInterface|null
-	 */	
+	 */       
 	protected function getHandlerForFile(string $path): ?DrafterInterface
 	{
 		$extension = pathinfo($path, PATHINFO_EXTENSION);
-		$class = '\Tatter\Schemas\Drafter\Handlers\\' . ucfirst(strtolower($extension)) . 'Handler';
+		$class     = '\Tatter\Schemas\Drafter\Handlers\\' . ucfirst(strtolower($extension)) . 'Handler';
 
 		if (! class_exists($class))
 		{
 			return null;
 		}
-		
+
 		$handler = new $class($this->config, $path);
 		return $handler;
 	}

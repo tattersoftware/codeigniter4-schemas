@@ -73,7 +73,7 @@ class Mergeable implements Countable, IteratorAggregate
 	/**
 	 * Magic checker to match the getter.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function __isset($name): bool
 	{
@@ -83,7 +83,7 @@ class Mergeable implements Countable, IteratorAggregate
 	/**
 	 * Specify count of public properties to satisfy Countable.
 	 *
-	 * @return int  Number of public properties
+	 * @return integer  Number of public properties
 	 */
 	public function count(): int
 	{

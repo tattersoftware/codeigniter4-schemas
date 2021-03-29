@@ -1,9 +1,25 @@
 <?php
 
+use CodeIgniter\Test\DatabaseTestTrait;
 use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
+use Tests\Support\Database\Seeds\TestSeeder;
+use Tests\Support\SchemasTestCase;
 
-class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
+class DatabaseDrafterTest extends SchemasTestCase
 {
+	use DatabaseTestTrait;
+
+	// Configure the database to be migrated and seeded once
+	protected $migrateOnce = true;
+	protected $seedOnce    = true;
+	protected $seed        = TestSeeder::class;
+	protected $basePath    = SUPPORTPATH . 'Database/';
+
+	/**
+	 * @var DatabaseHandler
+	 */
+	private $handler;
+
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -11,7 +27,7 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 		$this->handler = new DatabaseHandler($this->config, 'tests');
 		$this->schema  = $this->handler->draft();
 	}
-	
+
 	public function testHasAllTables()
 	{
 		$this->assertEquals(8, count($this->schema->tables));
@@ -36,17 +52,17 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 	{
 		$this->assertObjectNotHasAttribute('migrations', $this->schema->tables);
 
-		$config = new \Tatter\Schemas\Config\Schemas();
+		$config                = new \Tatter\Schemas\Config\Schemas();
 		$config->ignoredTables = [];
 
 		$handler = new DatabaseHandler($config, 'tests');
-		$schema = $handler->draft();
-		
+		$schema  = $handler->draft();
+
 		$this->assertObjectHasAttribute('migrations', $schema->tables);
 	}
 
 	// -------------------- RELATIONSHIPS --------------------
-	
+
 	public function testDetectsAllRelationships()
 	{
 		if ($this->db->DBDriver === 'SQLite3')
@@ -59,32 +75,42 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 		{
 			$relationsCount += count($table->relations);
 		}
-		
+
 		$this->assertEquals(14, $relationsCount);
 	}
-	
+
 	public function testBelongsTo()
 	{
 		$table1 = $this->schema->tables->lawyers;
 		$table2 = $this->schema->tables->servicers;
-		
+
 		$this->assertEquals('belongsTo', $table1->relations->{$table2->name}->type);
-		
-		$pivot = ['lawyers', 'servicer_id', 'servicers', 'id'];
+
+		$pivot = [
+			'lawyers',
+			'servicer_id',
+			'servicers',
+			'id',
+		];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
-	
+
 	public function testHasMany()
 	{
 		$table1 = $this->schema->tables->servicers;
 		$table2 = $this->schema->tables->lawyers;
-		
+
 		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
-		
-		$pivot = ['servicers', 'id', 'lawyers', 'servicer_id'];
+
+		$pivot = [
+			'servicers',
+			'id',
+			'lawyers',
+			'servicer_id',
+		];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
-	
+
 	public function testHasManyFromForeignKey()
 	{
 		if ($this->db->DBDriver === 'SQLite3')
@@ -94,27 +120,52 @@ class DatabaseDrafterTest extends Tests\Support\DatabaseTestCase
 
 		$table1 = $this->schema->tables->workers;
 		$table2 = $this->schema->tables->lawsuits;
-		
+
 		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
-		
-		$pivot = ['workers', 'id', 'lawsuits', 'client'];
+
+		$pivot = [
+			'workers',
+			'id',
+			'lawsuits',
+			'client',
+		];
 		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
-	
+
 	public function testManyToMany()
 	{
 		$table1 = $this->schema->tables->servicers;
 		$table2 = $this->schema->tables->machines;
-		
+
 		$this->assertEquals('manyToMany', $table1->relations->{$table2->name}->type);
 		$this->assertEquals('manyToMany', $table2->relations->{$table1->name}->type);
-		
-		$pivot1 = ['servicers', 'id', 'machines_servicers', 'servicer_id'];
-		$pivot2 = ['machines_servicers', 'machine_id', 'machines', 'id'];
+
+		$pivot1 = [
+			'servicers',
+			'id',
+			'machines_servicers',
+			'servicer_id',
+		];
+		$pivot2 = [
+			'machines_servicers',
+			'machine_id',
+			'machines',
+			'id',
+		];
 		$this->assertEquals([$pivot1, $pivot2], $table1->relations->{$table2->name}->pivots);
-		
-		$pivot1 = ['machines', 'id', 'machines_servicers', 'machine_id'];
-		$pivot2 = ['machines_servicers', 'servicer_id', 'servicers', 'id'];
+
+		$pivot1 = [
+			'machines',
+			'id',
+			'machines_servicers',
+			'machine_id',
+		];
+		$pivot2 = [
+			'machines_servicers',
+			'servicer_id',
+			'servicers',
+			'id',
+		];
 		$this->assertEquals([$pivot1, $pivot2], $table2->relations->{$table1->name}->pivots);
 	}
 }

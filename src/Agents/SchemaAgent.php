@@ -51,7 +51,7 @@ class SchemaAgent extends BaseAgent implements AgentInterface
 
 		// Generate the schema
 		$schema = $schemas->import(...$config->defaultHandlers)->get();
-		
+
 		$this->record('defaultSchema', 'object', $schema);
 	}
 }

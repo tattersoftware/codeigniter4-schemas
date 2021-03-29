@@ -16,14 +16,14 @@ abstract class BaseArchiver extends BaseHandler
 	 *
 	 * @param string $path The path to the file
 	 *
-	 * @return bool Success or failure
+	 * @return boolean Success or failure
 	 *
 	 * @throws FileNotFoundException
 	 */
 	protected function putContents($path, string $data): bool
 	{
 		$file = new File($path);
-		
+
 		if (! $file->isWritable())
 		{
 			if ($this->config->silent)
@@ -37,7 +37,7 @@ abstract class BaseArchiver extends BaseHandler
 			}
 		}
 
-	    $file = $file->openFile('w');
+		$file = $file->openFile('w');
 
 		return (bool) $file->fwrite($data);
 	}

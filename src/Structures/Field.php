@@ -8,19 +8,21 @@ class Field extends Mergeable
 	 * @var string
 	 */
 	public $name;
-	
+
 	/**
 	 * Whether this is a primary key.
 	 *
-	 * @var bool
+	 * @var boolean
 	 */
 	public $primary_key;
-	
+
 	public function __construct($fieldData = null)
 	{
 		if (empty($fieldData))
+		{
 			return;
-		
+		}
+
 		if (is_string($fieldData))
 		{
 			$this->name = $fieldData;
@@ -32,6 +34,5 @@ class Field extends Mergeable
 				$this->{$key} = $value;
 			}
 		}
-		
 	}
 }

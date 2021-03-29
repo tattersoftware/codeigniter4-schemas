@@ -7,8 +7,8 @@ use Tatter\Schemas\Structures\Schema;
 
 class Services extends BaseService
 {
-    public static function schemas(SchemasConfig $config = null, bool $getShared = true)
-    {
+	public static function schemas(SchemasConfig $config = null, bool $getShared = true)
+	{
 		if ($getShared)
 		{
 			return static::getSharedInstance('schemas', $config);

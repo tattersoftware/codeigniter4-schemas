@@ -13,7 +13,7 @@ class Schemas extends BaseConfig
 		'archive' => true,
 		'read'    => true,
 	];
-	
+
 	//--------------------------------------------------------------------
 	// Drafting
 	//--------------------------------------------------------------------
@@ -25,16 +25,16 @@ class Schemas extends BaseConfig
 		'Tatter\Schemas\Drafter\Handlers\ModelHandler',
 		'Tatter\Schemas\Drafter\Handlers\DirectoryHandler',
 	];
-	
+
 	// Tables to ignore when creating the schema
 	public $ignoredTables = ['migrations'];
-	
+
 	// Namespaces to ignore (mostly for ModelHandler)
 	public $ignoredNamespaces = [
 		'Tests\Support',
 		'CodeIgniter\Commands\Generators',
 	];
-	
+
 	// Path the directoryHandler should scan for schema files
 	public $schemasDirectory = APPPATH . 'Schemas';
 
@@ -46,7 +46,7 @@ class Schemas extends BaseConfig
 	public $archiveHandlers = [
 		'Tatter\Schemas\Archiver\Handlers\CacheHandler',
 	];
-	
+
 	// Default time-to-live for a stored schema (e.g. Cache) in seconds
 	public $ttl = 14400; // 4 hours
 
@@ -60,7 +60,7 @@ class Schemas extends BaseConfig
 	//--------------------------------------------------------------------
 	// Publishing
 	//--------------------------------------------------------------------
-	
+
 	// Precaution to prevent accidental wiping of databases or files
 	public $safeMode = true;
 }
