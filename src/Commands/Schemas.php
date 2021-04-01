@@ -101,7 +101,7 @@ class Schemas extends BaseCommand
 	 */
 	protected function getHandler(string $type, string $name): string
 	{
-				// Check if it is already namespaced
+		// Check if it is already namespaced
 		if (strpos($name, '\\') !== false)
 		{
 			return $name;
@@ -126,7 +126,7 @@ class Schemas extends BaseCommand
 	 */
 	protected function getDraftHandler(string $name): string
 	{
-				return $this->getHandler('Drafter', $name);
+		return $this->getHandler('Drafter', $name);
 	}
 
 	/**
@@ -138,6 +138,6 @@ class Schemas extends BaseCommand
 	 */
 	protected function getArchiveHandler(string $name): string
 	{
-				return $this->getHandler('Archiver', $name);
+		return $this->getHandler('Archiver', $name);
 	}
 }

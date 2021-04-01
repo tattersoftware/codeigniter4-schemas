@@ -1,6 +1,5 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
-use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Model;
 use Config\Services;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
@@ -11,11 +10,12 @@ use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
 
 class ModelHandler extends BaseDrafter implements DrafterInterface
-{        /**
-		  * The default database group.
-		  *
-		  * @var string
-		  */
+{
+	/**
+	  * The default database group.
+	  *
+	  * @var string
+	  */
 	protected $defaultGroup;
 
 	/**

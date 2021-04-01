@@ -1,6 +1,5 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
-use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;

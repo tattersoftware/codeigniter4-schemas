@@ -24,7 +24,7 @@ class CacheArchiverTest extends SchemasTestCase
 
 	public function testArchiveReturnsTrueOnSuccess()
 	{
-				$this->assertTrue($this->archiver->archive($this->schema));
+		$this->assertTrue($this->archiver->archive($this->schema));
 	}
 
 	public function testArchiveStoresScaffold()

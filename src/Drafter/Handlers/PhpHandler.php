@@ -1,6 +1,5 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
-use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;

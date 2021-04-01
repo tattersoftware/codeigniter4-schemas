@@ -1,6 +1,6 @@
 <?php namespace Tatter\Schemas\Drafter\Handlers;
 
-use CodeIgniter\Config\BaseConfig;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
 use Tatter\Schemas\Structures\Schema;
@@ -17,7 +17,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 	/**
 	 * Save the directory path or load the default from the config
 	 */
-	public function __construct(BaseConfig $config = null, $path = null)
+	public function __construct(SchemasConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
 
