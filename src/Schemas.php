@@ -262,4 +262,44 @@ class Schemas
 
 		return $this;
 	}
+
+	/**
+	 * Publishes a schema with the given or default handler
+	 *
+	 * @param array|string|null $handler
+	 *
+	 * @return $this
+	 *
+	 * @throws SchemasException
+	 */
+	public function publish($handler = null)
+	{
+		$this->timer->start('schema publish');
+
+		if (empty($handler))
+		{
+			$handler = $this->config->publishHandler;
+		}
+
+		// Create the publisher instance
+		if (is_string($handler))
+		{
+			$handler = new $handler($this->config);
+		}
+
+		if (is_null($this->schema))
+		{
+			// Absolute failure
+			throw SchemasException::forNoSchema();
+		}
+
+		if (! $handler->publish(clone $this->schema))
+		{
+			$this->errors = array_merge($this->errors, $handler->getErrors());
+		}
+
+		$this->timer->stop('schema publish');
+
+		return $this;
+	}
 }

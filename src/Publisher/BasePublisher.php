@@ -4,5 +4,4 @@ use Tatter\Schemas\BaseHandler;
 
 class BasePublisher extends BaseHandler
 {
-
 }
