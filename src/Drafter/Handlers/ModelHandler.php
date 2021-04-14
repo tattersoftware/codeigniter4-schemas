@@ -141,7 +141,8 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		$models  = [];
 
 		// Get each namespace
-		foreach ($loader->getNamespace() as $namespace => $path)
+		$namespaces = $loader->getNamespace();
+		foreach ($namespaces as $namespace => $path)
 		{
 			// Skip namespaces that are ignored
 			if (in_array($namespace, $this->config->ignoredNamespaces))
@@ -162,6 +163,23 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 
 		// Filter loaded class on likely models
 		$classes = preg_grep('/model$/i', get_declared_classes());
+
+		// Sort classes by namespace order
+		$sortArray = [];
+		foreach ($classes as $class)
+		{
+			foreach (array_keys($namespaces) as $index => $namespace)
+			{
+				// Store the namespace index if it belongs to the class
+				if (strpos($class, $namespace) === 0)
+				{
+					$sortArray[] = $index;
+					continue 2;
+				}
+			}
+			$sortArray[] = -1;
+		}
+		array_multisort($sortArray, SORT_NUMERIC, $classes);
 
 		// Try to load each class
 		foreach ($classes as $class)
