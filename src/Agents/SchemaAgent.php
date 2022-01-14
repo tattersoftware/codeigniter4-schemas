@@ -19,9 +19,8 @@
 
 use Config\Services;
 use Tatter\Agents\BaseAgent;
-use Tatter\Agents\Interfaces\AgentInterface;
 
-class SchemaAgent extends BaseAgent implements AgentInterface
+class SchemaAgent extends BaseAgent
 {
 	/**
 	 * Attributes for Tatter\Handlers

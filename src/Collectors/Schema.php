@@ -1,10 +1,12 @@
 <?php namespace Tatter\Schemas\Collectors;
 
+use CodeIgniter\Debug\Toolbar\Collectors\BaseCollector;
+
 /**
  * Schema collector
  */
 
-class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
+class Schema extends BaseCollector
 {
 	/**
 	 * Whether this collector has data that can
@@ -41,7 +43,7 @@ class Schema extends \CodeIgniter\Debug\Toolbar\Collectors\BaseCollector
 	/**
 	 * Copy of the schema to display
 	 *
-	 * @var Schema
+	 * @var Schema|null
 	 */
 	protected $schema;
 
