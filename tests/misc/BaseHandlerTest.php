@@ -3,17 +3,20 @@
 use Tatter\Schemas\BaseHandler;
 use Tests\Support\SchemasTestCase;
 
-class BaseHandlerTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class BaseHandlerTest extends SchemasTestCase
 {
-	public function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		$this->handler = new class($this->config) extends BaseHandler {};
-	}
+        $this->handler = new class ($this->config) extends BaseHandler {};
+    }
 
-	public function testGetErrors()
-	{
-		$this->assertEquals([], $this->handler->getErrors());
-	}
+    public function testGetErrors()
+    {
+        $this->assertSame([], $this->handler->getErrors());
+    }
 }

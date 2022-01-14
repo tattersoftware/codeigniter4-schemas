@@ -1,212 +1,193 @@
-<?php namespace Tatter\Schemas\Drafter\Handlers;
+<?php
 
-use CodeIgniter\Config\BaseConfig;
+namespace Tatter\Schemas\Drafter\Handlers;
+
 use CodeIgniter\Model;
 use Config\Services;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
+use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
 
 class ModelHandler extends BaseDrafter implements DrafterInterface
-{        /**
-		  * The default database group.
-		  *
-		  * @var string
-		  */
-	protected $defaultGroup;
+{
+    /**
+     * The default database group.
+     *
+     * @var string
+     */
+    protected $defaultGroup;
 
-	/**
-	 * The database group to constrain by.
-	 *
-	 * @var string
-	 */
-	protected $group;
+    /**
+     * The database group to constrain by.
+     *
+     * @var string
+     */
+    protected $group;
 
-	/**
-	 * Save the config and set the initial database group
-	 *
-	 * @param SchemasConfig $config The library config
-	 * @param string        $group  A database group to use as a filter; null = default group, false = no filtering
-	 */
-	public function __construct(SchemasConfig $config = null, $group = null)
-	{
-		parent::__construct($config);
+    /**
+     * Save the config and set the initial database group
+     *
+     * @param SchemasConfig $config The library config
+     * @param string        $group  A database group to use as a filter; null = default group, false = no filtering
+     */
+    public function __construct(?SchemasConfig $config = null, $group = null)
+    {
+        parent::__construct($config);
 
-		// Load the default database group
-		$config             = config('Database');
-		$this->defaultGroup = $config->defaultGroup;
-		unset($config);
+        // Load the default database group
+        $config             = config('Database');
+        $this->defaultGroup = $config->defaultGroup;
+        unset($config);
 
-		// If nothing was specified then constrain to the default database group
-		if (is_null($group))
-		{
-			$this->group = $this->defaultGroup;
-		}
-		elseif (! empty($group))
-		{
-			$this->group = $group;
-		}
-	}
+        // If nothing was specified then constrain to the default database group
+        if (null === $group) {
+            $this->group = $this->defaultGroup;
+        } elseif (! empty($group)) {
+            $this->group = $group;
+        }
+    }
 
-	/**
-	 * Change the name of the database group constraint
-	 *
-	 * @param string $group A database group to use as a filter; false = no filtering
-	 */
-	public function setGroup(string $group)
-	{
-		$this->group = $group;
-		return $group;
-	}
+    /**
+     * Change the name of the database group constraint
+     *
+     * @param string $group A database group to use as a filter; false = no filtering
+     */
+    public function setGroup(string $group)
+    {
+        $this->group = $group;
 
-	/**
-	 * Get the name of the database group constraint
-	 *
-	 * @return string|null  The current group
-	 */
-	public function getGroup(): ?string
-	{
-		return $this->group;
-	}
+        return $group;
+    }
 
-	/**
-	 * Load models and build table data off their properties
-	 *
-	 * @return Schema|null
-	 */
-	public function draft(): ?Schema
-	{
-		// Start with an empty schema
-		$schema = new Schema();
+    /**
+     * Get the name of the database group constraint
+     *
+     * @return string|null The current group
+     */
+    public function getGroup(): ?string
+    {
+        return $this->group;
+    }
 
-		foreach ($this->getModels() as $class)
-		{
-			$instance = new $class();
+    /**
+     * Load models and build table data off their properties
+     */
+    public function draft(): ?Schema
+    {
+        // Start with an empty schema
+        $schema = new Schema();
 
-			// Start a new table
-			$table             = new Table($instance->table);
-			$table->model      = $class;
-			$table->returnType = $instance->returnType;
+        foreach ($this->getModels() as $class) {
+            $instance = new $class();
 
-			// Create a field for the primary key
-			$field                         = new Field($instance->primaryKey);
-			$field->primary_key            = true;
-			$table->fields->{$field->name} = $field;
+            // Start a new table
+            $table             = new Table($instance->table);
+            $table->model      = $class;
+            $table->returnType = $instance->returnType;
 
-			// Create a field for each allowed field
-			foreach ($instance->allowedFields as $fieldName)
-			{
-				$field                     = new Field($fieldName);
-				$table->fields->$fieldName = $field;
-			}
+            // Create a field for the primary key
+            $field                         = new Field($instance->primaryKey);
+            $field->primary_key            = true;
+            $table->fields->{$field->name} = $field;
 
-			// Figure out which timestamp fields (if any) this model uses and add them
-			$timestamps = $instance->useTimestamps ? [
-														 'createdField',
-														 'updatedField',
-													 ] : [];
-			if ($instance->useSoftDeletes)
-			{
-				$timestamps[] = 'deletedField';
-			}
+            // Create a field for each allowed field
+            foreach ($instance->allowedFields as $fieldName) {
+                $field                       = new Field($fieldName);
+                $table->fields->{$fieldName} = $field;
+            }
 
-			// Get field names from each timestamp attribute
-			foreach ($timestamps as $attribute)
-			{
-				$fieldName   = $instance->$attribute;
-				$field       = new Field($fieldName);
-				$field->type = $instance->dateFormat;
+            // Figure out which timestamp fields (if any) this model uses and add them
+            $timestamps = $instance->useTimestamps ? [
+                'createdField',
+                'updatedField',
+            ] : [];
+            if ($instance->useSoftDeletes) {
+                $timestamps[] = 'deletedField';
+            }
 
-				$table->fields->$fieldName = $field;
-			}
+            // Get field names from each timestamp attribute
+            foreach ($timestamps as $attribute) {
+                $fieldName   = $instance->{$attribute};
+                $field       = new Field($fieldName);
+                $field->type = $instance->dateFormat;
 
-			$schema->tables->{$table->name} = $table;
-		}
+                $table->fields->{$fieldName} = $field;
+            }
 
-		return $schema;
-	}
+            $schema->tables->{$table->name} = $table;
+        }
 
-	/**
-	 * Load model class names from all namespaces, filtered by group
-	 *
-	 * @return array of model class names
-	 */
-	protected function getModels(): array
-	{
-		$loader  = Services::autoloader();
-		$locator = Services::locator();
-		$models  = [];
+        return $schema;
+    }
 
-		// Get each namespace
-		foreach ($loader->getNamespace() as $namespace => $path)
-		{
-			// Skip namespaces that are ignored
-			if (in_array($namespace, $this->config->ignoredNamespaces))
-			{
-				continue;
-			}
+    /**
+     * Load model class names from all namespaces, filtered by group
+     *
+     * @return array of model class names
+     */
+    protected function getModels(): array
+    {
+        $loader  = Services::autoloader();
+        $locator = Services::locator();
+        $models  = [];
 
-			// Get files under this namespace's "/Models" path
-			foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file)
-			{
-				if (is_file($file) && pathinfo($file, PATHINFO_EXTENSION) === 'php')
-				{
-					// Load the file
-					require_once $file;
-				}
-			}
-		}
+        // Get each namespace
+        foreach ($loader->getNamespace() as $namespace => $path) {
+            // Skip namespaces that are ignored
+            if (in_array($namespace, $this->config->ignoredNamespaces, true)) {
+                continue;
+            }
 
-		// Filter loaded class on likely models
-		$classes = preg_grep('/model$/i', get_declared_classes());
+            // Get files under this namespace's "/Models" path
+            foreach ($locator->listNamespaceFiles($namespace, '/Models/') as $file) {
+                if (is_file($file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+                    // Load the file
+                    require_once $file;
+                }
+            }
+        }
 
-		// Try to load each class
-		foreach ($classes as $class)
-		{
-			// Check for ignored namespaces
-			foreach ($this->config->ignoredNamespaces as $namespace)
-			{
-				if (strpos($class, $namespace) === 0)
-				{
-					continue 2;
-				}
-			}
+        // Filter loaded class on likely models
+        $classes = preg_grep('/model$/i', get_declared_classes());
 
-			// Make sure it's really a model
-			if (! is_a($class, Model::class, true))
-			{
-				continue;
-			}
+        // Try to load each class
+        foreach ($classes as $class) {
+            // Check for ignored namespaces
+            foreach ($this->config->ignoredNamespaces as $namespace) {
+                if (strpos($class, $namespace) === 0) {
+                    continue 2;
+                }
+            }
 
-			// Try to instantiate
-			try
-			{
-				$instance = new $class();
-			}
-			catch (\Exception $e)
-			{
-				continue;
-			}
+            // Make sure it's really a model
+            if (! is_a($class, Model::class, true)) {
+                continue;
+            }
 
-			// Make sure it has a valid table
-			$table = $instance->table;
-			if (empty($table))
-			{
-				continue;
-			}
+            // Try to instantiate
+            try {
+                $instance = new $class();
+            } catch (\Exception $e) {
+                continue;
+            }
 
-			// Filter by group
-			$group = $instance->DBGroup ?? $this->defaultGroup; // @phpstan-ignore-line
-			if (empty($this->group) || $group === $this->group)
-			{
-				$models[] = $class;
-			}
-			unset($instance);
-		}
+            // Make sure it has a valid table
+            $table = $instance->table;
+            if (empty($table)) {
+                continue;
+            }
 
-		return $models;
-	}
+            // Filter by group
+            $group = $instance->DBGroup ?? $this->defaultGroup; // @phpstan-ignore-line
+            if (empty($this->group) || $group === $this->group) {
+                $models[] = $class;
+            }
+            unset($instance);
+        }
+
+        return $models;
+    }
 }
