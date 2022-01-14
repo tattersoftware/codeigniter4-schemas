@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 class Field extends Mergeable
 {
@@ -12,7 +14,7 @@ class Field extends Mergeable
 	/**
 	 * Whether this is a primary key.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	public $primary_key;
 
@@ -26,9 +28,7 @@ class Field extends Mergeable
 		if (is_string($fieldData))
 		{
 			$this->name = $fieldData;
-		}
-		else
-		{
+		} else {
 			foreach ($fieldData as $key => $value)
 			{
 				$this->{$key} = $value;

@@ -1,21 +1,23 @@
-<?php namespace Tatter\Schemas\Drafter\Handlers;
+<?php
 
-use CodeIgniter\Config\BaseConfig;
+namespace Tatter\Schemas\Drafter\Handlers;
+
 use CodeIgniter\Model;
 use Config\Services;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
+use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
 
 class ModelHandler extends BaseDrafter implements DrafterInterface
-{        /**
-		  * The default database group.
-		  *
-		  * @var string
-		  */
+{
+	/**
+	 * The default database group.
+	 *
+	 * @var string
+	 */
 	protected $defaultGroup;
 
 	/**
@@ -31,7 +33,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	 * @param SchemasConfig $config The library config
 	 * @param string        $group  A database group to use as a filter; null = default group, false = no filtering
 	 */
-	public function __construct(SchemasConfig $config = null, $group = null)
+	public function __construct(?SchemasConfig $config = null, $group = null)
 	{
 		parent::__construct($config);
 
@@ -41,11 +43,10 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		unset($config);
 
 		// If nothing was specified then constrain to the default database group
-		if (is_null($group))
+		if (null === $group)
 		{
 			$this->group = $this->defaultGroup;
-		}
-		elseif (! empty($group))
+		} elseif (! empty($group))
 		{
 			$this->group = $group;
 		}
@@ -59,13 +60,14 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 	public function setGroup(string $group)
 	{
 		$this->group = $group;
+
 		return $group;
 	}
 
 	/**
 	 * Get the name of the database group constraint
 	 *
-	 * @return string|null  The current group
+	 * @return string|null The current group
 	 */
 	public function getGroup(): ?string
 	{
@@ -74,8 +76,6 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 
 	/**
 	 * Load models and build table data off their properties
-	 *
-	 * @return Schema|null
 	 */
 	public function draft(): ?Schema
 	{
@@ -99,8 +99,8 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			// Create a field for each allowed field
 			foreach ($instance->allowedFields as $fieldName)
 			{
-				$field                     = new Field($fieldName);
-				$table->fields->$fieldName = $field;
+				$field                       = new Field($fieldName);
+				$table->fields->{$fieldName} = $field;
 			}
 
 			// Figure out which timestamp fields (if any) this model uses and add them
@@ -116,11 +116,11 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			// Get field names from each timestamp attribute
 			foreach ($timestamps as $attribute)
 			{
-				$fieldName   = $instance->$attribute;
+				$fieldName   = $instance->{$attribute};
 				$field       = new Field($fieldName);
 				$field->type = $instance->dateFormat;
 
-				$table->fields->$fieldName = $field;
+				$table->fields->{$fieldName} = $field;
 			}
 
 			$schema->tables->{$table->name} = $table;
@@ -144,7 +144,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 		foreach ($loader->getNamespace() as $namespace => $path)
 		{
 			// Skip namespaces that are ignored
-			if (in_array($namespace, $this->config->ignoredNamespaces))
+			if (in_array($namespace, $this->config->ignoredNamespaces, true))
 			{
 				continue;
 			}
@@ -182,11 +182,9 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			}
 
 			// Try to instantiate
-			try
-			{
+			try {
 				$instance = new $class();
-			}
-			catch (\Exception $e)
+			} catch (\Exception $e)
 			{
 				continue;
 			}

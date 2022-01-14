@@ -5,7 +5,10 @@ use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 use Tests\Support\Database\Seeds\TestSeeder;
 use Tests\Support\SchemasTestCase;
 
-class DatabaseDrafterTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class DatabaseDrafterTest extends SchemasTestCase
 {
 	use DatabaseTestTrait;
 
@@ -20,7 +23,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 	 */
 	private $handler;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -30,7 +33,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 
 	public function testHasAllTables()
 	{
-		$this->assertEquals(8, count($this->schema->tables));
+		$this->assertCount(8, $this->schema->tables);
 	}
 
 	public function testHasSpecificTable()
@@ -71,12 +74,13 @@ class DatabaseDrafterTest extends SchemasTestCase
 		}
 
 		$relationsCount = 0;
+
 		foreach ($this->schema->tables as $table)
 		{
 			$relationsCount += count($table->relations);
 		}
 
-		$this->assertEquals(14, $relationsCount);
+		$this->assertSame(14, $relationsCount);
 	}
 
 	public function testBelongsTo()
@@ -84,7 +88,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 		$table1 = $this->schema->tables->lawyers;
 		$table2 = $this->schema->tables->servicers;
 
-		$this->assertEquals('belongsTo', $table1->relations->{$table2->name}->type);
+		$this->assertSame('belongsTo', $table1->relations->{$table2->name}->type);
 
 		$pivot = [
 			'lawyers',
@@ -92,7 +96,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 			'servicers',
 			'id',
 		];
-		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
+		$this->assertSame([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 
 	public function testHasMany()
@@ -100,7 +104,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 		$table1 = $this->schema->tables->servicers;
 		$table2 = $this->schema->tables->lawyers;
 
-		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
+		$this->assertSame('hasMany', $table1->relations->{$table2->name}->type);
 
 		$pivot = [
 			'servicers',
@@ -108,7 +112,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 			'lawyers',
 			'servicer_id',
 		];
-		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
+		$this->assertSame([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 
 	public function testHasManyFromForeignKey()
@@ -121,7 +125,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 		$table1 = $this->schema->tables->workers;
 		$table2 = $this->schema->tables->lawsuits;
 
-		$this->assertEquals('hasMany', $table1->relations->{$table2->name}->type);
+		$this->assertSame('hasMany', $table1->relations->{$table2->name}->type);
 
 		$pivot = [
 			'workers',
@@ -129,7 +133,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 			'lawsuits',
 			'client',
 		];
-		$this->assertEquals([$pivot], $table1->relations->{$table2->name}->pivots);
+		$this->assertSame([$pivot], $table1->relations->{$table2->name}->pivots);
 	}
 
 	public function testManyToMany()
@@ -137,8 +141,8 @@ class DatabaseDrafterTest extends SchemasTestCase
 		$table1 = $this->schema->tables->servicers;
 		$table2 = $this->schema->tables->machines;
 
-		$this->assertEquals('manyToMany', $table1->relations->{$table2->name}->type);
-		$this->assertEquals('manyToMany', $table2->relations->{$table1->name}->type);
+		$this->assertSame('manyToMany', $table1->relations->{$table2->name}->type);
+		$this->assertSame('manyToMany', $table2->relations->{$table1->name}->type);
 
 		$pivot1 = [
 			'servicers',
@@ -152,7 +156,7 @@ class DatabaseDrafterTest extends SchemasTestCase
 			'machines',
 			'id',
 		];
-		$this->assertEquals([$pivot1, $pivot2], $table1->relations->{$table2->name}->pivots);
+		$this->assertSame([$pivot1, $pivot2], $table1->relations->{$table2->name}->pivots);
 
 		$pivot1 = [
 			'machines',
@@ -166,6 +170,6 @@ class DatabaseDrafterTest extends SchemasTestCase
 			'servicers',
 			'id',
 		];
-		$this->assertEquals([$pivot1, $pivot2], $table2->relations->{$table1->name}->pivots);
+		$this->assertSame([$pivot1, $pivot2], $table2->relations->{$table1->name}->pivots);
 	}
 }

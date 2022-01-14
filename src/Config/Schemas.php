@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Config;
+<?php
+
+namespace Tatter\Schemas\Config;
 
 use CodeIgniter\Config\BaseConfig;
 

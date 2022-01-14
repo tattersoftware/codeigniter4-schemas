@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Drafter\Handlers;
+<?php
+
+namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Config\BaseConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
@@ -16,8 +18,10 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 
 	/**
 	 * Save the directory path or load the default from the config
+	 *
+	 * @param mixed|null $path
 	 */
-	public function __construct(BaseConfig $config = null, $path = null)
+	public function __construct(?BaseConfig $config = null, $path = null)
 	{
 		parent::__construct($config);
 
@@ -47,6 +51,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 		if (empty($files))
 		{
 			$this->errors[] = lang('Schemas.emptySchemaDirectory', [$this->config->schemasDirectory]);
+
 			return null;
 		}
 
@@ -56,18 +61,17 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 			// Make sure there is a handler for this extension
 			$handler = $this->getHandlerForFile($path);
 
-			if (is_null($handler))
+			if (null === $handler)
 			{
 				$this->errors[] = lang('Schemas.unsupportedHandler', [pathinfo($path, PATHINFO_EXTENSION)]);
+
 				continue;
 			}
 
 			if (empty($schema))
 			{
 				$schema = $handler->draft();
-			}
-			else
-			{
+			} else {
 				$schema->merge($handler->draft());
 			}
 		}
@@ -77,9 +81,7 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 
 	/**
 	 * Try to match a file to its handler by the extension
-	 *
-	 * @return DrafterInterface|null
-	 */       
+	 */
 	protected function getHandlerForFile(string $path): ?DrafterInterface
 	{
 		$extension = pathinfo($path, PATHINFO_EXTENSION);
@@ -90,7 +92,6 @@ class DirectoryHandler extends BaseDrafter implements DrafterInterface
 			return null;
 		}
 
-		$handler = new $class($this->config, $path);
-		return $handler;
+		return new $class($this->config, $path);
 	}
 }

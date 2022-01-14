@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Agents;
+<?php
+
+namespace Tatter\Schemas\Agents;
 
 /**
  * Tatter\Agents
@@ -36,8 +38,6 @@ class SchemaAgent extends BaseAgent
 
 	/**
 	 * Runs this Agent's status check. Usually in turn calls record().
-	 *
-	 * @return void
 	 */
 	public function check(): void
 	{

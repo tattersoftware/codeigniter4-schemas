@@ -1,4 +1,6 @@
-<?php namespace Tests\Support\Database\Seeds;
+<?php
+
+namespace Tests\Support\Database\Seeds;
 
 class TestSeeder extends \CodeIgniter\Database\Seeder
 {
@@ -38,6 +40,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('factories');
+
 		foreach ($factories as $factory)
 		{
 			$builder->insert($factory);
@@ -104,6 +107,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('workers');
+
 		foreach ($workers as $worker)
 		{
 			$builder->insert($worker);
@@ -150,6 +154,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('factories_workers');
+
 		foreach ($rows as $row)
 		{
 			$builder->insert($row);
@@ -195,6 +200,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('machines');
+
 		foreach ($machines as $machine)
 		{
 			$builder->insert($machine);
@@ -212,6 +218,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('servicers');
+
 		foreach ($servicers as $servicer)
 		{
 			$builder->insert($servicer);
@@ -274,6 +281,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('machines_servicers');
+
 		foreach ($rows as $row)
 		{
 			$builder->insert($row);
@@ -304,6 +312,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('lawyers');
+
 		foreach ($lawyers as $lawyer)
 		{
 			$builder->insert($lawyer);
@@ -335,6 +344,7 @@ class TestSeeder extends \CodeIgniter\Database\Seeder
 		];
 
 		$builder = $this->db->table('lawsuits');
+
 		foreach ($lawsuits as $lawsuit)
 		{
 			$builder->insert($lawsuit);

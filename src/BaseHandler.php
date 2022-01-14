@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas;
+<?php
+
+namespace Tatter\Schemas;
 
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 
@@ -23,7 +25,7 @@ abstract class BaseHandler
 	 *
 	 * @param SchemasConfig $config The library config
 	 */
-	public function __construct(SchemasConfig $config = null)
+	public function __construct(?SchemasConfig $config = null)
 	{
 		// If no configuration was supplied then load one
 		$this->config = $config ?? config('Schemas');

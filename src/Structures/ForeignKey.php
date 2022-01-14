@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 class ForeignKey extends Mergeable
 {
@@ -19,9 +21,7 @@ class ForeignKey extends Mergeable
 		if (is_string($foreignKeyData))
 		{
 			$this->constraint_name = $foreignKeyData;
-		}
-		else
-		{
+		} else {
 			foreach ($foreignKeyData as $key => $value)
 			{
 				$this->{$key} = $value;

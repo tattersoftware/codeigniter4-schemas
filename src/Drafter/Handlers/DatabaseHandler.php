@@ -1,18 +1,18 @@
-<?php namespace Tatter\Schemas\Drafter\Handlers;
+<?php
 
-use CodeIgniter\Config\BaseConfig;
+namespace Tatter\Schemas\Drafter\Handlers;
+
 use CodeIgniter\Database\BaseConnection;
-use CodeIgniter\Database\ConnectionInterface;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
-use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
 use Tatter\Schemas\Structures\ForeignKey;
+use Tatter\Schemas\Structures\Index;
+use Tatter\Schemas\Structures\Mergeable;
+use Tatter\Schemas\Structures\Relation;
+use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Structures\Table;
 
 class DatabaseHandler extends BaseDrafter implements DrafterInterface
 {
@@ -43,7 +43,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	 * @param SchemasConfig $config The library config
 	 * @param string        $db     A database connection, or null to use the default
 	 */
-	public function __construct(SchemasConfig $config = null, $db = null)
+	public function __construct(?SchemasConfig $config = null, $db = null)
 	{
 		parent::__construct($config);
 
@@ -54,8 +54,6 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 
 	/**
 	 * Map the database from $this->db into a new schema
-	 *
-	 * @return Schema|null
 	 */
 	public function draft(): ?Schema
 	{
@@ -73,14 +71,14 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 		foreach ($this->db->listTables(true) as $tableName)
 		{
 			// Check for ignored tables
-			if (in_array($tableName, $this->config->ignoredTables))
+			if (in_array($tableName, $this->config->ignoredTables, true))
 			{
 				continue;
 			}
 
 			// Strip the prefix and check again`
 			$tableName = $this->stripPrefix($tableName);
-			if (in_array($tableName, $this->config->ignoredTables))
+			if (in_array($tableName, $this->config->ignoredTables, true))
 			{
 				continue;
 			}
@@ -157,7 +155,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
 				{
-					$pivot            = [
+					$pivot = [
 						$foreignKey->table_name,
 						$foreignKey->column_name,
 						$foreignKey->foreign_table_name,
@@ -177,7 +175,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 				// Not all drivers supply the column names
 				if (isset($foreignKey->column_name))
 				{
-					$pivot            = [
+					$pivot = [
 						$foreignKey->foreign_table_name,
 						$foreignKey->foreign_column_name,
 						$foreignKey->table_name,
@@ -194,25 +192,25 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 		// Check tables flagged as possible pivots
 		foreach ($tableRelations as $tableName)
 		{
-			list($tableName1, $tableName2) = explode('_', $tableName, 2);
+			[$tableName1, $tableName2] = explode('_', $tableName, 2);
 
 			// Check for both tables (e.g. `groups_users` must have `groups` and `users`)
-			if (isset($schema->tables->$tableName1) && isset($schema->tables->$tableName2))
+			if (isset($schema->tables->{$tableName1}, $schema->tables->{$tableName2}))
 			{
 				// A match! Look for foreign fields (may not be properly keyed)
-				$fieldName1    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName1);
-				$foreignField1 = $this->findPrimaryKey($schema->tables->$tableName1);
+				$fieldName1    = $this->findKeyToForeignTable($schema->tables->{$tableName}, $tableName1);
+				$foreignField1 = $this->findPrimaryKey($schema->tables->{$tableName1});
 
-				$fieldName2    = $this->findKeyToForeignTable($schema->tables->$tableName, $tableName2);
-				$foreignField2 = $this->findPrimaryKey($schema->tables->$tableName2);
+				$fieldName2    = $this->findKeyToForeignTable($schema->tables->{$tableName}, $tableName2);
+				$foreignField2 = $this->findPrimaryKey($schema->tables->{$tableName2});
 
 				// If all fields were found we have a relation
 				if ($fieldName1 && $fieldName2 && $foreignField1 && $foreignField2)
 				{
 					// Set the table as a pivot & clear its relations
-					$schema->tables->$tableName->pivot     = true;
-					$schema->tables->$tableName->relations = new Mergeable();
-					$pivotTables[]                         = $tableName;
+					$schema->tables->{$tableName}->pivot     = true;
+					$schema->tables->{$tableName}->relations = new Mergeable();
+					$pivotTables[]                           = $tableName;
 
 					// Build the pivots
 					$pivot1 = [
@@ -238,7 +236,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 					];
 
 					// Add it to the first table
-					$schema->tables->$tableName1->relations->$tableName2 = $relation;
+					$schema->tables->{$tableName1}->relations->{$tableName2} = $relation;
 
 					// Build the pivots
 					$pivot1 = [
@@ -264,7 +262,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 					];
 
 					// Add it to the second table
-					$schema->tables->$tableName2->relations->$tableName1 = $relation;
+					$schema->tables->{$tableName2}->relations->{$tableName1} = $relation;
 				}
 			}
 		}
@@ -278,10 +276,10 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 				$tableName2 = plural(preg_replace('/_id$/', '', $fieldName, 1));
 
 				// Check for the table (e.g. `user_id` must have `users`)
-				if (isset($schema->tables->$tableName2))
+				if (isset($schema->tables->{$tableName2}))
 				{
 					// A match! Get the key from the target table
-					$foreignField = $this->findPrimaryKey($schema->tables->$tableName2);
+					$foreignField = $this->findPrimaryKey($schema->tables->{$tableName2});
 
 					// If the field was found we have a relation
 					if ($foreignField)
@@ -302,7 +300,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 						$relation->pivots    = [$pivot];
 
 						// Add it to the first table
-						$schema->tables->$tableName1->relations->$tableName2 = $relation;
+						$schema->tables->{$tableName1}->relations->{$tableName2} = $relation;
 
 						// Build the reverse pivot
 						$pivot = [
@@ -319,7 +317,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 						$relation->pivots = [$pivot];
 
 						// Add it to the second table
-						$schema->tables->$tableName2->relations->$tableName1 = $relation;
+						$schema->tables->{$tableName2}->relations->{$tableName1} = $relation;
 					}
 				}
 			}
@@ -329,12 +327,12 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 		foreach ($pivotTables as $pivotTableName)
 		{
 			// Blank this table's relations
-			$schema->tables->$pivotTableName->relations = new Mergeable();
+			$schema->tables->{$pivotTableName}->relations = new Mergeable();
 
 			// Remove the table from other relations
 			foreach ($schema->tables as $tableName => $table)
 			{
-				unset($schema->tables->$tableName->relations->$pivotTableName);
+				unset($schema->tables->{$tableName}->relations->{$pivotTableName});
 			}
 		}
 
@@ -346,7 +344,7 @@ class DatabaseHandler extends BaseDrafter implements DrafterInterface
 	 *
 	 * @param string $str Name of a database object
 	 *
-	 * @return string   The updated name
+	 * @return string The updated name
 	 */
 	protected function stripPrefix(string $str): string
 	{

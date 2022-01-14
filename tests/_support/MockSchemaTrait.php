@@ -1,4 +1,6 @@
-<?php namespace Tests\Support;
+<?php
+
+namespace Tests\Support;
 
 use Tatter\Schemas\Structures\Schema;
 

@@ -1,17 +1,21 @@
-<?php namespace Tests\Support;
+<?php
 
-use CodeIgniter\Config\Services;
+namespace Tests\Support;
+
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 
-class DatabaseTestCase extends CIUnitTestCase
+/**
+ * @internal
+ */
+abstract class DatabaseTestCase extends CIUnitTestCase
 {
 	use DatabaseTestTrait;
 
 	/**
 	 * Should the database be refreshed before each test?
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $refresh = true;
 
@@ -56,7 +60,7 @@ class DatabaseTestCase extends CIUnitTestCase
 	 */
 	protected $schema;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -75,13 +79,13 @@ class DatabaseTestCase extends CIUnitTestCase
 		$this->schemas = new \Tatter\Schemas\Schemas($config);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 
 		$this->schemas->reset();
-		unset($this->schema);
-		unset($this->handler);
+		unset($this->schema, $this->handler);
+
 		cache()->clean();
 	}
 }

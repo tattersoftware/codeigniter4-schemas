@@ -1,11 +1,16 @@
-<?php namespace Tests\Support;
+<?php
+
+namespace Tests\Support;
 
 use CodeIgniter\Test\CIUnitTestCase;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Schemas;
 use Tatter\Schemas\Structures\Schema;
 
-class SchemasTestCase extends CIUnitTestCase
+/**
+ * @internal
+ */
+abstract class SchemasTestCase extends CIUnitTestCase
 {
 	/**
 	 * @var SchemasConfig

@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Commands;
+<?php
+
+namespace Tatter\Schemas\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
@@ -9,9 +11,8 @@ class Schemas extends BaseCommand
 	protected $group       = 'Database';
 	protected $name        = 'schemas';
 	protected $description = 'Manage database schemas.';
-
-	protected $usage   = 'schemas [-draft handler1,handler2,...] [-archive handler1,... | -print]';
-	protected $options = [
+	protected $usage       = 'schemas [-draft handler1,handler2,...] [-archive handler1,... | -print]';
+	protected $options     = [
 		'-draft'   => 'Handler(s) for drafting the schema ("database", "model", etc)',
 		'-archive' => 'Handler(s) for archiving a copy of the schema',
 		'-print'   => 'Print out the drafted schema',
@@ -26,7 +27,7 @@ class Schemas extends BaseCommand
 			'archive' => false,
 			'read'    => false,
 		];
-		$schemas          = new \Tatter\Schemas\Schemas($config, null);
+		$schemas = new \Tatter\Schemas\Schemas($config, null);
 
 		// Determine draft handlers
 		if ($drafters = $params['-draft'] ?? CLI::getOption('draft'))
@@ -35,9 +36,7 @@ class Schemas extends BaseCommand
 
 			// Map each name to its handler
 			$drafters = array_map([$this, 'getDraftHandler'], $drafters);
-		}
-		else
-		{
+		} else {
 			$drafters = $config->draftHandlers;
 		}
 
@@ -45,35 +44,28 @@ class Schemas extends BaseCommand
 		if ($params['-print'] ?? CLI::getOption('print'))
 		{
 			$archivers = '\Tatter\Schemas\Archiver\Handlers\CliHandler';
-		}
-		elseif ($archivers = $params['-archive'] ?? CLI::getOption('archive'))
+		} elseif ($archivers = $params['-archive'] ?? CLI::getOption('archive'))
 		{
 			$archivers = explode(',', $archivers);
 
 			// Map each name to its handler
 			$archivers = array_map([$this, 'getArchiveHandler'], $archivers);
-		}
-		else
-		{
+		} else {
 			$archivers = $config->archiveHandlers;
 		}
 
 		// Try the draft
-		try
-		{
+		try {
 			$schemas->draft($drafters);
-		}
-		catch (\Exception $e)
+		} catch (\Exception $e)
 		{
 			$this->showError($e);
 		}
 
 		// Try the archive
-		try
-		{
+		try {
 			$result = $schemas->archive($archivers);
-		}
-		catch (\Exception $e)
+		} catch (\Exception $e)
 		{
 			$this->showError($e);
 		}
@@ -81,10 +73,12 @@ class Schemas extends BaseCommand
 		if (empty($result))
 		{
 			CLI::write('Archive failed!', 'red');
+
 			foreach ($schemas->getErrors() as $error)
 			{
 				CLI::write($error, 'yellow');
 			}
+
 			return;
 		}
 
@@ -96,8 +90,6 @@ class Schemas extends BaseCommand
 	 *
 	 * @param string $type The type of handler (drafter, archiver, etc)
 	 * @param string $name The name of the handler
-	 *
-	 * @return string
 	 */
 	protected function getHandler(string $type, string $name): string
 	{
@@ -121,8 +113,6 @@ class Schemas extends BaseCommand
 	 * Helper for getHandler
 	 *
 	 * @param string $name The name of the handler
-	 *
-	 * @return string
 	 */
 	protected function getDraftHandler(string $name): string
 	{
@@ -133,8 +123,6 @@ class Schemas extends BaseCommand
 	 * Helper for getHandler
 	 *
 	 * @param string $name The name of the handler
-	 *
-	 * @return string
 	 */
 	protected function getArchiveHandler(string $name): string
 	{

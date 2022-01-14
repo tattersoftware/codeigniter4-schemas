@@ -1,16 +1,19 @@
-<?php namespace Tests\Support;
+<?php
+
+namespace Tests\Support;
 
 use CodeIgniter\Test\CIUnitTestCase;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Schemas;
-use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
+use Tatter\Schemas\Structures\Relation;
+use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Structures\Table;
 
-class UnitTestCase extends CIUnitTestCase
+/**
+ * @internal
+ */
+abstract class UnitTestCase extends CIUnitTestCase
 {
 	/**
 	 * @var SchemasConfig
@@ -27,7 +30,7 @@ class UnitTestCase extends CIUnitTestCase
 	 */
 	protected $schema;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -53,10 +56,10 @@ class UnitTestCase extends CIUnitTestCase
 		$table1->fields->name = new Field('name');
 		$table1->fields->uid  = new Field('uid');
 
-		$relation                   = new Relation();
-		$relation->type             = 'manyToMany';
-		$relation->table            = 'workers';
-		$relation->pivots           = [
+		$relation         = new Relation();
+		$relation->type   = 'manyToMany';
+		$relation->table  = 'workers';
+		$relation->pivots = [
 			[
 				'factories',
 				'id',
@@ -79,10 +82,10 @@ class UnitTestCase extends CIUnitTestCase
 		$table2->fields->lastname  = new Field('lastname');
 		$table2->fields->role      = new Field('role');
 
-		$relation                     = new Relation();
-		$relation->type               = 'manyToMany';
-		$relation->table              = 'factories';
-		$relation->pivots             = [
+		$relation         = new Relation();
+		$relation->type   = 'manyToMany';
+		$relation->table  = 'factories';
+		$relation->pivots = [
 			[
 				'workers',
 				'id',
@@ -104,7 +107,7 @@ class UnitTestCase extends CIUnitTestCase
 		$this->schema->tables->workers   = $table2;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

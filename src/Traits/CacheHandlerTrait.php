@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Traits;
+<?php
+
+namespace Tatter\Schemas\Traits;
 
 use CodeIgniter\Cache\CacheInterface;
 use Config\Services;
@@ -25,20 +27,20 @@ trait CacheHandlerTrait
 	 *
 	 * @param CacheInterface $cache The cache handler to use, null to load a new default
 	 */
-	public function cacheInit(CacheInterface $cache = null)
+	public function cacheInit(?CacheInterface $cache = null)
 	{
 		// By default use an enviroment-specific name (helps with testing collisions)
 		$this->cacheKey = 'schema-' . ENVIRONMENT;
 
 		// Use injected cache handler, or get the default from its service
-		if (is_null($cache))
+		if (null === $cache)
 		{
 			$cache = Services::cache();
 		}
 
 		if (! $cache->isSupported())
 		{
-			throw SchemasException::forUnsupportedHandler(get_class($this));
+			throw SchemasException::forUnsupportedHandler(static::class);
 		}
 
 		$this->cache = $cache;

@@ -6,20 +6,23 @@ use Tests\Support\CacheTrait;
 use Tests\Support\MockSchemaTrait;
 use Tests\Support\SchemasTestCase;
 
-class CacheArchiverTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class CacheArchiverTest extends SchemasTestCase
 {
-	use CacheTrait, MockSchemaTrait;
+	use CacheTrait; use MockSchemaTrait;
 
 	public function testGetKeyUsesEnvironment()
 	{
-		$this->assertEquals('schema-testing', $this->archiver->getKey());
+		$this->assertSame('schema-testing', $this->archiver->getKey());
 	}
 
 	public function testSetKeyChangesKey()
 	{
 		$this->archiver->setKey('testKey');
 
-		$this->assertEquals('testKey', $this->archiver->getKey());
+		$this->assertSame('testKey', $this->archiver->getKey());
 	}
 
 	public function testArchiveReturnsTrueOnSuccess()
@@ -37,10 +40,10 @@ class CacheArchiverTest extends SchemasTestCase
 
 		foreach ($this->schema->tables as $tableName => $table)
 		{
-			$expected->tables->$tableName = true;
+			$expected->tables->{$tableName} = true;
 		}
 
-		$this->assertEquals($this->schema, $this->cache->get($key));
+		$this->assertSame($this->schema, $this->cache->get($key));
 	}
 
 	public function testArchiveStoresEachTable()
@@ -52,7 +55,7 @@ class CacheArchiverTest extends SchemasTestCase
 
 		foreach ($tables as $tableName => $table)
 		{
-			$this->assertEquals($table, $this->cache->get($key . '-' . $tableName));
+			$this->assertSame($table, $this->cache->get($key . '-' . $tableName));
 		}
 	}
 }

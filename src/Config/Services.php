@@ -1,13 +1,14 @@
-<?php namespace Tatter\Schemas\Config;
+<?php
+
+namespace Tatter\Schemas\Config;
 
 use Config\Services as BaseService;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Schemas;
-use Tatter\Schemas\Structures\Schema;
 
 class Services extends BaseService
 {
-	public static function schemas(SchemasConfig $config = null, bool $getShared = true)
+	public static function schemas(?SchemasConfig $config = null, bool $getShared = true)
 	{
 		if ($getShared)
 		{

@@ -1,17 +1,16 @@
-<?php namespace Tests\Support;
+<?php
 
-use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
+namespace Tests\Support;
+
 use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
+use Tatter\Schemas\Structures\Relation;
+use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Structures\Table;
 
-/* SCHEMA */
+// SCHEMA
 $schema = new Schema();
 
-/* TABLES */
+// TABLES
 $schema->tables->factories = new Table('factories');
 $schema->tables->machines  = new Table('machines');
 $schema->tables->workers   = new Table('workers');
@@ -19,22 +18,22 @@ $schema->tables->workers   = new Table('workers');
 // Factories
 foreach (['id', 'name', 'uid'] as $field)
 {
-	$schema->tables->factories->fields->$field = new Field($field);
+	$schema->tables->factories->fields->{$field} = new Field($field);
 }
 
 // Machines
 foreach (['id', 'type', 'serial', 'factory_id'] as $field)
 {
-	$schema->tables->machines->fields->$field = new Field($field);
+	$schema->tables->machines->fields->{$field} = new Field($field);
 }
 
 // Workers
 foreach (['id', 'firstname', 'lastname', 'role'] as $field)
 {
-	$schema->tables->workers->fields->$field = new Field($field);
+	$schema->tables->workers->fields->{$field} = new Field($field);
 }
 
-/* RELATIONS */
+// RELATIONS
 
 // Factories->Machines
 $relation         = new Relation();
@@ -74,5 +73,5 @@ $relation->pivots = [
 ];
 $schema->tables->workers->relations->factories = $relation;
 
-/* CLEANUP */
+// CLEANUP
 unset($relation);

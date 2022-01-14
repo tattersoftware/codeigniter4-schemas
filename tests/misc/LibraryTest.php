@@ -1,15 +1,16 @@
 <?php
 
 use Tatter\Schemas\Handlers\BaseHandler;
-use Tatter\Schemas\Interfaces\SchemaHandlerInterface;
-use Tatter\Schemas\Structures\Schema;
 use Tests\Support\SchemasTestCase;
 
-class LibraryTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class LibraryTest extends SchemasTestCase
 {
 	public function testGetErrors()
 	{
-		$this->assertEquals([], $this->schemas->getErrors());
+		$this->assertSame([], $this->schemas->getErrors());
 	}
 
 	public function testStartsWithoutSchema()

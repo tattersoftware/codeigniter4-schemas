@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 class Relation extends Mergeable
 {
@@ -19,7 +21,7 @@ class Relation extends Mergeable
 	/**
 	 * Whether the relation will be to a single object.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	public $singleton;
 

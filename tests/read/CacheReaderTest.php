@@ -1,22 +1,24 @@
 <?php
 
 use Tatter\Schemas\Reader\Handlers\CacheHandler as CacheReader;
-use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Schema;
 use Tests\Support\CacheTrait;
 use Tests\Support\MockSchemaTrait;
 use Tests\Support\SchemasTestCase;
 
-class CacheReaderTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class CacheReaderTest extends SchemasTestCase
 {
-	use CacheTrait, MockSchemaTrait;
+	use CacheTrait; use MockSchemaTrait;
 
 	/**
 	 * @var CacheReader
 	 */
 	private $reader;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -36,7 +38,7 @@ class CacheReaderTest extends SchemasTestCase
 			'workers'   => true,
 		];
 
-		$this->assertEquals($expected, (array) $this->reader->getTables());
+		$this->assertSame($expected, (array) $this->reader->getTables());
 	}
 
 	public function testReaderMagicGetsTable()
@@ -49,7 +51,7 @@ class CacheReaderTest extends SchemasTestCase
 			'workers'   => $this->schema->tables->workers,
 		];
 
-		$this->assertEquals($expected, (array)$this->reader->getTables());
+		$this->assertSame($expected, (array) $this->reader->getTables());
 	}
 
 	public function testReaderIteratesAllTables()
@@ -58,10 +60,10 @@ class CacheReaderTest extends SchemasTestCase
 
 		foreach ($this->reader as $tableName => $table)
 		{
-			$this->assertEquals($table, $this->schema->tables->$tableName);
+			$this->assertSame($table, $this->schema->tables->{$tableName});
 			$counted++;
 		}
 
-		$this->assertEquals(3, $counted);
+		$this->assertSame(3, $counted);
 	}
 }

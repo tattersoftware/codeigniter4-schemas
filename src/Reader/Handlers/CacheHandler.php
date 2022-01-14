@@ -1,14 +1,14 @@
-<?php namespace Tatter\Schemas\Reader\Handlers;
+<?php
+
+namespace Tatter\Schemas\Reader\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
-use Tatter\Schemas\Exceptions\SchemasException;
 use Tatter\Schemas\Reader\BaseReader;
 use Tatter\Schemas\Reader\ReaderInterface;
 use Tatter\Schemas\Structures\Mergeable;
 use Tatter\Schemas\Structures\Table;
 use Tatter\Schemas\Traits\CacheHandlerTrait;
-use ArrayIterator;
 
 class CacheHandler extends BaseReader implements ReaderInterface
 {
@@ -25,7 +25,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	 * @param SchemasConfig  $config The library config
 	 * @param CacheInterface $cache  The cache handler to use, null to load a new default
 	 */
-	public function __construct(SchemasConfig $config = null, CacheInterface $cache = null)
+	public function __construct(?SchemasConfig $config = null, ?CacheInterface $cache = null)
 	{
 		parent::__construct($config);
 
@@ -44,8 +44,6 @@ class CacheHandler extends BaseReader implements ReaderInterface
 
 	/**
 	 * Return the current tables, fetched or not
-	 *
-	 * @return Mergeable|null
 	 */
 	public function getTables(): ?Mergeable
 	{
@@ -73,9 +71,9 @@ class CacheHandler extends BaseReader implements ReaderInterface
 
 		foreach ($tables as $tableName)
 		{
-			if ($this->tables->$tableName === true)
+			if ($this->tables->{$tableName} === true)
 			{
-				$this->tables->$tableName = $this->cache->get($this->cacheKey . '-' . $tableName);
+				$this->tables->{$tableName} = $this->cache->get($this->cacheKey . '-' . $tableName);
 			}
 		}
 
@@ -109,8 +107,6 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	 * Intercept requests to load cached tables on-the-fly
 	 *
 	 * @param string $name Property (table) name to check for
-	 *
-	 * @return Table|null
 	 */
 	public function __get(string $name): ?Table
 	{
@@ -121,20 +117,18 @@ class CacheHandler extends BaseReader implements ReaderInterface
 		}
 
 		// If boolean true (cached but not loaded) then load it from cache
-		if ($this->tables->$name === true)
+		if ($this->tables->{$name} === true)
 		{
 			$this->fetch($name);
 		}
 
-		return $this->tables->$name;
+		return $this->tables->{$name};
 	}
 
 	/**
 	 * Magic checker to match the getter.
 	 *
 	 * @param string $name Property to check for
-	 *
-	 * @return boolean
 	 */
 	public function __isset($name): bool
 	{
@@ -144,7 +138,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
 	/**
 	 * Specify count of public properties to satisfy Countable.
 	 *
-	 * @return integer  Number of public properties
+	 * @return int Number of public properties
 	 */
 	public function count(): int
 	{
@@ -153,8 +147,6 @@ class CacheHandler extends BaseReader implements ReaderInterface
 
 	/**
 	 * Fetch all the tables and return them for iteration.
-	 *
-	 * @return Mergeable
 	 */
 	public function getIterator(): Mergeable
 	{

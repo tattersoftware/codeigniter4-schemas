@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 class Table extends Mergeable
 {
@@ -12,7 +14,7 @@ class Table extends Mergeable
 	/**
 	 * Whether the table is a pivot.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	public $pivot = false;
 

@@ -9,7 +9,10 @@ use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 use Tests\Support\Database\Seeds\TestSeeder;
 use Tests\Support\SchemasTestCase;
 
-class LiveTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class LiveTest extends SchemasTestCase
 {
 	use DatabaseTestTrait;
 
@@ -31,7 +34,7 @@ class LiveTest extends SchemasTestCase
 
 		$schemaFromService = $this->schemas->get();
 		$schemaFromCache   = $cache->get('schema-testing');
-		$this->assertEquals(count($schemaFromCache->tables), count($schemaFromService->tables));
+		$this->assertSame(count($schemaFromCache->tables), count($schemaFromService->tables));
 
 		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
 	}
@@ -66,7 +69,7 @@ class LiveTest extends SchemasTestCase
 		$schema = $this->schemas->draft([$databaseHandler, $modelHandler, $fileHandler])->get();
 
 		$this->assertObjectHasAttribute('products', $schema->tables);
-		$this->assertEquals('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
+		$this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 
@@ -100,7 +103,7 @@ class LiveTest extends SchemasTestCase
 
 		$schema = $this->schemas->get();
 
-		$this->assertEquals('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
+		$this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
 		$this->assertCount(3, $schema->tables->workers->relations);
 	}
 }

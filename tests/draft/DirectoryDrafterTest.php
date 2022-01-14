@@ -3,7 +3,10 @@
 use Tatter\Schemas\Drafter\Handlers\DirectoryHandler;
 use Tests\Support\SchemasTestCase;
 
-class DirectoryDrafterTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class DirectoryDrafterTest extends SchemasTestCase
 {
 	public function testEmptyDirectoryReturnsNull()
 	{
@@ -31,7 +34,7 @@ class DirectoryDrafterTest extends SchemasTestCase
 
 		$schema = $handler->draft();
 
-		$this->assertEquals('hasMany', $schema->tables->workers->relations->products->type);
+		$this->assertSame('hasMany', $schema->tables->workers->relations->products->type);
 		$this->assertCount(0, $handler->getErrors());
 	}
 }

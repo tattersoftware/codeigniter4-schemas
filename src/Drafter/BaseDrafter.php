@@ -1,6 +1,7 @@
-<?php namespace Tatter\Schemas\Drafter;
+<?php
 
-use CodeIgniter\Config\BaseConfig;
+namespace Tatter\Schemas\Drafter;
+
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use CodeIgniter\Files\File;
 use Tatter\Schemas\BaseHandler;
@@ -19,7 +20,7 @@ abstract class BaseDrafter extends BaseHandler
 	 *
 	 * @param SchemasConfig $config The library config
 	 */
-	public function __construct(SchemasConfig $config = null)
+	public function __construct(?SchemasConfig $config = null)
 	{
 		parent::__construct($config);
 
@@ -62,7 +63,7 @@ abstract class BaseDrafter extends BaseHandler
 	 * @param Table  $table     A Table
 	 * @param string $tableName The foreign table to try to match
 	 *
-	 * @return ?String The name of the field, or null if not found
+	 * @return ?string The name of the field, or null if not found
 	 */
 	protected function findKeyToForeignTable(Table $table, string $tableName): ?string
 	{
@@ -76,7 +77,7 @@ abstract class BaseDrafter extends BaseHandler
 
 		foreach ($tests as $fieldName)
 		{
-			if (isset($table->fields->$fieldName))
+			if (isset($table->fields->{$fieldName}))
 			{
 				return $fieldName;
 			}
@@ -101,6 +102,7 @@ abstract class BaseDrafter extends BaseHandler
 		if (! $file->isFile())
 		{
 			$this->errors[] = lang('Files.fileNotFound', [$path]);
+
 			return null;
 		}
 

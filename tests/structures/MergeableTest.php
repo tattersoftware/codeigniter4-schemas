@@ -3,7 +3,10 @@
 use CodeIgniter\Test\CIUnitTestCase;
 use Tatter\Schemas\Structures\Mergeable;
 
-class MergeableTest extends CIUnitTestCase
+/**
+ * @internal
+ */
+final class MergeableTest extends CIUnitTestCase
 {
 	public function testMergeHasItem()
 	{
@@ -15,7 +18,7 @@ class MergeableTest extends CIUnitTestCase
 
 		$object1->merge($object2);
 
-		$this->assertEquals('no thanks', $object1->bar);
+		$this->assertSame('no thanks', $object1->bar);
 	}
 
 	public function testMergeOverwrites()
@@ -33,7 +36,7 @@ class MergeableTest extends CIUnitTestCase
 
 		$object1->merge($object2);
 
-		$this->assertEquals('no thanks', $object1->foo);
+		$this->assertSame('no thanks', $object1->foo);
 		$this->assertContains('dog', $object1->ra);
 	}
 
@@ -49,7 +52,7 @@ class MergeableTest extends CIUnitTestCase
 		$object3 = new Mergeable();
 		$object3->merge($object2);
 
-		$this->assertEquals($object3->nest->foo, 'yes');
+		$this->assertSame($object3->nest->foo, 'yes');
 	}
 
 	public function testMergeableIsCountable()
@@ -68,12 +71,13 @@ class MergeableTest extends CIUnitTestCase
 		$object->bar = 'no thanks';
 
 		$counted = 0;
+
 		foreach ($object as $key => $value)
 		{
-			$this->assertEquals($value, $object->$key);
+			$this->assertSame($value, $object->{$key});
 			$counted++;
 		}
 
-		$this->assertEquals(2, $counted);
+		$this->assertSame(2, $counted);
 	}
 }

@@ -1,4 +1,6 @@
-<?php namespace Tests\Support;
+<?php
+
+namespace Tests\Support;
 
 use CodeIgniter\Cache\CacheInterface;
 use Config\Services;
@@ -24,8 +26,6 @@ trait CacheTrait
 	/**
 	 * Sets up the Cache driver and
 	 * the Schemas Cache handlers.
-	 *
-	 * @return void
 	 */
 	public function setUpCacheTrait(): void
 	{

@@ -3,7 +3,10 @@
 use Tatter\Schemas\Drafter\Handlers\PhpHandler;
 use Tests\Support\SchemasTestCase;
 
-class PhpDrafterTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class PhpDrafterTest extends SchemasTestCase
 {
 	public function testSuccessReturnsSchemaFromFile()
 	{
@@ -11,7 +14,7 @@ class PhpDrafterTest extends SchemasTestCase
 		$handler = new PhpHandler($this->config, $path);
 		$schema  = $handler->draft();
 
-		$this->assertEquals('hasMany', $schema->tables->workers->relations->products->type);
+		$this->assertSame('hasMany', $schema->tables->workers->relations->products->type);
 		$this->assertCount(0, $handler->getErrors());
 	}
 

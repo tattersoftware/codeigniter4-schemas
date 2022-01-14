@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Archiver;
+<?php
+
+namespace Tatter\Schemas\Archiver;
 
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use CodeIgniter\Files\File;
@@ -16,9 +18,9 @@ abstract class BaseArchiver extends BaseHandler
 	 *
 	 * @param string $path The path to the file
 	 *
-	 * @return boolean Success or failure
-	 *
 	 * @throws FileNotFoundException
+	 *
+	 * @return bool Success or failure
 	 */
 	protected function putContents($path, string $data): bool
 	{
@@ -29,12 +31,12 @@ abstract class BaseArchiver extends BaseHandler
 			if ($this->config->silent)
 			{
 				$this->errors[] = lang('Files.fileNotFound', [$path]);
+
 				return false;
 			}
-			else
-			{
+
 				throw FileNotFoundException::forFileNotFound($path);
-			}
+
 		}
 
 		$file = $file->openFile('w');

@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 use ArrayIterator;
 use Countable;
@@ -13,42 +15,35 @@ class Mergeable implements Countable, IteratorAggregate
 	 */
 	public function merge(?Mergeable $object): Mergeable
 	{
-		if (is_null($object))
+		if (null === $object)
 		{
 			return $this;
 		}
 
 		foreach ($object as $key => $item)
 		{
-			if (! isset($this->$key))
+			if (! isset($this->{$key}))
 			{
-				$this->$key = $item;
-			}
-			elseif ($item instanceof Mergeable && $this->$key instanceof Mergeable)
+				$this->{$key} = $item;
+			} elseif ($item instanceof Mergeable && $this->{$key} instanceof Mergeable)
 			{
-				$this->$key->merge($item);
-			}
-			elseif (is_array($item) && is_array($this->$key))
+				$this->{$key}->merge($item);
+			} elseif (is_array($item) && is_array($this->{$key}))
 			{
-				$this->$key = array_merge($this->$key, $item);
-			}
-			elseif (is_iterable($item) && is_iterable($this->$key))
+				$this->{$key} = array_merge($this->{$key}, $item);
+			} elseif (is_iterable($item) && is_iterable($this->{$key}))
 			{
 				foreach ($item as $mykey => $value)
 				{
-					if ($item instanceof Mergeable && $this->$key instanceof Mergeable)
+					if ($item instanceof Mergeable && $this->{$key} instanceof Mergeable)
 					{
-						$this->$key->merge($item);
-					}
-					else
-					{
-						$this->$key->$mykey = $value;
+						$this->{$key}->merge($item);
+					} else {
+						$this->{$key}->{$mykey} = $value;
 					}
 				}
-			}
-			else
-			{
-				$this->$key = $item;
+			} else {
+				$this->{$key} = $item;
 			}
 		}
 
@@ -58,13 +53,15 @@ class Mergeable implements Countable, IteratorAggregate
 	/**
 	 * Magic getter to prevent exceptions on missing property checks.
 	 *
+	 * @param mixed $name
+	 *
 	 * @return mixed
 	 */
 	public function __get($name)
 	{
 		if (property_exists($this, $name))
 		{
-			return $this->$name;
+			return $this->{$name};
 		}
 
 		return null;
@@ -73,7 +70,7 @@ class Mergeable implements Countable, IteratorAggregate
 	/**
 	 * Magic checker to match the getter.
 	 *
-	 * @return boolean
+	 * @param mixed $name
 	 */
 	public function __isset($name): bool
 	{
@@ -83,7 +80,7 @@ class Mergeable implements Countable, IteratorAggregate
 	/**
 	 * Specify count of public properties to satisfy Countable.
 	 *
-	 * @return integer  Number of public properties
+	 * @return int Number of public properties
 	 */
 	public function count(): int
 	{

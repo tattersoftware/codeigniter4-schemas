@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas;
+<?php
+
+namespace Tatter\Schemas;
 
 use CodeIgniter\Debug\Timer;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
@@ -37,11 +39,8 @@ class Schemas
 
 	/**
 	 * Initiates the library.
-	 *
-	 * @param SchemasConfig $config
-	 * @param Schema|null   $schema
 	 */
-	public function __construct(SchemasConfig $config, Schema $schema = null)
+	public function __construct(SchemasConfig $config, ?Schema $schema = null)
 	{
 		$this->config = $config;
 
@@ -93,11 +92,11 @@ class Schemas
 	/**
 	 * Return the current schema; if automation is enabled then read or draft a missing schema
 	 *
-	 * @return Schema|null  The current schema object
+	 * @return Schema|null The current schema object
 	 */
 	public function get(): ?Schema
 	{
-		if (! is_null($this->schema))
+		if (null !== $this->schema)
 		{
 			return $this->schema;
 		}
@@ -107,7 +106,7 @@ class Schemas
 		{
 			$this->read();
 
-			if (! is_null($this->schema))
+			if (null !== $this->schema)
 			{
 				return $this->schema;
 			}
@@ -118,7 +117,7 @@ class Schemas
 		{
 			$this->draft();
 
-			if (! is_null($this->schema))
+			if (null !== $this->schema)
 			{
 				// If the draft succeeded check if we should archive it
 				if ($this->config->automate['archive'])
@@ -137,6 +136,7 @@ class Schemas
 		}
 
 		$this->errors[] = lang('Schemas.noSchema');
+
 		return null;
 	}
 
@@ -170,12 +170,10 @@ class Schemas
 				$handler = new $handler($this->config);
 			}
 
-			if (is_null($this->schema))
+			if (null === $this->schema)
 			{
 				$this->schema = $handler->draft();
-			}
-			else
-			{
+			} else {
 				$this->schema->merge($handler->draft());
 			}
 
@@ -192,7 +190,7 @@ class Schemas
 	 *
 	 * @param array|string|null $handlers
 	 *
-	 * @return boolean Success or failure
+	 * @return bool Success or failure
 	 */
 	public function archive($handlers = null)
 	{
@@ -211,6 +209,7 @@ class Schemas
 
 		// Archive a copy to each handler's destination
 		$result = true;
+
 		foreach ($handlers as $handler)
 		{
 			if (is_string($handler))

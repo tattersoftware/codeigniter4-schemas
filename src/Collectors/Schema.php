@@ -1,18 +1,19 @@
-<?php namespace Tatter\Schemas\Collectors;
+<?php
+
+namespace Tatter\Schemas\Collectors;
 
 use CodeIgniter\Debug\Toolbar\Collectors\BaseCollector;
 
 /**
  * Schema collector
  */
-
 class Schema extends BaseCollector
 {
 	/**
 	 * Whether this collector has data that can
 	 * be displayed in the Timeline.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $hasTimeline = false;
 
@@ -20,7 +21,7 @@ class Schema extends BaseCollector
 	 * Whether this collector needs to display
 	 * content in a tab or not.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $hasTabContent = true;
 
@@ -28,7 +29,7 @@ class Schema extends BaseCollector
 	 * Whether this collector has data that
 	 * should be shown in the Vars tab.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $hasVarData = false;
 
@@ -59,8 +60,6 @@ class Schema extends BaseCollector
 
 	/**
 	 * Returns any information that should be shown next to the title.
-	 *
-	 * @return string
 	 */
 	public function getTitleDetails(): string
 	{
@@ -68,7 +67,7 @@ class Schema extends BaseCollector
 		{
 			return '(Failure)';
 		}
-		elseif (empty($this->schema->tables))
+		if (empty($this->schema->tables))
 		{
 			return '(No tables)';
 		}
@@ -80,8 +79,6 @@ class Schema extends BaseCollector
 
 	/**
 	 * Returns the data of this collector to be formatted in the toolbar
-	 *
-	 * @return string
 	 */
 	public function display(): string
 	{
@@ -89,12 +86,13 @@ class Schema extends BaseCollector
 		{
 			return '<p><em>Schema failed to load.</em></p>';
 		}
-		elseif (empty($this->schema->tables))
+		if (empty($this->schema->tables))
 		{
 			return '<p><em>No tables found.</em></p>';
 		}
 
 		$html = '';
+
 		foreach ($this->schema->tables as $table)
 		{
 			$html .= '<h4>' . $table->name . '</h4>' . PHP_EOL;
@@ -108,8 +106,6 @@ class Schema extends BaseCollector
 
 	/**
 	 * Gets the "badge" value for the button.
-	 *
-	 * @return integer
 	 */
 	public function getBadgeValue(): int
 	{
@@ -123,8 +119,6 @@ class Schema extends BaseCollector
 	 *
 	 * Icon from https://icons8.com - 1em package
 	 * https://icons8.com/icon/pack/data/p1em
-	 *
-	 * @return string
 	 */
 	public function icon(): string
 	{

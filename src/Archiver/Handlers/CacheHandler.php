@@ -1,12 +1,13 @@
-<?php namespace Tatter\Schemas\Archiver\Handlers;
+<?php
+
+namespace Tatter\Schemas\Archiver\Handlers;
 
 use CodeIgniter\Cache\CacheInterface;
-use Tatter\Schemas\Config\Schemas as SchemasConfig;
-use Tatter\Schemas\Exceptions\SchemasException;
-use Tatter\Schemas\Archiver\BaseArchiver;
 use Tatter\Schemas\Archiver\ArchiverInterface;
-use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Archiver\BaseArchiver;
+use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Structures\Mergeable;
+use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Traits\CacheHandlerTrait;
 
 class CacheHandler extends BaseArchiver implements ArchiverInterface
@@ -19,7 +20,7 @@ class CacheHandler extends BaseArchiver implements ArchiverInterface
 	 * @param SchemasConfig  $config The library config
 	 * @param CacheInterface $cache  The cache handler to use, null to load a new default
 	 */
-	public function __construct(SchemasConfig $config = null, CacheInterface $cache = null)
+	public function __construct(?SchemasConfig $config = null, ?CacheInterface $cache = null)
 	{
 		parent::__construct($config);
 
@@ -29,9 +30,7 @@ class CacheHandler extends BaseArchiver implements ArchiverInterface
 	/**
 	 * Store the scaffold and each individual table to cache
 	 *
-	 * @param Schema $schema
-	 *
-	 * @return boolean  Success or failure
+	 * @return bool Success or failure
 	 */
 	public function archive(Schema $schema): bool
 	{

@@ -1,12 +1,6 @@
-<?php namespace Tests\Support;
+<?php
 
-use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
-use Tatter\Schemas\Structures\Relation;
-use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
+namespace Tests\Support;
 
 // Strong start but no $schema
 $foo = 'Wrong';

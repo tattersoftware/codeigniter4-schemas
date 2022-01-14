@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Reader;
+<?php
+
+namespace Tatter\Schemas\Reader;
 
 use Tatter\Schemas\BaseHandler;
 use Tatter\Schemas\Exceptions\SchemasException;
@@ -13,7 +15,7 @@ abstract class BaseReader extends BaseHandler
 	/**
 	 * Whether the reader is in a state to be used
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $ready = false;
 
@@ -28,8 +30,6 @@ abstract class BaseReader extends BaseHandler
 
 	/**
 	 * Indicate whether the reader is in a state to be used
-	 *
-	 * @return boolean
 	 */
 	public function ready(): bool
 	{
@@ -38,8 +38,6 @@ abstract class BaseReader extends BaseHandler
 
 	/**
 	 * Check that reader is ready before using its functions
-	 *
-	 * @return boolean
 	 */
 	protected function ensureReady(): bool
 	{
@@ -54,6 +52,7 @@ abstract class BaseReader extends BaseHandler
 		}
 
 		$this->errors[] = lang('Schemas.notReady');
+
 		return false;
 	}
 

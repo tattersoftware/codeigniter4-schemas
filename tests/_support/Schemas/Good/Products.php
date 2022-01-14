@@ -1,21 +1,19 @@
-<?php namespace Tests\Support;
+<?php
 
-use Tatter\Schemas\Structures\Mergeable;
-use Tatter\Schemas\Structures\Schema;
+namespace Tests\Support;
+
 use Tatter\Schemas\Structures\Relation;
+use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Table;
-use Tatter\Schemas\Structures\Field;
-use Tatter\Schemas\Structures\Index;
-use Tatter\Schemas\Structures\ForeignKey;
 
-/* SCHEMA */
+// SCHEMA
 $schema = new Schema();
 
-/* TABLES */
+// TABLES
 $schema->tables->products = new Table('products');
 $schema->tables->workers  = new Table('workers');
 
-/* RELATIONS */
+// RELATIONS
 // Products->Workers
 $relation         = new Relation();
 $relation->type   = 'belongsTo';
@@ -34,5 +32,5 @@ $relation->pivots = [
 ];
 $schema->tables->workers->relations->products = $relation;
 
-/* CLEANUP */
+// CLEANUP
 unset($relation);

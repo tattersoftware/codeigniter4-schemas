@@ -3,9 +3,12 @@
 use Tatter\Schemas\Drafter\Handlers\ModelHandler;
 use Tests\Support\SchemasTestCase;
 
-class ModelDrafterTest extends SchemasTestCase
+/**
+ * @internal
+ */
+final class ModelDrafterTest extends SchemasTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->handler = new ModelHandler($this->config);
@@ -13,9 +16,9 @@ class ModelDrafterTest extends SchemasTestCase
 
 	public function testSetGroup()
 	{
-		$this->assertEquals('tests', $this->handler->getGroup());
+		$this->assertSame('tests', $this->handler->getGroup());
 		$this->handler->setGroup('foobar');
-		$this->assertEquals('foobar', $this->handler->getGroup());
+		$this->assertSame('foobar', $this->handler->getGroup());
 	}
 
 	public function testGetModels()
@@ -39,8 +42,8 @@ class ModelDrafterTest extends SchemasTestCase
 	{
 				$schema = $this->handler->draft();
 
-		$this->assertEquals('servicers', $schema->tables->servicers->name);
-		$this->assertEquals('Tests\Support\Models\WorkerModel', $schema->tables->workers->model);
+		$this->assertSame('servicers', $schema->tables->servicers->name);
+		$this->assertSame('Tests\Support\Models\WorkerModel', $schema->tables->workers->model);
 		$this->assertCount(6, $schema->tables->machines->fields);
 		$this->assertTrue($schema->tables->factories->fields->id->primary_key);
 	}

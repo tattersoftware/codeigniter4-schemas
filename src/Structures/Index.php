@@ -1,4 +1,6 @@
-<?php namespace Tatter\Schemas\Structures;
+<?php
+
+namespace Tatter\Schemas\Structures;
 
 class Index extends Mergeable
 {
@@ -19,9 +21,7 @@ class Index extends Mergeable
 		if (is_string($indexData))
 		{
 			$this->name = $indexData;
-		}
-		else
-		{
+		} else {
 			foreach ($indexData as $key => $value)
 			{
 				$this->{$key} = $value;

@@ -1,24 +1,22 @@
-<?php namespace Tests\Support\Models;
+<?php
+
+namespace Tests\Support\Models;
 
 use CodeIgniter\Model;
 
 class WorkerModel extends Model
 {
-	protected $table      = 'workers';
-	protected $primaryKey = 'id';
-
+	protected $table          = 'workers';
+	protected $primaryKey     = 'id';
 	protected $returnType     = 'object';
 	protected $useSoftDeletes = true;
-
-	protected $allowedFields = [
+	protected $allowedFields  = [
 		'firstname',
 		'lastname',
 		'role',
 		'age',
 	];
-
-	protected $useTimestamps = true;
-
+	protected $useTimestamps      = true;
 	protected $validationRules    = [];
 	protected $validationMessages = [];
 	protected $skipValidation     = false;
