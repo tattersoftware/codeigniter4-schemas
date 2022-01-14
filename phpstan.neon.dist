@@ -6,12 +6,11 @@ parameters:
 		- tests
 	bootstrapFiles:
 		- vendor/codeigniter4/codeigniter4/system/Test/bootstrap.php
-	excludes_analyse:
+	excludePaths:
 		- src/Config/Routes.php
 		- src/Views/*
 	ignoreErrors:
 		- '#Access to an undefined property [A-Za-z]+Test::\$[a-z]+#'
-		- '#Access to protected property CodeIgniter\\Database\\BaseConnection::\$[A-Za-z]+#'
 		- '#Access to protected property CodeIgniter\\Model::\$[A-Za-z]+#'
 		- '#Call to an undefined static method Config\\Services::[A-Za-z]+\(\)#'
 		- '#Unsafe usage of new static\(\)*#'

@@ -80,7 +80,7 @@ class LiveTest extends SchemasTestCase
 
 		$schema = $this->schemas->read()->get();
 
-		$this->assertInstanceOf('\Tatter\Schemas\Reader\BaseReader', $schema->tables);
+		$this->assertInstanceOf('\Tatter\Schemas\Reader\BaseReader', $schema->tables); // @phpstan-ignore-line
 	}
 
 	public function testAutoRead()

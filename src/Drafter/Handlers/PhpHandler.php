@@ -56,6 +56,6 @@ class PhpHandler extends BaseDrafter implements DrafterInterface
 			return null;
 		}
 
-		return $schema ?? null;
+		return $schema ?? null; // @phpstan-ignore-line
 	}
 }

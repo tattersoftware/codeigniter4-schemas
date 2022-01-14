@@ -199,7 +199,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
 			}
 
 			// Filter by group
-			$group = $instance->DBGroup ?? $this->defaultGroup;
+			$group = $instance->DBGroup ?? $this->defaultGroup; // @phpstan-ignore-line
 			if (empty($this->group) || $group === $this->group)
 			{
 				$models[] = $class;
