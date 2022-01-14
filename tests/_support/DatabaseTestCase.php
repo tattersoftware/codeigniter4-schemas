@@ -10,82 +10,82 @@ use CodeIgniter\Test\DatabaseTestTrait;
  */
 abstract class DatabaseTestCase extends CIUnitTestCase
 {
-	use DatabaseTestTrait;
+    use DatabaseTestTrait;
 
-	/**
-	 * Should the database be refreshed before each test?
-	 *
-	 * @var bool
-	 */
-	protected $refresh = true;
+    /**
+     * Should the database be refreshed before each test?
+     *
+     * @var bool
+     */
+    protected $refresh = true;
 
-	/**
-	 * The name of a seed file used for all tests within this test case.
-	 *
-	 * @var string
-	 */
-	protected $seed = 'Tests\Support\Database\Seeds\TestSeeder';
+    /**
+     * The name of a seed file used for all tests within this test case.
+     *
+     * @var string
+     */
+    protected $seed = 'Tests\Support\Database\Seeds\TestSeeder';
 
-	/**
-	 * The path to where we can find the test Seeds directory.
-	 *
-	 * @var string
-	 */
-	protected $basePath = SUPPORTPATH . 'Database/';
+    /**
+     * The path to where we can find the test Seeds directory.
+     *
+     * @var string
+     */
+    protected $basePath = SUPPORTPATH . 'Database/';
 
-	/**
-	 * The namespace to help us find the migration classes.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'Tests\Support';
+    /**
+     * The namespace to help us find the migration classes.
+     *
+     * @var string
+     */
+    protected $namespace = 'Tests\Support';
 
-	/**
-	 * Preconfigured config instance.
-	 */
-	protected $config;
+    /**
+     * Preconfigured config instance.
+     */
+    protected $config;
 
-	/**
-	 * Instance of the library.
-	 */
-	protected $schemas;
+    /**
+     * Instance of the library.
+     */
+    protected $schemas;
 
-	/**
-	 * SchemaDatabaseHandler preloaded for 'tests' DBGroup.
-	 */
-	protected $handler;
+    /**
+     * SchemaDatabaseHandler preloaded for 'tests' DBGroup.
+     */
+    protected $handler;
 
-	/**
-	 * An initial schema generated from the 'tests' database.
-	 */
-	protected $schema;
+    /**
+     * An initial schema generated from the 'tests' database.
+     */
+    protected $schema;
 
-	protected function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		$config                    = new \Tatter\Schemas\Config\Schemas();
-		$config->silent            = false;
-		$config->ignoredTables     = ['migrations'];
-		$config->ignoredNamespaces = [];
-		$config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
-		$config->automate          = [
-			'draft'   => false,
-			'archive' => false,
-			'read'    => false,
-		];
+        $config                    = new \Tatter\Schemas\Config\Schemas();
+        $config->silent            = false;
+        $config->ignoredTables     = ['migrations'];
+        $config->ignoredNamespaces = [];
+        $config->schemasDirectory  = SUPPORTPATH . 'Schemas/Good';
+        $config->automate          = [
+            'draft'   => false,
+            'archive' => false,
+            'read'    => false,
+        ];
 
-		$this->config  = $config;
-		$this->schemas = new \Tatter\Schemas\Schemas($config);
-	}
+        $this->config  = $config;
+        $this->schemas = new \Tatter\Schemas\Schemas($config);
+    }
 
-	protected function tearDown(): void
-	{
-		parent::tearDown();
+    protected function tearDown(): void
+    {
+        parent::tearDown();
 
-		$this->schemas->reset();
-		unset($this->schema, $this->handler);
+        $this->schemas->reset();
+        unset($this->schema, $this->handler);
 
-		cache()->clean();
-	}
+        cache()->clean();
+    }
 }

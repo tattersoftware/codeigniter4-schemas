@@ -13,34 +13,31 @@ use Tatter\Schemas\BaseHandler;
  */
 abstract class BaseArchiver extends BaseHandler
 {
-	/**
-	 * Validate or create a file and write to it.
-	 *
-	 * @param string $path The path to the file
-	 *
-	 * @throws FileNotFoundException
-	 *
-	 * @return bool Success or failure
-	 */
-	protected function putContents($path, string $data): bool
-	{
-		$file = new File($path);
+    /**
+     * Validate or create a file and write to it.
+     *
+     * @param string $path The path to the file
+     *
+     * @throws FileNotFoundException
+     *
+     * @return bool Success or failure
+     */
+    protected function putContents($path, string $data): bool
+    {
+        $file = new File($path);
 
-		if (! $file->isWritable())
-		{
-			if ($this->config->silent)
-			{
-				$this->errors[] = lang('Files.fileNotFound', [$path]);
+        if (! $file->isWritable()) {
+            if ($this->config->silent) {
+                $this->errors[] = lang('Files.fileNotFound', [$path]);
 
-				return false;
-			}
+                return false;
+            }
 
-				throw FileNotFoundException::forFileNotFound($path);
+            throw FileNotFoundException::forFileNotFound($path);
+        }
 
-		}
+        $file = $file->openFile('w');
 
-		$file = $file->openFile('w');
-
-		return (bool) $file->fwrite($data);
-	}
+        return (bool) $file->fwrite($data);
+    }
 }

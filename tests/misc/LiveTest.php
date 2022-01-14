@@ -14,96 +14,93 @@ use Tests\Support\SchemasTestCase;
  */
 final class LiveTest extends SchemasTestCase
 {
-	use DatabaseTestTrait;
+    use DatabaseTestTrait;
 
-	// Configure the database to be migrated and seeded once
-	protected $migrateOnce = true;
-	protected $seedOnce    = true;
-	protected $seed        = TestSeeder::class;
-	protected $basePath    = SUPPORTPATH . 'Database/';
+    // Configure the database to be migrated and seeded once
+    protected $migrateOnce = true;
+    protected $seedOnce    = true;
+    protected $seed        = TestSeeder::class;
+    protected $basePath    = SUPPORTPATH . 'Database/';
 
-	// Probably a quite common scenario
-	public function testDatabaseToCache()
-	{
-		$cache           = Services::cache();
-		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$cacheHandler    = new CacheArchiver($this->config, $cache);
+    // Probably a quite common scenario
+    public function testDatabaseToCache()
+    {
+        $cache           = Services::cache();
+        $databaseHandler = new DatabaseHandler($this->config, 'tests');
+        $cacheHandler    = new CacheArchiver($this->config, $cache);
 
-		$this->schemas->draft([$databaseHandler])->archive([$cacheHandler]);
-		$this->assertEmpty($this->schemas->getErrors());
+        $this->schemas->draft([$databaseHandler])->archive([$cacheHandler]);
+        $this->assertEmpty($this->schemas->getErrors());
 
-		$schemaFromService = $this->schemas->get();
-		$schemaFromCache   = $cache->get('schema-testing');
-		$this->assertSame(count($schemaFromCache->tables), count($schemaFromService->tables));
+        $schemaFromService = $this->schemas->get();
+        $schemaFromCache   = $cache->get('schema-testing');
+        $this->assertCount(count($schemaFromCache->tables), $schemaFromService->tables);
 
-		$this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
-	}
+        $this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
+    }
 
-	public function testDatabaseMergeFile()
-	{
-		if ($this->db->DBDriver === 'SQLite3')
-		{
-			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
-		}
+    public function testDatabaseMergeFile()
+    {
+        if ($this->db->DBDriver === 'SQLite3') {
+            $this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+        }
 
-		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$fileHandler     = new DirectoryHandler($this->config);
+        $databaseHandler = new DatabaseHandler($this->config, 'tests');
+        $fileHandler     = new DirectoryHandler($this->config);
 
-		$schema = $this->schemas->draft([$databaseHandler, $fileHandler])->get();
+        $schema = $this->schemas->draft([$databaseHandler, $fileHandler])->get();
 
-		$this->assertObjectHasAttribute('products', $schema->tables);
-		$this->assertCount(3, $schema->tables->workers->relations);
-	}
+        $this->assertObjectHasAttribute('products', $schema->tables);
+        $this->assertCount(3, $schema->tables->workers->relations);
+    }
 
-	public function testMergeAllDrafters()
-	{
-		if ($this->db->DBDriver === 'SQLite3')
-		{
-			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
-		}
+    public function testMergeAllDrafters()
+    {
+        if ($this->db->DBDriver === 'SQLite3') {
+            $this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+        }
 
-		$databaseHandler = new DatabaseHandler($this->config, 'tests');
-		$modelHandler    = new ModelHandler($this->config);
-		$fileHandler     = new DirectoryHandler($this->config);
+        $databaseHandler = new DatabaseHandler($this->config, 'tests');
+        $modelHandler    = new ModelHandler($this->config);
+        $fileHandler     = new DirectoryHandler($this->config);
 
-		$schema = $this->schemas->draft([$databaseHandler, $modelHandler, $fileHandler])->get();
+        $schema = $this->schemas->draft([$databaseHandler, $modelHandler, $fileHandler])->get();
 
-		$this->assertObjectHasAttribute('products', $schema->tables);
-		$this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
-		$this->assertCount(3, $schema->tables->workers->relations);
-	}
+        $this->assertObjectHasAttribute('products', $schema->tables);
+        $this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
+        $this->assertCount(3, $schema->tables->workers->relations);
+    }
 
-	public function testGetReturnsSchemaWithReader()
-	{
-		// Draft & archive a copy of the schema so we can test reading it
-		$result = $this->schemas->draft()->archive();
-		$this->assertTrue($result);
+    public function testGetReturnsSchemaWithReader()
+    {
+        // Draft & archive a copy of the schema so we can test reading it
+        $result = $this->schemas->draft()->archive();
+        $this->assertTrue($result);
 
-		$this->schemas->reset();
+        $this->schemas->reset();
 
-		$schema = $this->schemas->read()->get();
+        $schema = $this->schemas->read()->get();
 
-		$this->assertInstanceOf('\Tatter\Schemas\Reader\BaseReader', $schema->tables); // @phpstan-ignore-line
-	}
+        $this->assertInstanceOf('\Tatter\Schemas\Reader\BaseReader', $schema->tables); // @phpstan-ignore-line
+    }
 
-	public function testAutoRead()
-	{
-		if ($this->db->DBDriver === 'SQLite3')
-		{
-			$this->markTestSkipped('SQLite3 does not always support foreign key reads.');
-		}
+    public function testAutoRead()
+    {
+        if ($this->db->DBDriver === 'SQLite3') {
+            $this->markTestSkipped('SQLite3 does not always support foreign key reads.');
+        }
 
-		$this->config->automate['read'] = true;
+        $this->config->automate['read'] = true;
 
-		// Draft & archive a copy of the schema so we can test reading it
-		$result = $this->schemas->draft()->archive();
-		$this->assertTrue($result);
+        // Draft & archive a copy of the schema so we can test reading it
+        $result = $this->schemas->draft()->archive();
+        $this->assertTrue($result);
 
-		$this->schemas->reset();
+        $this->schemas->reset();
 
-		$schema = $this->schemas->get();
+        $schema = $this->schemas->get();
 
-		$this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
-		$this->assertCount(3, $schema->tables->workers->relations);
-	}
+        $this->assertSame('Tests\Support\Models\FactoryModel', $schema->tables->factories->model);
+        $this->assertCount(3, $schema->tables->workers->relations);
+    }
 }

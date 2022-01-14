@@ -19,7 +19,7 @@ $relation         = new Relation();
 $relation->type   = 'belongsTo';
 $relation->table  = 'workers';
 $relation->pivots = [
-	['products', 'worker_id', 'workers', 'id'],
+    ['products', 'worker_id', 'workers', 'id'],
 ];
 $schema->tables->products->relations->workers = $relation;
 
@@ -28,7 +28,7 @@ $relation         = new Relation();
 $relation->type   = 'hasMany';
 $relation->table  = 'products';
 $relation->pivots = [
-	['workers', 'id', 'products', 'worker_id'],
+    ['workers', 'id', 'products', 'worker_id'],
 ];
 $schema->tables->workers->relations->products = $relation;
 

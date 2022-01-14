@@ -8,15 +8,15 @@ use Tests\Support\SchemasTestCase;
  */
 final class BaseHandlerTest extends SchemasTestCase
 {
-	protected function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		$this->handler = new class ($this->config) extends BaseHandler {};
-	}
+        $this->handler = new class ($this->config) extends BaseHandler {};
+    }
 
-	public function testGetErrors()
-	{
-		$this->assertSame([], $this->handler->getErrors());
-	}
+    public function testGetErrors()
+    {
+        $this->assertSame([], $this->handler->getErrors());
+    }
 }

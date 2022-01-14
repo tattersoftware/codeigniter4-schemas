@@ -24,33 +24,32 @@ use Tatter\Agents\BaseAgent;
 
 class SchemaAgent extends BaseAgent
 {
-	/**
-	 * Attributes for Tatter\Handlers
-	 *
-	 * @var array<string, string>
-	 */
-	public $attributes = [
-		'name'    => 'Schema',
-		'uid'     => 'schema',
-		'icon'    => 'fas fa-project-diagram',
-		'summary' => 'Map the database structure from the default connection',
-	];
+    /**
+     * Attributes for Tatter\Handlers
+     *
+     * @var array<string, string>
+     */
+    public $attributes = [
+        'name'    => 'Schema',
+        'uid'     => 'schema',
+        'icon'    => 'fas fa-project-diagram',
+        'summary' => 'Map the database structure from the default connection',
+    ];
 
-	/**
-	 * Runs this Agent's status check. Usually in turn calls record().
-	 */
-	public function check(): void
-	{
-		if (! $schemas = Services::schemas())
-		{
-			return;
-		}
+    /**
+     * Runs this Agent's status check. Usually in turn calls record().
+     */
+    public function check(): void
+    {
+        if (! $schemas = Services::schemas()) {
+            return;
+        }
 
-		$config = config('Schemas');
+        $config = config('Schemas');
 
-		// Generate the schema
-		$schema = $schemas->import(...$config->defaultHandlers)->get();
+        // Generate the schema
+        $schema = $schemas->import(...$config->defaultHandlers)->get();
 
-		$this->record('defaultSchema', 'object', $schema);
-	}
+        $this->record('defaultSchema', 'object', $schema);
+    }
 }

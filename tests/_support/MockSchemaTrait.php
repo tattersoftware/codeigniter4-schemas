@@ -14,17 +14,17 @@ use Tatter\Schemas\Structures\Schema;
  */
 trait MockSchemaTrait
 {
-	/**
-	 * Loads the Industrial Schema.
-	 *
-	 * @retun void
-	 */
-	protected function setUpMockSchemaTrait(): void
-	{
-		// Include the file which will place the Schema into $schema
-		require SUPPORTPATH . 'Schemas' . DIRECTORY_SEPARATOR . 'MockSchema.php';
+    /**
+     * Loads the Industrial Schema.
+     *
+     * @retun void
+     */
+    protected function setUpMockSchemaTrait(): void
+    {
+        // Include the file which will place the Schema into $schema
+        require SUPPORTPATH . 'Schemas' . DIRECTORY_SEPARATOR . 'MockSchema.php';
 
-		// @phpstan-ignore-next-line
-		$this->schema = $schema;
-	}
+        // @phpstan-ignore-next-line
+        $this->schema = $schema;
+    }
 }
