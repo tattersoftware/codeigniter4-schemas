@@ -5,6 +5,7 @@ namespace Tatter\Schemas\Structures;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Traversable;
 
 class Mergeable implements Countable, IteratorAggregate
 {
@@ -83,7 +84,7 @@ class Mergeable implements Countable, IteratorAggregate
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this); // @phpstan-ignore-line
     }
