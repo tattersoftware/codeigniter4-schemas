@@ -14,10 +14,7 @@ final class CacheReaderTest extends SchemasTestCase
     use CacheTrait;
     use MockSchemaTrait;
 
-    /**
-     * @var CacheReader
-     */
-    private $reader;
+    private CacheReader $reader;
 
     protected function setUp(): void
     {
@@ -44,8 +41,6 @@ final class CacheReaderTest extends SchemasTestCase
 
     public function testReaderMagicGetsTable()
     {
-        $table = $this->reader->workers;
-
         $expected = [
             'factories' => true,
             'machines'  => true,

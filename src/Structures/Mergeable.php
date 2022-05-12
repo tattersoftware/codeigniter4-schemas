@@ -11,8 +11,6 @@ class Mergeable implements Countable, IteratorAggregate
 {
     /**
      * Merge two structures together.
-     *
-     * @return $this
      */
     public function merge(?Mergeable $object): Mergeable
     {

@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Test\DatabaseTestTrait;
+use Tatter\Schemas\Config\Schemas;
 use Tatter\Schemas\Drafter\Handlers\DatabaseHandler;
 use Tests\Support\Database\Seeds\TestSeeder;
 use Tests\Support\SchemasTestCase;
@@ -17,11 +18,7 @@ final class DatabaseDrafterTest extends SchemasTestCase
     protected $seedOnce    = true;
     protected $seed        = TestSeeder::class;
     protected $basePath    = SUPPORTPATH . 'Database/';
-
-    /**
-     * @var DatabaseHandler
-     */
-    private $handler;
+    private DatabaseHandler $handler;
 
     protected function setUp(): void
     {
@@ -55,7 +52,7 @@ final class DatabaseDrafterTest extends SchemasTestCase
     {
         $this->assertObjectNotHasAttribute('migrations', $this->schema->tables);
 
-        $config                = new \Tatter\Schemas\Config\Schemas();
+        $config                = new Schemas();
         $config->ignoredTables = [];
 
         $handler = new DatabaseHandler($config, 'tests');
@@ -75,7 +72,7 @@ final class DatabaseDrafterTest extends SchemasTestCase
         $relationsCount = 0;
 
         foreach ($this->schema->tables as $table) {
-            $relationsCount += count($table->relations);
+            $relationsCount += is_countable($table->relations) ? count($table->relations) : 0;
         }
 
         $this->assertSame(14, $relationsCount);

@@ -34,7 +34,7 @@ final class LiveTest extends SchemasTestCase
 
         $schemaFromService = $this->schemas->get();
         $schemaFromCache   = $cache->get('schema-testing');
-        $this->assertCount(count($schemaFromCache->tables), $schemaFromService->tables);
+        $this->assertCount(is_countable($schemaFromCache->tables) ? count($schemaFromCache->tables) : 0, $schemaFromService->tables);
 
         $this->assertObjectHasAttribute('factories', $schemaFromCache->tables);
     }

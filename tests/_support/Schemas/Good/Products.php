@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Schemas\Good;
 
 use Tatter\Schemas\Structures\Relation;
 use Tatter\Schemas\Structures\Schema;

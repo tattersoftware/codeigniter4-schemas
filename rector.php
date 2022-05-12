@@ -66,6 +66,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     // Are there files or rules you need to skip?
     $rectorConfig->skip([
+        __DIR__ . '/src/Archiver/Handlers/CliHandler.php', // Rector doesn't like the Kint modifier
         __DIR__ . '/src/Views',
 
         JsonThrowOnErrorRector::class,
@@ -114,6 +115,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(NormalizeNamespaceByPSR4ComposerAutoloadRector::class);
     $rectorConfig
         ->ruleWithConfiguration(TypedPropertyRector::class, [
-            TypedPropertyRector::INLINE_PUBLIC => true,
+            TypedPropertyRector::INLINE_PUBLIC => false,
         ]);
 };

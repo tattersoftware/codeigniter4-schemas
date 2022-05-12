@@ -2,10 +2,11 @@
 
 namespace Tests\Support\Database\Migrations;
 
+use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\Migration;
 
 /**
- * @property \CodeIgniter\Database\BaseConnection $db
+ * @property BaseConnection $db
  */
 class CreateTestTables extends Migration
 {
