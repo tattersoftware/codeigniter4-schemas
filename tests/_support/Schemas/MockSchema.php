@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\Schemas;
 
 use Tatter\Schemas\Structures\Field;
 use Tatter\Schemas\Structures\Relation;

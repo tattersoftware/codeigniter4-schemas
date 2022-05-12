@@ -32,11 +32,9 @@ class CacheHandler extends BaseReader implements ReaderInterface
         $this->cacheInit($cache);
 
         // Start $tables as the cached scaffold version
-        if ($scaffold = $this->cache->get($this->cacheKey)) {
-            if (isset($scaffold->tables)) {
-                $this->tables = $scaffold->tables ?? new Mergeable();
-                $this->ready  = true;
-            }
+        if (($scaffold = $this->cache->get($this->cacheKey)) && isset($scaffold->tables)) {
+            $this->tables = $scaffold->tables ?? new Mergeable();
+            $this->ready  = true;
         }
     }
 
@@ -131,7 +129,7 @@ class CacheHandler extends BaseReader implements ReaderInterface
      */
     public function count(): int
     {
-        return count($this->tables);
+        return $this->tables === null ? 0 : count($this->tables);
     }
 
     /**

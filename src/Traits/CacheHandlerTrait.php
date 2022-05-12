@@ -11,7 +11,7 @@ trait CacheHandlerTrait
     /**
      * The cache handler instance.
      *
-     * @var \CodeIgniter\Cache\CacheInterface
+     * @var CacheInterface
      */
     protected $cache;
 

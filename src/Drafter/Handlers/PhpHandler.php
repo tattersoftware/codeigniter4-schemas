@@ -2,6 +2,7 @@
 
 namespace Tatter\Schemas\Drafter\Handlers;
 
+use Exception;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
@@ -46,7 +47,7 @@ class PhpHandler extends BaseDrafter implements DrafterInterface
         // So the path just needs to be included and the variable checked
         try {
             require $this->path;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
 
             return null;

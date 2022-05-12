@@ -2,6 +2,7 @@
 
 use Tatter\Schemas\Reader\Handlers\CacheHandler as CacheReader;
 use Tatter\Schemas\Structures\Schema;
+use Tatter\Schemas\Structures\Table;
 use Tests\Support\CacheTrait;
 use Tests\Support\MockSchemaTrait;
 use Tests\Support\SchemasTestCase;
@@ -14,10 +15,7 @@ final class CacheReaderTest extends SchemasTestCase
     use CacheTrait;
     use MockSchemaTrait;
 
-    /**
-     * @var CacheReader
-     */
-    private $reader;
+    private CacheReader $reader;
 
     protected function setUp(): void
     {
@@ -45,6 +43,7 @@ final class CacheReaderTest extends SchemasTestCase
     public function testReaderMagicGetsTable()
     {
         $table = $this->reader->workers;
+        $this->assertInstanceOf(Table::class, $table);
 
         $expected = [
             'factories' => true,

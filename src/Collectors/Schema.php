@@ -70,7 +70,7 @@ class Schema extends BaseCollector
             return '(No tables)';
         }
 
-        return '(' . count($this->schema->tables) . ' tables)';
+        return '(' . (is_countable($this->schema->tables) ? count($this->schema->tables) : 0) . ' tables)';
     }
 
     //--------------------------------------------------------------------

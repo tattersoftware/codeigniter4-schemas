@@ -4,6 +4,7 @@ namespace Tests\Support;
 
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
+use Tatter\Schemas\Config\Schemas;
 
 /**
  * @internal
@@ -64,7 +65,7 @@ abstract class DatabaseTestCase extends CIUnitTestCase
     {
         parent::setUp();
 
-        $config                    = new \Tatter\Schemas\Config\Schemas();
+        $config                    = new Schemas();
         $config->silent            = false;
         $config->ignoredTables     = ['migrations'];
         $config->ignoredNamespaces = [];

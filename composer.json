@@ -1,7 +1,8 @@
 {
     "name": "tatter/schemas",
-    "type": "library",
     "description": "Database schema management, for CodeIgniter 4",
+    "license": "MIT",
+    "type": "library",
     "keywords": [
         "codeigniter",
         "codeigniter4",
@@ -10,8 +11,6 @@
         "mapping",
         "structure"
     ],
-    "homepage": "https://github.com/tattersoftware/codeigniter4-schemas",
-    "license": "MIT",
     "authors": [
         {
             "name": "Matthew Gatner",
@@ -20,14 +19,17 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/tattersoftware/codeigniter4-schemas",
     "require": {
-        "php": "^7.3 || ^8.0"
+        "php": "^7.4 || ^8.0"
     },
     "require-dev": {
         "codeigniter4/framework": "^4.1",
         "tatter/agents": "^1.2",
-        "tatter/tools": "^1.15"
+        "tatter/tools": "^2.0"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Tatter\\Schemas\\": "src"
@@ -41,8 +43,11 @@
             "Tests\\Support\\": "tests/_support"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
     "scripts": {
         "analyze": "phpstan analyze",
         "ci": [
@@ -51,11 +56,13 @@
             "@analyze",
             "@test",
             "@inspect",
+            "rector process",
             "@style"
         ],
         "deduplicate": "phpcpd app/ src/",
         "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
         "mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
+        "retool": "retool",
         "style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
         "test": "phpunit"
     }

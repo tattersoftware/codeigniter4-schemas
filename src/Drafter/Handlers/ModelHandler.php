@@ -4,6 +4,7 @@ namespace Tatter\Schemas\Drafter\Handlers;
 
 use CodeIgniter\Model;
 use Config\Services;
+use Exception;
 use Tatter\Schemas\Config\Schemas as SchemasConfig;
 use Tatter\Schemas\Drafter\BaseDrafter;
 use Tatter\Schemas\Drafter\DrafterInterface;
@@ -170,7 +171,7 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
             // Try to instantiate
             try {
                 $instance = new $class();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 continue;
             }
 

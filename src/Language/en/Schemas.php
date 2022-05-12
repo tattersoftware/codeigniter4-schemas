@@ -1,5 +1,7 @@
 <?php
 
+namespace Tatter\Schemas\Language\en;
+
 return [
     'methodNotImplemented' => '{0} does not have a {1} method',
     'unsupportedHandler'   => 'Handler not supported: {0}',
