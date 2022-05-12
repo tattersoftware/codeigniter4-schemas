@@ -4,6 +4,7 @@ namespace Tatter\Schemas\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Exception;
 use Tatter\Schemas\Exceptions\SchemasException;
 
 class Schemas extends BaseCommand
@@ -54,14 +55,14 @@ class Schemas extends BaseCommand
         // Try the draft
         try {
             $schemas->draft($drafters);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->showError($e);
         }
 
         // Try the archive
         try {
             $result = $schemas->archive($archivers);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->showError($e);
         }
 
