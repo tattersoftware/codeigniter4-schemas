@@ -21,7 +21,7 @@ class ForeignKey extends Mergeable
             $this->constraint_name = $foreignKeyData;
         } else {
             foreach ($foreignKeyData as $key => $value) {
-                $this->{$key} = $value;
+                $this->{$key} = is_array($value) ? $value[0] : $value;
             }
         }
     }
