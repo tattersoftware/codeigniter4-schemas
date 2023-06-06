@@ -5,9 +5,10 @@ namespace Tatter\Schemas\Structures;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use stdClass;
 use Traversable;
 
-class Mergeable implements Countable, IteratorAggregate
+class Mergeable extends stdClass implements Countable, IteratorAggregate
 {
     /**
      * Merge two structures together.
