@@ -70,7 +70,7 @@ abstract class BaseDrafter extends BaseHandler
             $tableName !== 'onus' ? $tableName . '_id' : 'onu_id',
             $tableName !== 'onus' ? singular($tableName) : 'onu',
             $tableName !== 'onus' ? singular($tableName) . '_id' : 'onu_id',
-        ]
+        ];
 
         foreach ($tests as $fieldName) {
             if (isset($table->fields->{$fieldName})) {
