@@ -65,10 +65,11 @@ abstract class BaseDrafter extends BaseHandler
     {
         // Check a few common conventions
         $tests = [
-            $tableName,
-            $tableName . '_id',
-            singular($tableName),
-            singular($tableName) . '_id',
+            $tableName !== 'onus' ? $tableName : 'onu',
+            $tableName !== 'onus' ? $tableName : 'onu' . '_id',
+            // Hacked because missing regex in Framework. Remove after merge of PR.
+            $tableName !== 'onus' ? singular($tableName) : 'onu',
+            $tableName !== 'onus' ? singular($tableName) : 'onu' . '_id',
         ];
 
         foreach ($tests as $fieldName) {
