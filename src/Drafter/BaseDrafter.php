@@ -63,14 +63,14 @@ abstract class BaseDrafter extends BaseHandler
      */
     protected function findKeyToForeignTable(Table $table, string $tableName): ?string
     {
-        // Check a few common conventions
+        // Hacked 'onus' is not returned as singular because of missing regex in Framework.
+        // Remove after merge of PR.
         $tests = [
             $tableName !== 'onus' ? $tableName : 'onu',
-            $tableName !== 'onus' ? $tableName : 'onu' . '_id',
-            // Hacked because missing regex in Framework. Remove after merge of PR.
+            $tableName !== 'onus' ? $tableName . '_id' : 'onu_id',
             $tableName !== 'onus' ? singular($tableName) : 'onu',
-            $tableName !== 'onus' ? singular($tableName) : 'onu' . '_id',
-        ];
+            $tableName !== 'onus' ? singular($tableName) . '_id' : 'onu_id',
+        ]
 
         foreach ($tests as $fieldName) {
             if (isset($table->fields->{$fieldName})) {
