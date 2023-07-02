@@ -18,9 +18,9 @@ abstract class BaseArchiver extends BaseHandler
      *
      * @param string $path The path to the file
      *
-     * @throws FileNotFoundException
-     *
      * @return bool Success or failure
+     *
+     * @throws FileNotFoundException
      */
     protected function putContents($path, string $data): bool
     {

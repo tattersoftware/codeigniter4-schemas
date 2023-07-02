@@ -48,7 +48,7 @@ class Schema extends BaseCollector
      */
     protected $schema;
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Load a copy of the schema.
@@ -73,7 +73,7 @@ class Schema extends BaseCollector
         return '(' . (is_countable($this->schema->tables) ? count($this->schema->tables) : 0) . ' tables)';
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Returns the data of this collector to be formatted in the toolbar
@@ -97,7 +97,7 @@ class Schema extends BaseCollector
         return $html;
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Gets the "badge" value for the button.
@@ -107,7 +107,7 @@ class Schema extends BaseCollector
         return empty($this->schema->tables) ? 0 : count($this->schema->tables);
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Display the icon.
