@@ -1,7 +1,6 @@
 <?php
 
 use Tatter\Schemas\Reader\Handlers\CacheHandler as CacheReader;
-use Tatter\Schemas\Structures\Schema;
 use Tatter\Schemas\Structures\Table;
 use Tests\Support\CacheTrait;
 use Tests\Support\MockSchemaTrait;

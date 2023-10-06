@@ -16,9 +16,9 @@ class Schemas extends BaseConfig
         'read'    => true,
     ];
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Drafting
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     // Default handlers used to create a schema (order sensitive)
     // (Probably shouldn't change this unless you really know what you're doing)
@@ -40,9 +40,9 @@ class Schemas extends BaseConfig
     // Path the directoryHandler should scan for schema files
     public $schemasDirectory = APPPATH . 'Schemas';
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Archiving
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     // Default handlers to archive copies of the schema
     public $archiveHandlers = [
@@ -52,16 +52,16 @@ class Schemas extends BaseConfig
     // Default time-to-live for a stored schema (e.g. Cache) in seconds
     public $ttl = 14400; // 4 hours
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Reading
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     // Default handler used to return and read a schema
     public $readHandler = 'Tatter\Schemas\Reader\Handlers\CacheHandler';
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Publishing
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     // Precaution to prevent accidental wiping of databases or files
     public $safeMode = true;
