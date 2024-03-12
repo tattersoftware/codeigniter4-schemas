@@ -7,7 +7,7 @@ Database schema management, for CodeIgniter 4
 
 ## Quick Start
 
-1. Install with Composer: `> composer require tatter/schemas`
+1. Install with Composer: `> composer require mkuettel/codeigniter4-schemas`
 2. Generate a new schema: `> php spark schemas`
 
 ## Features

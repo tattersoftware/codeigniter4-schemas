@@ -1,5 +1,5 @@
 {
-    "name": "tatter/schemas",
+    "name": "mkuettel/codeigniter4-schemas",
     "description": "Database schema management, for CodeIgniter 4",
     "license": "MIT",
     "type": "library",
@@ -17,9 +17,14 @@
             "email": "mgatner@tattersoftware.com",
             "homepage": "https://tattersoftware.com",
             "role": "Developer"
+        },
+        {
+            "name": "Moritz Küttel",
+            "email": "moritz_kuettel+composer_ci4schemas@tattersoftware.com",
+            "role": "Developer"
         }
     ],
-    "homepage": "https://github.com/tattersoftware/codeigniter4-schemas",
+    "homepage": "https://github.com/mkuettel/codeigniter4-schemas",
     "require": {
         "php": "^7.4 || ^8.0"
     },
