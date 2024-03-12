@@ -33,7 +33,6 @@ class Schemas extends BaseConfig
 
     // Namespaces to ignore (mostly for ModelHandler)
     public $ignoredNamespaces = [
-        'Tests\Support',
         'CodeIgniter\Commands\Generators',
     ];
 

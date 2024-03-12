@@ -168,6 +168,10 @@ class ModelHandler extends BaseDrafter implements DrafterInterface
                 continue;
             }
 
+            if (!(new \ReflectionClass($class))->isInstantiable()) {
+                continue;
+            }
+
             // Try to instantiate
             try {
                 $instance = new $class();
